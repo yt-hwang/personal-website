@@ -31,4 +31,4 @@
 | 2026-09-16 | 게이트 검사 대상을 `git diff --cached` 전체로 변경 | skills/publish-gate | 디렉토리를 손으로 골라 스캔하다 ops/*.py 를 세 번째로 빠뜨림. 목록은 반드시 무언가를 빠뜨린다 |
 | 2026-09-16 | ops/ 를 저장소에서 제외 (_workspace/ops 로 이동) | .gitignore | 마이그레이션 스크립트가 금칙어 목록을 하드코딩하고 있어 공개 불가 |
 | 2026-09-16 | 미승인 링크를 공개 카드에서 제거 | content/projects, _workspace/notes | limited·LINK_HOLD 프로젝트의 URL이 렌더는 안 되나 저장소에는 커밋됨 |
-
+| 2026-09-16 | 배포 — 공개 저장소 + 프로덕션 | 전체 | 배포 https://personal-website-flax-eight-41.vercel.app · 저장소 https://github.com/yt-hwang/personal-website |

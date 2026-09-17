@@ -117,7 +117,24 @@
       "result": "This page is the output. A new project is added by dropping in one JSON file, and no project name appears in a component. The source goes to a public repository, but the intermediate working files are excluded — the list of what must not be published is itself sensitive."
     }
   },
-  "links": [],
+  "links": [
+    {
+      "label": {
+        "ko": "이 사이트",
+        "en": "This site"
+      },
+      "url": "https://personal-website-flax-eight-41.vercel.app",
+      "kind": "site"
+    },
+    {
+      "label": {
+        "ko": "소스 코드",
+        "en": "Source code"
+      },
+      "url": "https://github.com/yt-hwang/personal-website",
+      "kind": "repo"
+    }
+  ],
   "assets": [],
   "visibility": "public",
   "featured": false,
