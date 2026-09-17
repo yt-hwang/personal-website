@@ -115,7 +115,7 @@ Open to collaboration, hiring conversations, and consulting work. Email is the f
 
 ## CONTACT-EMAIL
 
-hyt037 [at] gmail [dot] com
+hyt037@gmail.com
 
 ## CONTACT-LINKEDIN
 

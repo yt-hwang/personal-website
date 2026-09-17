@@ -47,6 +47,51 @@ export const TEAM_VISIBLE_LIMIT = 6;
 /** 홈 카드 그리드에 쓰는 그룹 순서 (IA 4.3) */
 export const GRID_GROUPS: GroupId[] = ["agent-systems", "products"];
 
+/**
+ * 그룹 단위 렌더 정책. 앵커·카피 슬롯·카드 밀도를 한 곳에 모은다.
+ *
+ * `density` 는 **그룹의 내용 무게**에 붙는다 — 프로젝트별 레이아웃이 아니다.
+ * 에이전트 시스템은 팀·역할·스택이 다 있어 넓은 판(full)이 필요하고,
+ * 앱은 한 줄이면 끝나므로 밀도 높은 목록(compact)이 맞다.
+ * 카드 컴포넌트는 여전히 하나이고, 이 값 하나로 조판만 갈린다.
+ */
+export const GROUP_META: Record<
+  GroupId,
+  {
+    anchor: string;
+    titleSlot: string;
+    leadSlot: string;
+    navSlot: string;
+    density: "full" | "compact";
+  }
+> = {
+  "agent-systems": {
+    anchor: "systems",
+    titleSlot: "SEC3-TITLE",
+    leadSlot: "GRP-A",
+    navSlot: "NAV-SYSTEMS",
+    density: "full",
+  },
+  products: {
+    anchor: "apps",
+    titleSlot: "SEC5-TITLE",
+    leadSlot: "GRP-B",
+    navSlot: "NAV-APPS",
+    density: "compact",
+  },
+  community: {
+    anchor: "community",
+    titleSlot: "SEC6-TITLE",
+    leadSlot: "GRP-C",
+    navSlot: "NAV-COMMUNITY",
+    density: "full",
+  },
+};
+
+export function groupMeta(group: GroupId) {
+  return GROUP_META[group] ?? GROUP_META.products;
+}
+
 function str(v: unknown): string {
   return typeof v === "string" ? v.trim() : "";
 }

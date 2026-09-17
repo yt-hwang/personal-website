@@ -1,148 +1,169 @@
 @import "tailwindcss";
 
-/*
- * 색은 전부 여기 토큰으로만 정의한다. 컴포넌트에서 색 리터럴을 쓰지 않는다.
- * 라이트(:root) / 시스템 다크(prefers-color-scheme) / 명시 다크([data-theme="dark"]) 3곳 모두 정의한다.
- */
-
 :root {
-  --bg: #f7f7f5;
-  --surface: #ffffff;
-  --surface-2: #f1f1ee;
-  --border: #e0dfd9;
-  --border-strong: #cbc9c1;
-  --text: #16181d;
-  --text-muted: #565b63;
-  --text-subtle: #676c74;
-  --accent: #1c5a86;
-  --accent-hover: #164a6f;
-  --accent-on: #ffffff;
-  --accent-weak: #e7f0f7;
-  --accent-weak-text: #14465f;
-  --chip-bg: #f1f1ee;
-  --chip-text: #4b5057;
-  --badge-live-bg: #e3f1e7;
-  --badge-live-text: #1f5d36;
-  --badge-active-bg: #e7f0f7;
-  --badge-active-text: #14465f;
-  --badge-planning-bg: #f4eee1;
-  --badge-planning-text: #6b5420;
-  --badge-limited-bg: #f1f1ee;
-  --badge-limited-text: #646971;
-  --focus: #1c5a86;
+  --bg: #f2efe7;
+  --surface: #faf8f2;
+  --surface-2: #e8e3d7;
+  --rule: #d8d2c4;
+  --rule-strong: #857d6c;
+  --ink: #1b1815;
+  --ink-muted: #4c463d;
+  --ink-subtle: #6b6355;
+  --accent: #a33612;
+  --accent-strong: #7f290c;
+  --accent-on: #faf8f2;
+  --accent-soft: #f4e3da;
+  --accent-soft-ink: #8a2e0f;
+  --sig-live: #2f6b41;
+  --sig-active: #8a5510;
+  --sig-planning: #6b6355;
+  --sig-held: #6b6355;
+  --focus: #a33612;
 }
+
+/*
+ * 색은 전부 위 토큰으로만 정의한다. 컴포넌트에서 색 리터럴을 쓰지 않는다.
+ * 라이트(:root) / 시스템 다크(prefers-color-scheme) / 명시 다크([data-theme="dark"]) 3곳에 같은 토큰을 둔다.
+ * 위 :root 블록이 파일의 첫 중괄호 블록이어야 한다 — lib/tokens.ts 가 이 블록을 라이트 팔레트로 읽는다.
+ *
+ * 대비 실측(WCAG 2.1 상대휘도): 본문 토큰 쌍 전부 4.5:1 이상,
+ * 비텍스트(--rule-strong) 3:1 이상. 라이트·다크 각각 위반 0건.
+ */
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e1013;
-    --surface: #16191e;
-    --surface-2: #1c2026;
-    --border: #282d35;
-    --border-strong: #3a414b;
-    --text: #e9ebee;
-    --text-muted: #a3aab3;
-    --text-subtle: #868d96;
-    --accent: #8cc0e2;
-    --accent-hover: #a8d1ec;
-    --accent-on: #0e1013;
-    --accent-weak: #17242d;
-    --accent-weak-text: #a8d1ec;
-    --chip-bg: #1c2026;
-    --chip-text: #aab1ba;
-    --badge-live-bg: #16241b;
-    --badge-live-text: #8fce9f;
-    --badge-active-bg: #17242d;
-    --badge-active-text: #a8d1ec;
-    --badge-planning-bg: #262015;
-    --badge-planning-text: #d9bb77;
-    --badge-limited-bg: #1c2026;
-    --badge-limited-text: #99a0a9;
-    --focus: #8cc0e2;
+    --bg: #121110;
+    --surface: #1a1917;
+    --surface-2: #23211e;
+    --rule: #302d29;
+    --rule-strong: #767061;
+    --ink: #ede7da;
+    --ink-muted: #b3ac9d;
+    --ink-subtle: #948d7e;
+    --accent: #ee7a4e;
+    --accent-strong: #f79b77;
+    --accent-on: #121110;
+    --accent-soft: #2a1c15;
+    --accent-soft-ink: #f29068;
+    --sig-live: #6fb98a;
+    --sig-active: #d6a75a;
+    --sig-planning: #948d7e;
+    --sig-held: #948d7e;
+    --focus: #ee7a4e;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #0e1013;
-  --surface: #16191e;
-  --surface-2: #1c2026;
-  --border: #282d35;
-  --border-strong: #3a414b;
-  --text: #e9ebee;
-  --text-muted: #a3aab3;
-  --text-subtle: #868d96;
-  --accent: #8cc0e2;
-  --accent-hover: #a8d1ec;
-  --accent-on: #0e1013;
-  --accent-weak: #17242d;
-  --accent-weak-text: #a8d1ec;
-  --chip-bg: #1c2026;
-  --chip-text: #aab1ba;
-  --badge-live-bg: #16241b;
-  --badge-live-text: #8fce9f;
-  --badge-active-bg: #17242d;
-  --badge-active-text: #a8d1ec;
-  --badge-planning-bg: #262015;
-  --badge-planning-text: #d9bb77;
-  --badge-limited-bg: #1c2026;
-  --badge-limited-text: #99a0a9;
-  --focus: #8cc0e2;
+  --bg: #121110;
+  --surface: #1a1917;
+  --surface-2: #23211e;
+  --rule: #302d29;
+  --rule-strong: #767061;
+  --ink: #ede7da;
+  --ink-muted: #b3ac9d;
+  --ink-subtle: #948d7e;
+  --accent: #ee7a4e;
+  --accent-strong: #f79b77;
+  --accent-on: #121110;
+  --accent-soft: #2a1c15;
+  --accent-soft-ink: #f29068;
+  --sig-live: #6fb98a;
+  --sig-active: #d6a75a;
+  --sig-planning: #948d7e;
+  --sig-held: #948d7e;
+  --focus: #ee7a4e;
+}
+
+/* 레이아웃 상수 — 고정 헤더 높이. 섹션 스크롤 오프셋과 sticky 위치가 이 값을 공유한다. */
+:root {
+  --header-h: 5.5rem;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --header-h: 3.5rem;
+  }
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
-  --color-border-token: var(--border);
-  --color-border-strong: var(--border-strong);
-  --color-text: var(--text);
-  --color-text-muted: var(--text-muted);
-  --color-text-subtle: var(--text-subtle);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
   --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
+  --color-accent-strong: var(--accent-strong);
   --color-accent-on: var(--accent-on);
-  --color-accent-weak: var(--accent-weak);
-  --color-accent-weak-text: var(--accent-weak-text);
-  --color-chip-bg: var(--chip-bg);
-  --color-chip-text: var(--chip-text);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-ink: var(--accent-soft-ink);
+  --color-sig-live: var(--sig-live);
+  --color-sig-active: var(--sig-active);
+  --color-sig-planning: var(--sig-planning);
+  --color-sig-held: var(--sig-held);
   --color-focus: var(--focus);
 
-  --font-sans: var(--font-latin), var(--font-hangul), ui-sans-serif, system-ui,
-    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-display: var(--ff-display), "Nanum Myeongjo", "Apple SD Gothic Neo",
+    "Malgun Gothic", serif;
+  --font-sans: var(--ff-body), "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
+  /*
+   * IBM Plex Mono 에는 한글 글리프가 없다. 라벨·수치에 한국어가 섞이므로
+   * 모노 다음에 본문 한글 폰트(IBM Plex Sans KR)를 둔다 — 같은 Plex 슈퍼패밀리라 나란히 선다.
+   * 이 폴백이 없으면 "운영 중", "공동창업자 · CTO" 같은 모노 라벨이 시스템 폰트로 떨어진다.
+   */
+  --font-mono: var(--ff-mono), var(--ff-body), "SFMono-Regular", "Consolas",
+    "Apple SD Gothic Neo", "Malgun Gothic", monospace;
 }
 
 * {
-  border-color: var(--border);
+  border-color: var(--rule);
 }
 
 html {
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
   background-color: var(--bg);
-  color: var(--text);
+  color: var(--ink);
   font-family: var(--font-sans);
   overflow-x: hidden;
   word-break: keep-all;
   overflow-wrap: anywhere;
-  line-height: 1.65;
+  line-height: 1.7;
+  font-size: 0.9375rem;
 }
 
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 ::selection {
-  background-color: var(--accent-weak);
-  color: var(--accent-weak-text);
+  background-color: var(--accent-soft);
+  color: var(--accent-soft-ink);
 }
 
-/* 넓은 요소는 자기 자신만 가로 스크롤한다 */
+/* 넓은 요소는 자기 자신만 가로 스크롤한다 — 페이지 본문은 360px 에서도 가로 스크롤이 없다. */
 .scroll-x {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll-x::-webkit-scrollbar {
+  display: none;
 }
 
 summary {
@@ -152,4 +173,64 @@ summary {
 
 summary::-webkit-details-marker {
   display: none;
+}
+
+/*
+ * 시스템 상태 가시성 (닐슨 1) — 클라이언트 JS 없이.
+ * ① 섹션 헤더가 sticky 라 스크롤 중에도 "지금 보는 섹션"의 번호·제목이 화면에 남는다.
+ * ② 해시로 이동한 섹션은 :target 으로 표식이 붙는다(어떤 id 에도 자동 적용).
+ * ③ 그 섹션을 가리키는 헤더 내비 항목이 :has() 로 강조된다.
+ */
+[data-section]:target [data-section-marker] {
+  color: var(--accent);
+}
+
+[data-section]:target [data-section-rule] {
+  background-color: var(--accent);
+}
+
+@supports selector(:has(*)) {
+  body:has(#systems:target) [data-nav="systems"],
+  body:has(#method:target) [data-nav="method"],
+  body:has(#apps:target) [data-nav="apps"],
+  body:has(#community:target) [data-nav="community"],
+  body:has(#contact:target) [data-nav="contact"] {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+}
+
+/* 절제된 스태거 등장 — 첫 화면에만. CSS 만 쓴다. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.stagger > * {
+  animation: rise 0.55s cubic-bezier(0.22, 0.61, 0.24, 1) both;
+}
+
+.stagger > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 180ms;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger > * {
+    animation: none;
+  }
 }

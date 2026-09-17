@@ -60,6 +60,6 @@ export function aboutMeta(lang: Lang): Metadata {
     lang,
     "/about",
     pick(lang, "META-about-title", "META-about.title", "ABOUT-TITLE"),
-    pick(lang, "META-about-desc", "META-about.description", "ABOUT-1"),
+    pick(lang, "META-about-desc", "META-about.description", "ABOUT-LEAD"),
   );
 }

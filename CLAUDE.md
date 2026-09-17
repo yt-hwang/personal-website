@@ -32,3 +32,5 @@
 | 2026-09-16 | ops/ 를 저장소에서 제외 (_workspace/ops 로 이동) | .gitignore | 마이그레이션 스크립트가 금칙어 목록을 하드코딩하고 있어 공개 불가 |
 | 2026-09-16 | 미승인 링크를 공개 카드에서 제거 | content/projects, _workspace/notes | limited·LINK_HOLD 프로젝트의 URL이 렌더는 안 되나 저장소에는 커밋됨 |
 | 2026-09-16 | 배포 — 공개 저장소 + 프로덕션 | 전체 | 배포 https://personal-website-flax-eight-41.vercel.app · 저장소 https://github.com/yt-hwang/personal-website |
+| 2026-09-17 | 전면 재디자인 (기술 문서 조판 · 종이/잉크 팔레트 · Hahmlet+IBM Plex) + About 구조화 | app/ components/ lib/ | 사용자 피드백 "디자인 UI/UX 별로야", "소개 페이지 산문이라 뭘 하는지 모르겠어". IA는 유지, 시각 언어·레이아웃·정보 밀도만 교체. 근거는 `_workspace/04_builder_notes.md` §11~§17 |
+| 2026-09-17 | 의존성 추가 — `lucide-react@0.577.0` (버전 고정) | package.json | 아이콘 세트 단일화. 1.x 는 아이콘 기반 컴포넌트에 `"use client"` 가 붙어 전 페이지에 11KB 클라이언트 청크가 생긴다. 0.577 은 서버에서 순수 SVG 로 렌더되고 클라이언트 JS 0바이트 |

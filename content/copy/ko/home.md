@@ -115,7 +115,7 @@
 
 ## CONTACT-EMAIL
 
-hyt037 [at] gmail [dot] com
+hyt037@gmail.com
 
 ## CONTACT-LINKEDIN
 

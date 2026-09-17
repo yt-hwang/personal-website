@@ -1,6 +1,8 @@
 import { localized } from "@/lib/projects";
 import type { Lang, ProjectLink } from "@/lib/types";
 
+import { OutLink } from "./Links";
+
 /** 링크가 없으면 영역 자체를 렌더하지 않는다. 빈 <a href=""> 를 만들지 않는다. */
 export function ExternalLinks({
   links,
@@ -16,16 +18,9 @@ export function ExternalLinks({
         const label = localized(l.label, lang);
         if (!label) return null;
         return (
-          <a
-            key={l.url}
-            href={l.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-medium text-accent underline-offset-4 hover:underline"
-          >
+          <OutLink key={l.url} href={l.url} lang={lang}>
             {label}
-            <span aria-hidden="true"> ↗</span>
-          </a>
+          </OutLink>
         );
       })}
     </>

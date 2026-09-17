@@ -1,9 +1,8 @@
-import Link from "next/link";
-
 import { paragraphs, pick, t } from "@/lib/copy";
 import {
   GRID_GROUPS,
   featuredProjects,
+  groupMeta,
   hasDetailPage,
   list,
   periodLabel,
@@ -13,49 +12,82 @@ import {
 } from "@/lib/projects";
 import { href } from "@/lib/routes";
 import type { GroupId, Lang, Project } from "@/lib/types";
-import { ui } from "@/lib/ui";
+import { ordinal, ui } from "@/lib/ui";
 
-import { StatusBadge } from "./Badges";
+import { GroupMark, StatusMark } from "./Badges";
 import { ExternalLinks } from "./ExternalLinks";
-import { ProjectGrid } from "./ProjectCard";
+import { ContactChannels } from "./ContactChannels";
+import { GhostAction, GoLink, OutLink, PrimaryAction } from "./Links";
+import { ProjectList } from "./ProjectCard";
 
-const GROUP_HEADING: Record<string, string> = {
-  "agent-systems": "SEC3-TITLE",
-  products: "SEC5-TITLE",
-  community: "SEC6-TITLE",
-};
+/**
+ * 홈 — 기술 문서(dossier) 조판.
+ * 대칭 카드 그리드를 쓰지 않는다. 섹션 번호(모노) + 가는 규칙선 + 여백으로 위계를 만들고,
+ * 내용의 무게에 따라 항목의 형태를 달리한다(에이전트 시스템은 넓게, 앱은 밀도 높은 목록으로).
+ *
+ * 섹션 헤더는 sticky 라 스크롤 중에도 현재 섹션 번호·제목이 화면에 남는다 (닐슨 1).
+ */
 
-const GROUP_ANCHOR: Record<string, string> = {
-  "agent-systems": "systems",
-  products: "apps",
-  community: "community",
-};
+const HEADING_LABEL =
+  "font-mono text-[0.75rem] tracking-[0.16em] tabular-nums uppercase";
 
 function Section({
   id,
+  index,
   heading,
   lead,
   children,
 }: {
-  id?: string;
-  heading?: string;
+  id: string;
+  index: number;
+  heading: string;
   lead?: string;
   children?: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-16 border-t border-[var(--border)] py-10 sm:py-14">
-      {heading && (
-        <h2 className="text-lg font-semibold tracking-tight text-text sm:text-xl">
-          {heading}
-        </h2>
-      )}
+    <section
+      id={id}
+      data-section="true"
+      className="scroll-mt-[var(--header-h)] pt-14 sm:pt-20"
+    >
+      <div className="sticky top-[var(--header-h)] z-20 -mx-4 bg-bg px-4 sm:-mx-6 sm:px-6">
+        <div className="flex items-baseline gap-4 pt-2 pb-2.5">
+          <span
+            data-section-marker="true"
+            className={HEADING_LABEL + " text-ink-subtle"}
+          >
+            {ordinal(index)}
+          </span>
+          {heading && (
+            <h2 className="font-display text-lg leading-snug font-medium tracking-tight text-ink sm:text-xl">
+              {heading}
+            </h2>
+          )}
+        </div>
+        <div
+          data-section-rule="true"
+          className="h-0.5 bg-[var(--rule-strong)]"
+        />
+      </div>
+
       {lead && (
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-text-muted sm:text-base">
-          {lead}
-        </p>
+        <p className="mt-6 max-w-2xl leading-relaxed text-ink-muted">{lead}</p>
       )}
-      {children && <div className="mt-6">{children}</div>}
+      {children && <div className="mt-8">{children}</div>}
     </section>
+  );
+}
+
+/** 처음 나오는 내부 용어에는 한 줄 설명을 붙인다 (닐슨 2 — 현실 세계와의 일치). */
+function Gloss({ lang, body }: { lang: Lang; body: string }) {
+  if (!body) return null;
+  return (
+    <p className="mt-5 max-w-2xl border-l-2 border-[var(--rule-strong)] pl-4 text-[0.8125rem] leading-relaxed text-ink-muted">
+      <span className="mr-2 font-mono text-[0.6875rem] tracking-[0.14em] text-ink-subtle uppercase">
+        {ui(lang, "UI.terms")}
+      </span>
+      {body}
+    </p>
   );
 }
 
@@ -66,13 +98,10 @@ function Section({
 function splitProof(raw: string): { value: string; label: string } {
   const i = raw.indexOf("·");
   if (i < 0) return { value: "", label: raw };
-  return {
-    value: raw.slice(0, i).trim(),
-    label: raw.slice(i + 1).trim(),
-  };
+  return { value: raw.slice(0, i).trim(), label: raw.slice(i + 1).trim() };
 }
 
-function ProofStrip({ lang }: { lang: Lang }) {
+function Ledger({ lang }: { lang: Lang }) {
   const items = [1, 2, 3, 4]
     .map((n) => {
       const id = "PROOF-" + n;
@@ -86,16 +115,23 @@ function ProofStrip({ lang }: { lang: Lang }) {
   if (!items.length) return null;
 
   return (
-    <ul className="grid grid-cols-2 gap-3 border-t border-[var(--border)] pt-6 sm:grid-cols-4 sm:gap-4">
-      {items.map((i) => (
-        <li key={i.key}>
+    <ul className="grid grid-cols-2 border-t-2 border-[var(--rule-strong)] sm:grid-cols-4">
+      {items.map((i, n) => (
+        <li
+          key={i.key}
+          className={
+            "border-b border-[var(--rule)] py-4 sm:border-b-0 " +
+            (n % 2 === 1 ? "pl-4 " : "pr-4 ") +
+            "sm:border-r sm:border-[var(--rule)] sm:px-4 sm:first:pl-0 sm:last:border-r-0"
+          }
+        >
           {i.value && (
-            <p className="text-2xl font-semibold tracking-tight text-text tabular-nums sm:text-3xl">
+            <p className="font-display text-2xl leading-none tracking-tight text-ink tabular-nums sm:text-3xl">
               {i.value}
             </p>
           )}
           {i.label && (
-            <p className="mt-1 text-[0.8125rem] leading-snug text-text-muted">
+            <p className="mt-2 font-mono text-[0.6875rem] leading-snug tracking-[0.1em] text-ink-subtle uppercase">
               {i.label}
             </p>
           )}
@@ -105,49 +141,40 @@ function ProofStrip({ lang }: { lang: Lang }) {
   );
 }
 
-function Hero({ lang }: { lang: Lang }) {
+/** 첫 화면 — 스크롤 없이 "이 사이트가 무엇인지"가 끝난다 (닐슨 10). */
+function Masthead({ lang }: { lang: Lang }) {
   const h1 = t(lang, "HERO-1");
   const sub = t(lang, "HERO-2");
   const cta1 = t(lang, "HERO-CTA-1");
   const cta2 = t(lang, "HERO-CTA-2");
 
   return (
-    <section className="py-12 sm:py-20">
+    <section className="stagger pt-10 pb-4 sm:pt-16">
       {h1 && (
-        <h1 className="max-w-3xl text-2xl leading-tight font-semibold tracking-tight text-text sm:text-4xl">
+        <h1 className="max-w-3xl font-display text-[2rem] leading-[1.25] font-medium tracking-tight text-ink sm:text-5xl">
           {h1}
         </h1>
       )}
       {sub && (
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-text-muted sm:text-lg">
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg">
           {sub}
         </p>
       )}
       {(cta1 || cta2) && (
-        <div className="mt-7 flex flex-wrap gap-3">
-          {cta1 && (
-            <a
-              href="#systems"
-              className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-[var(--accent-on)] hover:bg-accent-hover"
-            >
-              {cta1}
-            </a>
-          )}
-          {cta2 && (
-            <Link
-              href={href(lang, "/about")}
-              className="rounded-md border border-[var(--border-strong)] px-4 py-2 text-sm font-medium text-text hover:border-accent hover:text-accent"
-            >
-              {cta2}
-            </Link>
-          )}
+        <div className="mt-8 flex flex-wrap gap-3">
+          {cta1 && <PrimaryAction href="#systems">{cta1}</PrimaryAction>}
+          {cta2 && <GhostAction href="#contact">{cta2}</GhostAction>}
         </div>
       )}
-      <div className="mt-10">
-        <ProofStrip lang={lang} />
+      <div className="mt-10 sm:mt-12">
+        <Ledger lang={lang} />
       </div>
     </section>
   );
+}
+
+function withProtocol(url: string): string {
+  return /^https?:\/\//i.test(url) ? url : "https://" + url;
 }
 
 /**
@@ -169,15 +196,9 @@ function splitLink(
   return { label: l, url: withProtocol(u) };
 }
 
-function withProtocol(url: string): string {
-  return /^https?:\/\//i.test(url) ? url : "https://" + url;
-}
-
 /**
  * 저장소 링크는 `NEXT_PUBLIC_REPO_URL` 이 설정돼 있을 때만 앵커가 된다.
- * 저장소를 만들기 전에는 주소가 없으므로 문장만 남기고 링크를 만들지 않는다 —
- * 사이트의 핵심 주장을 검증하러 온 방문자가 404를 맞는 일이 없게 한다.
- * 변수를 넣는 순간 카피의 레이블로 링크가 살아난다.
+ * 저장소가 없을 때 주장을 검증하러 온 방문자가 404를 맞는 일이 없게 한다 (닐슨 5).
  */
 function repoLink(lang: Lang): { label: string; url: string } {
   const env = (process.env.NEXT_PUBLIC_REPO_URL ?? "").trim();
@@ -192,7 +213,7 @@ function repoLink(lang: Lang): { label: string; url: string } {
   return { label, url: withProtocol(env) };
 }
 
-function MethodSection({ lang }: { lang: Lang }) {
+function MethodSection({ lang, index }: { lang: Lang; index: number }) {
   const intro = t(lang, "METHOD-INTRO");
   const patterns = [1, 2, 3]
     .map((n) => ({
@@ -203,56 +224,58 @@ function MethodSection({ lang }: { lang: Lang }) {
     .filter((p) => p.title || p.body);
   const selfDemo = t(lang, "SELFDEMO");
   const repo = repoLink(lang);
-  const repoLabel = repo.label;
-  const repoUrl = repo.url;
   const heading = pick(lang, "SEC4-TITLE", "SECTION.method");
 
   if (!intro && !patterns.length && !selfDemo && !heading) return null;
 
   return (
-    <Section id="method" heading={heading} lead={intro}>
+    <Section id="method" index={index} heading={heading} lead={intro}>
       {patterns.length > 0 && (
-        <ol className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {patterns.map((p) => (
+        <ol>
+          {patterns.map((p, i) => (
             <li
               key={p.key}
-              className="rounded-lg border border-[var(--border)] bg-surface p-4"
+              className="grid gap-x-8 gap-y-2 border-t border-[var(--rule)] py-6 sm:grid-cols-[4.5rem_minmax(0,1fr)]"
             >
-              {p.title && (
-                <h3 className="text-sm font-semibold text-text">{p.title}</h3>
-              )}
-              {p.body && (
-                <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-muted">
-                  {p.body}
-                </p>
-              )}
+              <p className="font-mono text-[1.375rem] leading-none text-ink-subtle tabular-nums">
+                {ordinal(i + 1)}
+              </p>
+              <div className="min-w-0">
+                {p.title && (
+                  <h3 className="font-display text-base font-medium tracking-tight text-ink">
+                    {p.title}
+                  </h3>
+                )}
+                {p.body && (
+                  <p className="max-w-2xl leading-relaxed text-ink-muted">
+                    {p.body}
+                  </p>
+                )}
+              </div>
             </li>
           ))}
         </ol>
       )}
-      {(selfDemo || (repoLabel && repoUrl)) && (
-        <div className="mt-6 rounded-lg border border-[var(--border)] bg-surface-2 p-4 sm:p-5">
+      {(selfDemo || repo.url) && (
+        <div className="mt-8 border border-[var(--rule)] bg-surface p-5 sm:p-6">
           {selfDemo &&
             paragraphs(selfDemo).map((para, i) => (
               <p
                 key={i}
                 className={
-                  "text-sm leading-relaxed text-text-muted" + (i > 0 ? " mt-2" : "")
+                  "max-w-2xl text-[0.875rem] leading-relaxed text-ink-muted" +
+                  (i > 0 ? " mt-3" : "")
                 }
               >
                 {para}
               </p>
             ))}
-          {repoLabel && repoUrl && (
-            <a
-              href={repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-block text-sm font-medium text-accent underline-offset-4 hover:underline"
-            >
-              {repoLabel}
-              <span aria-hidden="true"> ↗</span>
-            </a>
+          {repo.url && (
+            <p className="mt-4 text-[0.8125rem]">
+              <OutLink href={repo.url} lang={lang}>
+                {repo.label}
+              </OutLink>
+            </p>
           )}
         </div>
       )}
@@ -260,88 +283,109 @@ function MethodSection({ lang }: { lang: Lang }) {
   );
 }
 
+/** featured 카드는 그리드에서 빠지고 이 단독 블록이 소비한다 (IA 4.3). */
 function FeaturedBlock({ p, lang }: { p: Project; lang: Lang }) {
   const title = text(p.title, lang);
   const tagline = text(p.tagline, lang);
+  const role = text(p.role, lang);
   const body = t(lang, "AKDS-SEC");
   const highlights = list(p.highlights, lang).slice(0, 3);
   const links = renderableLinks(p);
   const period = periodLabel(p);
+  const groupLabel = t(lang, groupMeta(p.group).navSlot);
 
   return (
-    <div className="rounded-lg border border-[var(--border)] bg-surface p-5 sm:p-6">
-      <div className="flex flex-wrap items-center gap-2">
-        <StatusBadge lang={lang} status={p.status} />
+    <article className="grid gap-x-8 gap-y-4 border-t border-[var(--rule)] py-7 sm:grid-cols-[4.5rem_minmax(0,1fr)]">
+      <div className="flex items-baseline gap-3 sm:block">
         {period && (
-          <span className="text-[0.75rem] text-text-subtle tabular-nums">
+          <p className="font-mono text-[0.6875rem] text-ink-subtle tabular-nums">
             {period}
-          </span>
+          </p>
         )}
       </div>
-      {title && (
-        <h3 className="mt-2 text-base font-semibold tracking-tight text-text sm:text-lg">
-          {title}
-        </h3>
-      )}
-      {tagline && (
-        <p className="mt-1.5 text-sm leading-relaxed text-text-muted">
-          {tagline}
-        </p>
-      )}
-      {body &&
-        paragraphs(body).map((para, i) => (
-          <p key={i} className="mt-3 text-sm leading-relaxed text-text-muted">
-            {para}
-          </p>
-        ))}
-      {highlights.length > 0 && (
-        <ul className="mt-4 space-y-1.5">
-          {highlights.map((h) => (
-            <li
-              key={h}
-              className="border-l-2 border-[var(--border-strong)] pl-3 text-[0.8125rem] leading-relaxed text-text-muted"
-            >
-              {h}
-            </li>
-          ))}
-        </ul>
-      )}
-      {(hasDetailPage(p) || links.length > 0) && (
-        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-          {hasDetailPage(p) && (
-            <Link
-              href={href(lang, "/projects/" + p.slug)}
-              className="font-medium text-accent underline-offset-4 hover:underline"
-            >
-              {ui(lang, "UI.detail")}
-              <span aria-hidden="true"> →</span>
-            </Link>
-          )}
-          <ExternalLinks links={links} lang={lang} />
+
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <GroupMark label={groupLabel} />
+          <StatusMark lang={lang} status={p.status} />
         </div>
-      )}
-    </div>
+
+        {title && (
+          <h3 className="mt-2 font-display text-xl leading-snug font-medium tracking-tight text-ink sm:text-2xl">
+            {title}
+          </h3>
+        )}
+        {role && (
+          <p className="mt-1.5 font-mono text-[0.8125rem] tracking-[0.04em] text-accent">
+            {role}
+          </p>
+        )}
+        {tagline && (
+          <p className="mt-3 max-w-2xl leading-relaxed text-ink-muted">
+            {tagline}
+          </p>
+        )}
+        {body &&
+          paragraphs(body).map((para, i) => (
+            <p
+              key={i}
+              className="mt-3 max-w-2xl text-[0.875rem] leading-relaxed text-ink-muted"
+            >
+              {para}
+            </p>
+          ))}
+        {highlights.length > 0 && (
+          <ul className="mt-5 space-y-2">
+            {highlights.map((h) => (
+              <li
+                key={h}
+                className="border-l-2 border-[var(--rule-strong)] pl-4 text-[0.8125rem] leading-relaxed text-ink-muted"
+              >
+                {h}
+              </li>
+            ))}
+          </ul>
+        )}
+        {(hasDetailPage(p) || links.length > 0) && (
+          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.8125rem]">
+            {hasDetailPage(p) && (
+              <GoLink href={href(lang, "/projects/" + p.slug)}>
+                {ui(lang, "UI.detail")}
+              </GoLink>
+            )}
+            <ExternalLinks links={links} lang={lang} />
+          </div>
+        )}
+      </div>
+    </article>
   );
 }
 
 function GroupSection({
   group,
-  lead,
+  index,
   lang,
+  gloss,
 }: {
   group: GroupId;
-  lead: string;
+  index: number;
   lang: Lang;
+  gloss?: string;
 }) {
   const items = projectsInGroup(group);
   if (!items.length) return null;
+  const g = groupMeta(group);
   return (
     <Section
-      id={GROUP_ANCHOR[group]}
-      heading={pick(lang, GROUP_HEADING[group], "SECTION." + group)}
-      lead={t(lang, lead)}
+      id={g.anchor}
+      index={index}
+      heading={pick(lang, g.titleSlot, "SECTION." + group)}
+      lead={t(lang, g.leadSlot)}
     >
-      <ProjectGrid items={items} lang={lang} />
+      {gloss && <Gloss lang={lang} body={gloss} />}
+      <div className={gloss ? "mt-8" : undefined}>
+        <ProjectList items={items} lang={lang} />
+      </div>
     </Section>
   );
 }
@@ -352,40 +396,44 @@ export function HomePage({ lang }: { lang: Lang }) {
 
   return (
     <>
-      <Hero lang={lang} />
+      <Masthead lang={lang} />
 
-      <GroupSection group={GRID_GROUPS[0]} lead="GRP-A" lang={lang} />
+      <GroupSection
+        group={GRID_GROUPS[0]}
+        index={1}
+        lang={lang}
+        gloss={ui(lang, "UI.glossHarness")}
+      />
 
-      <MethodSection lang={lang} />
+      <MethodSection lang={lang} index={2} />
 
-      <GroupSection group={GRID_GROUPS[1]} lead="GRP-B" lang={lang} />
+      <GroupSection group={GRID_GROUPS[1]} index={3} lang={lang} />
 
       {featured.length > 0 && (
         <Section
           id="community"
+          index={4}
           heading={pick(lang, "SEC6-TITLE", "SECTION.community")}
           lead={t(lang, "GRP-C")}
         >
-          <div className="space-y-4">
-            {featured.map((p) => (
-              <FeaturedBlock key={p.slug} p={p} lang={lang} />
-            ))}
-          </div>
+          {featured.map((p) => (
+            <FeaturedBlock key={p.slug} p={p} lang={lang} />
+          ))}
         </Section>
       )}
 
       <Section
         id="contact"
+        index={5}
         heading={pick(lang, "SEC7-TITLE", "SECTION.contact")}
         lead={contact}
       >
-        <Link
-          href={href(lang, "/about")}
-          className="text-sm font-medium text-accent underline-offset-4 hover:underline"
-        >
-          {t(lang, "NAV-ABOUT") || ui(lang, "UI.about")}
-          <span aria-hidden="true"> →</span>
-        </Link>
+        <ContactChannels lang={lang} className="max-w-2xl" />
+        <p className="mt-8 text-[0.8125rem]">
+          <GoLink href={href(lang, "/about")}>
+            {t(lang, "NAV-ABOUT") || ui(lang, "UI.about")}
+          </GoLink>
+        </p>
       </Section>
     </>
   );
