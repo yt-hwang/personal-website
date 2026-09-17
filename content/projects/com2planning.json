@@ -1,0 +1,50 @@
+{
+  "slug": "com2planning",
+  "order": 10,
+  "group": "products",
+  "title": {
+    "ko": "Com2Planning",
+    "en": "Com2Planning"
+  },
+  "tagline": {
+    "ko": "예배 기획과 사역 스케줄링을 한곳에서 — 순서, 팀 편성, 곡 관리, 가용시간",
+    "en": "Service planning and ministry scheduling in one tool — run of show, team assignments, songs, availability."
+  },
+  "role": {
+    "ko": "기획 · 개발 · 운영",
+    "en": "Product, development, and operation"
+  },
+  "status": "live",
+  "period": {
+    "start": "2026",
+    "end": null
+  },
+  "stack": [],
+  "agent_team": {
+    "count": 0,
+    "members": []
+  },
+  "highlights": {
+    "ko": [],
+    "en": []
+  },
+  "body": {
+    "ko": {
+      "problem": "",
+      "work": "",
+      "structure": "",
+      "result": ""
+    },
+    "en": {
+      "problem": "",
+      "work": "",
+      "structure": "",
+      "result": ""
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "limited",
+  "featured": false,
+  "updated": "2026-09-16"
+}

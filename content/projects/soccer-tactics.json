@@ -1,0 +1,50 @@
+{
+  "slug": "soccer-tactics",
+  "order": 11,
+  "group": "products",
+  "title": {
+    "ko": "FC 명보 전술 보드",
+    "en": "Tactical Board"
+  },
+  "tagline": {
+    "ko": "축구팀 전술을 그려 공유하는 보드",
+    "en": "A board for drawing and sharing a football team's tactics."
+  },
+  "role": {
+    "ko": "기획 · 개발",
+    "en": "Product and development"
+  },
+  "status": "live",
+  "period": {
+    "start": "2026-09",
+    "end": null
+  },
+  "stack": [],
+  "agent_team": {
+    "count": 0,
+    "members": []
+  },
+  "highlights": {
+    "ko": [],
+    "en": []
+  },
+  "body": {
+    "ko": {
+      "problem": "[[NEEDS: 전술 보드를 만든 이유 — 기존 도구의 어떤 점이 부족했는지]]",
+      "work": "[[NEEDS: 실제로 구현한 기능 목록 (배치 편집, 공유 방식, 포메이션 프리셋 등)]]",
+      "structure": "[[NEEDS: 기술 스택 — 소스 폴더가 이 PC에 없어 확인 불가]]",
+      "result": "[[NEEDS: 정본 배포 URL 확정 (배포본 3개 공존) + 7v7 버전이 별도 제품인지]]"
+    },
+    "en": {
+      "problem": "[[NEEDS: why this board was built — what existing tools did not do]]",
+      "work": "[[NEEDS: features actually implemented (drag editing, sharing, formation presets)]]",
+      "structure": "[[NEEDS: tech stack — source folder is not on this machine]]",
+      "result": "[[NEEDS: canonical deployment URL (three deployments coexist) + whether the 7v7 version is a separate product]]"
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "public",
+  "featured": false,
+  "updated": "2026-09-16"
+}

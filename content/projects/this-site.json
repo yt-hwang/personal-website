@@ -1,0 +1,125 @@
+{
+  "slug": "this-site",
+  "order": 6,
+  "group": "agent-systems",
+  "title": {
+    "ko": "이 사이트",
+    "en": "This Site"
+  },
+  "tagline": {
+    "ko": "이 포트폴리오 자체가 6인 에이전트 팀이 만든 결과물이다",
+    "en": "This portfolio is itself the output of a six-agent team."
+  },
+  "role": {
+    "ko": "하네스 설계 · 오케스트레이션",
+    "en": "Harness design and orchestration"
+  },
+  "status": "active",
+  "period": {
+    "start": "2026-09",
+    "end": null
+  },
+  "stack": [
+    "Claude Code",
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "Vercel"
+  ],
+  "agent_team": {
+    "count": 6,
+    "members": [
+      {
+        "name": {
+          "ko": "site-architect",
+          "en": "site-architect"
+        },
+        "role": {
+          "ko": "정보구조 설계",
+          "en": "Information architecture"
+        }
+      },
+      {
+        "name": {
+          "ko": "project-scout",
+          "en": "project-scout"
+        },
+        "role": {
+          "ko": "프로젝트 사실 조사 — 값마다 출처 경로 기록",
+          "en": "Fact-finding — records a source path for every value"
+        }
+      },
+      {
+        "name": {
+          "ko": "content-writer",
+          "en": "content-writer"
+        },
+        "role": {
+          "ko": "한국어 · 영어 카피",
+          "en": "Korean and English copy"
+        }
+      },
+      {
+        "name": {
+          "ko": "web-builder",
+          "en": "web-builder"
+        },
+        "role": {
+          "ko": "구현 · 저장소 · 배포",
+          "en": "Implementation, repository, deployment"
+        }
+      },
+      {
+        "name": {
+          "ko": "privacy-auditor",
+          "en": "privacy-auditor"
+        },
+        "role": {
+          "ko": "게이트키퍼 — 공개 등급 판정, 배포 차단권 보유",
+          "en": "Gatekeeper — sets disclosure levels and can block a deploy"
+        }
+      },
+      {
+        "name": {
+          "ko": "qa-reviewer",
+          "en": "qa-reviewer"
+        },
+        "role": {
+          "ko": "링크 · 반응형 · 데이터-화면 정합성 검증",
+          "en": "Links, responsiveness, data-to-screen consistency"
+        }
+      }
+    ]
+  },
+  "highlights": {
+    "ko": [
+      "조사 에이전트가 값마다 출처 파일 경로를 남겨, 근거 없는 문장이 사이트에 오르지 못하게 했다",
+      "공개 검수자가 배포 차단권을 가진다 — 카피 작성 전 1회, push 직전 1회 총 두 번 검사",
+      "프로젝트 추가는 JSON 한 개. 컴포넌트에 프로젝트 이름을 하드코딩하지 않는다"
+    ],
+    "en": [
+      "The research agent records a source file path for every value, so no unsourced sentence reaches the page.",
+      "The privacy reviewer holds a deploy veto — one pass before any copy is written, one more right before push.",
+      "Adding a project means adding one JSON file; no project name is hardcoded into a component."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "프로젝트가 12개까지 늘어나는 동안 설명은 각 저장소 안에만 있었습니다. 누가 무엇을 만들었냐고 물으면 매번 다시 설명해야 했고, 설명할 때마다 내용이 조금씩 달라졌습니다. 흩어진 사실을 한 번 정리해 고정된 페이지로 만들 필요가 있었습니다.",
+      "work": "사이트를 바로 쓰는 대신, 사이트를 만드는 6인 에이전트 팀을 먼저 설계했습니다. 팀원은 전부 AI 에이전트입니다. 각 역할의 권한과 금지 사항을 에이전트 정의 파일에 적고, 반복 작업은 스킬로 분리했습니다. 프로젝트 데이터는 JSON 한 벌로 고정해, 카피와 구현이 같은 사실을 보게 했습니다.",
+      "structure": "정보구조 담당이 페이지 구성과 카피 슬롯을 먼저 확정하고, 조사 담당이 원본 저장소를 읽어 값마다 출처 파일 경로를 남깁니다. 카피 담당은 그 사실만으로 문장을 쓰고, 구현 담당이 빌드와 배포를 맡습니다. 공개 검수 담당이 게이트키퍼로 배포 차단권을 가지며, 카피 작성 전과 push 직전 두 번 검사합니다. QA 담당이 링크·반응형·데이터 정합성을 마지막에 확인합니다.",
+      "result": "이 페이지가 그 결과물입니다. 새 프로젝트는 JSON 한 개를 넣으면 추가되고, 컴포넌트에 프로젝트 이름이 들어 있지 않습니다. 소스는 공개 저장소에 올리되 중간 산출물은 제외합니다 — 게재 금지 항목의 목록 자체가 민감 정보이기 때문입니다."
+    },
+    "en": {
+      "problem": "As the project count grew to twelve, every explanation lived inside its own repository. Answering \"what have you built?\" meant re-explaining from scratch, and the answer drifted a little each time. The scattered facts needed to be collected once into a page that does not move.",
+      "work": "Rather than writing the site directly, the six-agent team that would build it was designed first. All six are AI agents. Each role's authority and prohibitions are written into its agent definition file, and repeated procedures were split out into skills. Project data was frozen into one set of JSON files so that the copy and the implementation read the same facts.",
+      "structure": "The architecture agent fixes the page structure and the copy slots. The research agent reads the original repositories and records a source file path next to every value. The copy agent writes only from those facts, and the build agent handles the build and the deploy. The privacy reviewer is the gatekeeper and holds a deploy veto, running once before any copy is written and once more right before push. A QA agent checks links, responsiveness, and data-to-screen consistency last.",
+      "result": "This page is the output. A new project is added by dropping in one JSON file, and no project name appears in a component. The source goes to a public repository, but the intermediate working files are excluded — the list of what must not be published is itself sensitive."
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "public",
+  "featured": false,
+  "updated": "2026-09-16"
+}

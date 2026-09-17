@@ -1,0 +1,145 @@
+{
+  "slug": "fantasy-epl",
+  "order": 2,
+  "group": "agent-systems",
+  "title": {
+    "ko": "Fantasy EPL 자동화 하네스",
+    "en": "Fantasy EPL Automation Harness"
+  },
+  "tagline": {
+    "ko": "8인 에이전트가 매 게임위크의 이적·라인업·주장·칩을 스스로 결정한다",
+    "en": "Eight agents decide each gameweek's transfers, lineup, captain, and chips."
+  },
+  "role": {
+    "ko": "전체 설계 · 운영",
+    "en": "End-to-end design and operation"
+  },
+  "status": "active",
+  "period": {
+    "start": "2026-08",
+    "end": null
+  },
+  "stack": [
+    "Claude Code",
+    "Python",
+    "FPL Public API",
+    "Telegram Bot API",
+    "Windows Task Scheduler"
+  ],
+  "agent_team": {
+    "count": 8,
+    "members": [
+      {
+        "name": {
+          "ko": "fpl-scout",
+          "en": "fpl-scout"
+        },
+        "role": {
+          "ko": "공식 API 수집·검증",
+          "en": "Collects and validates official API data"
+        }
+      },
+      {
+        "name": {
+          "ko": "fpl-fixture-analyst",
+          "en": "fpl-fixture-analyst"
+        },
+        "role": {
+          "ko": "6게임위크 일정 난이도, DGW/BGW",
+          "en": "Six-gameweek fixture difficulty, double and blank gameweeks"
+        }
+      },
+      {
+        "name": {
+          "ko": "fpl-player-analyst",
+          "en": "fpl-player-analyst"
+        },
+        "role": {
+          "ko": "per-90 선수 가치 (xGI/xGC)",
+          "en": "Per-90 player value from expected goal involvement and goals conceded"
+        }
+      },
+      {
+        "name": {
+          "ko": "fpl-rival-analyst",
+          "en": "fpl-rival-analyst"
+        },
+        "role": {
+          "ko": "H2H 상대 스쿼드, 실효 소유율",
+          "en": "Head-to-head opponent squads and effective ownership"
+        }
+      },
+      {
+        "name": {
+          "ko": "fpl-squad-optimizer",
+          "en": "fpl-squad-optimizer"
+        },
+        "role": {
+          "ko": "기대값 최대 스쿼드 생성",
+          "en": "Builds the expected-value-maximising squad"
+        }
+      },
+      {
+        "name": {
+          "ko": "fpl-strategist",
+          "en": "fpl-strategist"
+        },
+        "role": {
+          "ko": "옵티마이저 결과의 적대적 검증",
+          "en": "Adversarially verifies whatever the optimizer proposes"
+        }
+      },
+      {
+        "name": {
+          "ko": "fpl-executor",
+          "en": "fpl-executor"
+        },
+        "role": {
+          "ko": "브라우저로 실제 사이트에 입력",
+          "en": "Enters the squad on the live site through a browser"
+        }
+      },
+      {
+        "name": {
+          "ko": "fpl-retrospective",
+          "en": "fpl-retrospective"
+        },
+        "role": {
+          "ko": "사후 채점 — 운과 프로세스 오류를 분리",
+          "en": "Scores past decisions, separating luck from process error"
+        }
+      }
+    ]
+  },
+  "highlights": {
+    "ko": [
+      "생성-검증 루프 — 옵티마이저가 낸 안을 전략가가 항목별 PASS/FAIL로 재검증해야 통과",
+      "실행 전 두 개의 하드 게이트(PREFLIGHT A~G, Gate 2)를 숫자로 채워야 진행",
+      "학습 원장 LESSONS.md — 규칙 L1~L33을 매 회고마다 백테스트해 폐기·재작성 (GW4 회고에서 27→23개)"
+    ],
+    "en": [
+      "Generate-then-verify loop — the optimizer's squad only ships after the strategist re-checks it item by item with a PASS/FAIL.",
+      "Two hard gates before execution (PREFLIGHT A–G, Gate 2); each has to be filled in with actual numbers to proceed.",
+      "LESSONS.md as a learning ledger — rules L1–L33 are backtested at every retrospective and retired or rewritten (27 → 23 after the GW4 review)."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "판타지 프리미어리그는 매 게임위크마다 이적, 라인업, 주장, 칩 사용을 정해야 합니다. 감으로 정하면 판단 근거가 매번 달라지고, 결과가 나쁠 때 운 때문인지 판단이 틀린 것인지 분리가 안 됩니다. 같은 실수를 반복하고도 반복한 줄 모르는 상태가 됩니다.",
+      "work": "결정 과정을 8개 역할로 쪼개 각각 에이전트에게 맡겼습니다. 팀원은 전부 AI 에이전트입니다. 핵심은 한 에이전트가 낸 결론을 다른 에이전트가 반드시 반박하게 만든 것입니다. 실행 직전에는 두 개의 하드 게이트(PREFLIGHT A~G, Gate 2)를 두어 근거 숫자를 채우지 못하면 진행되지 않습니다. 이 저장소는 Apache-2.0 라이선스의 revfactory/harness를 클론해 시작했고, 상위 프로젝트 자산은 출처와 라이선스를 표기합니다.",
+      "structure": "8인 전원이 기능 역할이고 별도의 오케스트레이터를 두지 않았습니다. 공식 API 수집·검증, 6게임위크 일정 난이도, per-90 선수 가치(xGI/xGC), H2H 상대 스쿼드 분석이 앞단을 맡고, 옵티마이저가 기대값 최대 스쿼드를 생성합니다. 전략가가 그 결과를 항목별 PASS/FAIL로 재검증하고, 통과한 안만 실행 역할이 실제 사이트에 입력합니다. 회고 역할은 결과를 사후 채점해 운과 프로세스 오류를 분리합니다.",
+      "result": "2026년 8월부터 매 게임위크 돌고 있습니다. 회고에서 나온 규칙은 LESSONS.md에 L1~L33으로 쌓이고, 매 회고마다 백테스트해 통하지 않는 규칙을 폐기합니다(GW4 회고에서 27개 → 23개). 리그 순위와 점수는 이 페이지에서 성과로 주장하지 않습니다."
+    },
+    "en": {
+      "problem": "Fantasy Premier League forces a decision every gameweek: transfers, lineup, captain, chips. Decided by feel, the reasoning changes week to week, and a bad result cannot be separated into bad luck versus a bad call. You repeat the same mistake without noticing you repeated it.",
+      "work": "The decision was split into eight roles, each assigned to an agent. Every member of the team is an AI agent, not a person. The point of the split is that one agent's conclusion has to be attacked by another before it counts. Two hard gates sit in front of execution (PREFLIGHT A–G, Gate 2) and will not pass until the supporting numbers are filled in. The repository began as a clone of revfactory/harness (Apache-2.0); assets from that upstream project are credited with their license.",
+      "structure": "All eight are functional roles — there is no orchestrator. The front half collects and validates the official API, scores six gameweeks of fixture difficulty, values players per 90 minutes (xGI/xGC), and reads head-to-head rivals' squads. The optimizer generates the highest-expected-value squad, the strategist re-checks it item by item with a PASS/FAIL, and only a cleared squad goes to the executor, which enters it on the actual site. A retrospective role grades the outcome afterwards and separates luck from process error.",
+      "result": "It has run every gameweek since August 2026. Rules that come out of the retrospectives accumulate in LESSONS.md as L1–L33, and each retrospective backtests them and discards the ones that no longer hold (27 → 23 after the GW4 review). League rank and points are not claimed here as a result."
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "public",
+  "featured": false,
+  "updated": "2026-09-16"
+}

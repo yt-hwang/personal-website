@@ -1,0 +1,115 @@
+{
+  "slug": "financial-manager",
+  "order": 4,
+  "group": "agent-systems",
+  "title": {
+    "ko": "Personal Financial Manager",
+    "en": "Personal Financial Manager"
+  },
+  "tagline": {
+    "ko": "5인 투자위원회가 규칙 기반으로 배분·디리스킹·세금·분할매수를 집행한다",
+    "en": "A five-member investment committee that executes allocation, de-risking, tax, and staged buying by rule."
+  },
+  "role": {
+    "ko": "전체 설계 · 운영",
+    "en": "End-to-end design and operation"
+  },
+  "status": "active",
+  "period": {
+    "start": "2026-07",
+    "end": null
+  },
+  "stack": [
+    "Claude Code",
+    "Python",
+    "브라우저 자동화",
+    "Telegram Bot API",
+    "Markdown as database"
+  ],
+  "agent_team": {
+    "count": 5,
+    "members": [
+      {
+        "name": {
+          "ko": "위원장 (CIO)",
+          "en": "Chair (CIO)"
+        },
+        "role": {
+          "ko": "오케스트레이터 — 위원회 소집, 최종 결정",
+          "en": "Orchestrator — convenes the committee, makes the final call"
+        }
+      },
+      {
+        "name": {
+          "ko": "포트폴리오 전략가",
+          "en": "Portfolio Strategist"
+        },
+        "role": {
+          "ko": "코어-새틀라이트 목표 배분, 드리프트 계산",
+          "en": "Core-satellite target allocation and drift"
+        }
+      },
+      {
+        "name": {
+          "ko": "세금 전략가",
+          "en": "Tax Strategist"
+        },
+        "role": {
+          "ko": "집중주 언와인드, 손실 상계, lot 단위 매도 선택",
+          "en": "Concentrated-position unwind, loss harvesting, lot-level sell selection"
+        }
+      },
+      {
+        "name": {
+          "ko": "퀀트 엔지니어",
+          "en": "Quant Engineer"
+        },
+        "role": {
+          "ko": "분할 매수 스케줄의 수학적 검증",
+          "en": "Mathematical validation of the dollar-cost-averaging schedule"
+        }
+      },
+      {
+        "name": {
+          "ko": "리스크 매니저",
+          "en": "Risk Manager"
+        },
+        "role": {
+          "ko": "게이트키퍼 — 유일하게 집행 보류를 선언할 수 있는 역할",
+          "en": "Gatekeeper — the only role that can halt execution"
+        }
+      }
+    ]
+  },
+  "highlights": {
+    "ko": [
+      "컨텍스트 확인 → 데이터 인입 → 전문가 병렬 초안 → 리스크 게이트 순으로 위원회가 소집됨",
+      "게이트키퍼 패턴 — 어떤 안도 리스크 매니저를 통과하지 못하면 집행되지 않음",
+      "매일 오전 7시(ET) 뉴스와 자산 영향 브리핑 자동 발송"
+    ],
+    "en": [
+      "The committee convenes in a fixed order — context check, data intake, parallel specialist drafts, then the risk gate.",
+      "Gatekeeper pattern — no proposal executes unless the risk manager clears it.",
+      "A daily 7am ET briefing on the news and what it means for the portfolio."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "",
+      "work": "",
+      "structure": "",
+      "result": ""
+    },
+    "en": {
+      "problem": "",
+      "work": "",
+      "structure": "",
+      "result": ""
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "limited",
+  "featured": false,
+  "updated": "2026-09-16"
+}

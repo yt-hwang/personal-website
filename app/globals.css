@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+/*
+ * 색은 전부 여기 토큰으로만 정의한다. 컴포넌트에서 색 리터럴을 쓰지 않는다.
+ * 라이트(:root) / 시스템 다크(prefers-color-scheme) / 명시 다크([data-theme="dark"]) 3곳 모두 정의한다.
+ */
+
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f1f1ee;
+  --border: #e0dfd9;
+  --border-strong: #cbc9c1;
+  --text: #16181d;
+  --text-muted: #565b63;
+  --text-subtle: #676c74;
+  --accent: #1c5a86;
+  --accent-hover: #164a6f;
+  --accent-on: #ffffff;
+  --accent-weak: #e7f0f7;
+  --accent-weak-text: #14465f;
+  --chip-bg: #f1f1ee;
+  --chip-text: #4b5057;
+  --badge-live-bg: #e3f1e7;
+  --badge-live-text: #1f5d36;
+  --badge-active-bg: #e7f0f7;
+  --badge-active-text: #14465f;
+  --badge-planning-bg: #f4eee1;
+  --badge-planning-text: #6b5420;
+  --badge-limited-bg: #f1f1ee;
+  --badge-limited-text: #646971;
+  --focus: #1c5a86;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1013;
+    --surface: #16191e;
+    --surface-2: #1c2026;
+    --border: #282d35;
+    --border-strong: #3a414b;
+    --text: #e9ebee;
+    --text-muted: #a3aab3;
+    --text-subtle: #868d96;
+    --accent: #8cc0e2;
+    --accent-hover: #a8d1ec;
+    --accent-on: #0e1013;
+    --accent-weak: #17242d;
+    --accent-weak-text: #a8d1ec;
+    --chip-bg: #1c2026;
+    --chip-text: #aab1ba;
+    --badge-live-bg: #16241b;
+    --badge-live-text: #8fce9f;
+    --badge-active-bg: #17242d;
+    --badge-active-text: #a8d1ec;
+    --badge-planning-bg: #262015;
+    --badge-planning-text: #d9bb77;
+    --badge-limited-bg: #1c2026;
+    --badge-limited-text: #99a0a9;
+    --focus: #8cc0e2;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0e1013;
+  --surface: #16191e;
+  --surface-2: #1c2026;
+  --border: #282d35;
+  --border-strong: #3a414b;
+  --text: #e9ebee;
+  --text-muted: #a3aab3;
+  --text-subtle: #868d96;
+  --accent: #8cc0e2;
+  --accent-hover: #a8d1ec;
+  --accent-on: #0e1013;
+  --accent-weak: #17242d;
+  --accent-weak-text: #a8d1ec;
+  --chip-bg: #1c2026;
+  --chip-text: #aab1ba;
+  --badge-live-bg: #16241b;
+  --badge-live-text: #8fce9f;
+  --badge-active-bg: #17242d;
+  --badge-active-text: #a8d1ec;
+  --badge-planning-bg: #262015;
+  --badge-planning-text: #d9bb77;
+  --badge-limited-bg: #1c2026;
+  --badge-limited-text: #99a0a9;
+  --focus: #8cc0e2;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border-token: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-on: var(--accent-on);
+  --color-accent-weak: var(--accent-weak);
+  --color-accent-weak-text: var(--accent-weak-text);
+  --color-chip-bg: var(--chip-bg);
+  --color-chip-text: var(--chip-text);
+  --color-focus: var(--focus);
+
+  --font-sans: var(--font-latin), var(--font-hangul), ui-sans-serif, system-ui,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background-color: var(--accent-weak);
+  color: var(--accent-weak-text);
+}
+
+/* 넓은 요소는 자기 자신만 가로 스크롤한다 */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}

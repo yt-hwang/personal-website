@@ -1,0 +1,37 @@
+# 하네스 중간 산출물 — 공개 저장소에 초안을 올리지 않는다
+_workspace/
+_workspace_prev/
+
+# 비밀
+.env
+.env.*
+!.env.example
+*.local.json
+*token*
+*secret*
+credentials*
+
+# 빌드
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Next.js 빌드 산출물 / 도구
+/.next/
+/out/
+/build
+next-env.d.ts
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# 일회성 마이그레이션 스크립트 — 금칙어 목록을 코드에 담고 있어 공개하지 않는다
+ops/

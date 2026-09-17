@@ -1,0 +1,76 @@
+{
+  "slug": "bible-reading",
+  "order": 8,
+  "group": "products",
+  "title": {
+    "ko": "오늘의 말씀",
+    "en": "Today's Word"
+  },
+  "tagline": {
+    "ko": "친구들과 같은 페이지를 펴고 오늘 읽었는지 서로 확인하는 성경 통독 앱",
+    "en": "A Bible-reading app where a small group opens the same page and sees whether everyone read today."
+  },
+  "role": {
+    "ko": "기획 · 개발 · 운영",
+    "en": "Product, development, and operation"
+  },
+  "status": "live",
+  "period": {
+    "start": "2026",
+    "end": null
+  },
+  "stack": [
+    "Next.js 16 (App Router)",
+    "TypeScript",
+    "React 19",
+    "Tailwind CSS v4",
+    "Supabase (Postgres/Auth)",
+    "TanStack Query",
+    "web-push",
+    "Vercel"
+  ],
+  "agent_team": {
+    "count": 0,
+    "members": []
+  },
+  "highlights": {
+    "ko": [
+      "구약·신약·전체 × 5·15·30·60분 목표로 통독 스케줄을 자동 생성",
+      "초대 링크 기반 방 — 같은 방 사람끼리 진도와 하이라이트(4색)를 공유",
+      "매일 알림 cron, 놓친 날 보기, 전원 완독 시 스티커"
+    ],
+    "en": [
+      "Reading plans are generated automatically from a scope (Old Testament, New Testament, or the whole Bible) and a daily target of 5, 15, 30, or 60 minutes.",
+      "Rooms are joined by invite link; people in the same room see each other's progress and four-color highlights.",
+      "A daily reminder cron, a catch-up view for missed days, and a sticker once everyone in the room finishes."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "성경 통독은 혼자 하면 대개 며칠 만에 멈춥니다. 같이 하려고 해도 각자 진도가 달라 오늘 어디까지 읽었는지를 매번 물어야 하고, 그 확인이 번거로워 흐지부지됩니다. 필요한 건 계획표가 아니라 오늘 읽었는지가 서로 보이는 상태였습니다.",
+      "work": "범위(구약·신약·전체)와 하루 목표 시간(5·15·30·60분)을 고르면 통독 스케줄이 자동으로 만들어집니다. 초대 링크로 들어온 사람들이 한 방을 이루고, 같은 방 안에서 서로의 진도와 4색 하이라이트가 보입니다. 놓친 날을 따로 볼 수 있게 하고, 방 전원이 완독하면 스티커가 붙습니다.",
+      "structure": "Next.js 16 App Router / React 19 / TypeScript에 Tailwind CSS v4를 얹고 Vercel에 배포했습니다. 계정과 데이터는 Supabase(Postgres·Auth)가 맡고, 서버 상태는 TanStack Query로 다룹니다. 매일 알림은 cron이 web-push로 보냅니다. 방과 기록은 로그인한 사람만 접근할 수 있습니다.",
+      "result": "배포돼 운영 중입니다. 참여자가 쓴 묵상 노트와 하이라이트는 제3자의 기록이므로 어떤 형태로도 인용하지 않고, 화면 캡처는 데모 방으로만 촬영합니다. 운영 중인 방 수와 참여자 수는 확인하지 않아 쓰지 않습니다."
+    },
+    "en": {
+      "problem": "Reading through the Bible alone usually stops within a few days. Doing it with other people runs into a different problem: everyone is at a different chapter, so someone has to keep asking how far the others got, and the asking is what kills it. What was needed was not another plan but a state in which today's reading is simply visible to the group.",
+      "work": "Pick a scope — Old Testament, New Testament, or the whole Bible — and a daily target of 5, 15, 30, or 60 minutes, and the schedule is generated. People who join through an invite link form a room, and inside that room they see each other's progress and four-color highlights. Missed days get their own catch-up view, and when everyone in the room finishes, the room gets a sticker.",
+      "structure": "Next.js 16 with the App Router, React 19, TypeScript, and Tailwind CSS v4, deployed on Vercel. Accounts and data run on Supabase (Postgres and Auth); server state is handled with TanStack Query. A daily cron sends reminders over web-push. Rooms and records are reachable only after signing in.",
+      "result": "It is deployed and in use. Reflection notes and highlights written by members are other people's records, so they are never quoted here in any form, and screenshots are taken only from a demo room. The number of active rooms and members has not been verified, so it is not stated."
+    }
+  },
+  "links": [
+    {
+      "label": {
+        "ko": "앱 열기",
+        "en": "Open the app"
+      },
+      "url": "https://bible-ilzza.vercel.app/rooms",
+      "kind": "app"
+    }
+  ],
+  "assets": [],
+  "visibility": "public",
+  "featured": false,
+  "updated": "2026-09-16"
+}

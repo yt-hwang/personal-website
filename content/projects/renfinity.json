@@ -1,0 +1,116 @@
+{
+  "slug": "renfinity",
+  "order": 1,
+  "group": "agent-systems",
+  "title": {
+    "ko": "Renfinity",
+    "en": "Renfinity"
+  },
+  "tagline": {
+    "ko": "알고리즘 트레이딩 시스템을 5인 AI 에이전트 팀이 운영한다",
+    "en": "A five-agent AI team runs the day-to-day of an algorithmic trading system."
+  },
+  "role": {
+    "ko": "PM · 아키텍처 · 하네스 설계",
+    "en": "PM · architecture · harness design"
+  },
+  "status": "active",
+  "period": {
+    "start": "2026-04",
+    "end": null
+  },
+  "stack": [
+    "Claude Code",
+    "C# / NinjaTrader 8",
+    "Python",
+    "Optuna",
+    "Redis",
+    "Telegram Bot API"
+  ],
+  "agent_team": {
+    "count": 5,
+    "members": [
+      {
+        "name": {
+          "ko": "오케스트레이터",
+          "en": "Orchestrator"
+        },
+        "role": {
+          "ko": "팀 조율 · 대외 단일 창구",
+          "en": "Coordination and the single outward channel"
+        }
+      },
+      {
+        "name": {
+          "ko": "전략",
+          "en": "Strategy"
+        },
+        "role": {
+          "ko": "엣지 분석, 아웃오브샘플 검증",
+          "en": "Edge analysis and out-of-sample validation"
+        }
+      },
+      {
+        "name": {
+          "ko": "검증",
+          "en": "Validation"
+        },
+        "role": {
+          "ko": "시뮬레이션 · 플레이백 테스트",
+          "en": "Simulation and playback testing"
+        }
+      },
+      {
+        "name": {
+          "ko": "기록",
+          "en": "Records"
+        },
+        "role": {
+          "ko": "문서 · PR · 이슈 트래킹",
+          "en": "Documentation, pull requests, issue tracking"
+        }
+      },
+      {
+        "name": {
+          "ko": "모니터링",
+          "en": "Monitoring"
+        },
+        "role": {
+          "ko": "24시간 포지션 감시",
+          "en": "Round-the-clock position surveillance"
+        }
+      }
+    ]
+  },
+  "highlights": {
+    "ko": [
+      "약속이 아니라 훅으로 강제 — src 동결, 문서 표준, 채널 가드 등 5종이 fail-closed로 동작",
+      "15개 자동 로딩 규칙(증거 기반 주장, 검증 완결성, 자율 실행)으로 에이전트 행동을 제약",
+      "research/docs 3단계 파이프라인(New → In Review → Final)으로 의사결정 이력을 관리"
+    ],
+    "en": [
+      "Rules are enforced by hooks rather than by instruction — five fail-closed guards cover source freeze, document standards, and channel access.",
+      "Fifteen auto-loaded rules constrain how agents behave: evidence-backed claims, complete verification, limits on autonomous execution.",
+      "A three-stage document pipeline (New → In Review → Final) keeps the decision record in one place."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "알고리즘 트레이딩은 전략 개발, 검증, 실행, 감시가 동시에 돌아가야 하는 일입니다. 사람 손으로만 하면 바쁜 구간에서 검증을 건너뛰거나 감시가 끊깁니다. 에이전트에게 맡겨도 같은 문제가 생겼습니다 — 규칙을 지키겠다고 답하고는 지키지 않습니다.",
+      "work": "회사에서 PM으로 일하며 에이전트 운영 체계(하네스)를 설계했습니다. 규칙을 문서로 부탁하는 대신 훅으로 강제했습니다. 소스 동결, 문서 표준, 채널 가드 등 5종의 가드가 fail-closed로 동작해, 조건을 만족하지 못하면 작업 자체가 진행되지 않습니다. 여기에 15개 자동 로딩 규칙(증거 기반 주장, 검증 완결성, 자율 실행 범위)을 얹어 모든 세션이 같은 제약에서 시작하도록 했습니다.",
+      "structure": "팀은 5인이고 전원 AI 에이전트입니다. 오케스트레이터 1인이 대외 단일 창구를 맡고, 전략·검증·기록·모니터링 4개 역할이 각자 영역을 담당합니다. 전략 역할이 낸 안은 검증 역할의 별도 테스트를 통과하기 전에는 실행 단계로 넘어가지 않습니다. 기록 역할은 3단계 문서 파이프라인(New → In Review → Final)으로 모든 의사결정을 남기고, 모니터링 역할이 운영 중인 포지션을 상시 감시합니다.",
+      "result": "2026년 4월부터 운영 중이고 지금도 돌아갑니다. 전략 로직, 파라미터, 성과 수치는 회사 자산이므로 이 페이지에 쓰지 않습니다. 공개하는 것은 일하는 방식의 구조뿐입니다."
+    },
+    "en": {
+      "problem": "Algorithmic trading needs strategy work, verification, execution, and monitoring to run at the same time. Done by hand, the busy stretches are exactly where verification gets skipped and monitoring goes dark. Handing it to agents reproduced the same failure: an agent answers that it will follow the rule, then does not.",
+      "work": "I work as PM on this system and designed the harness the agents run under. Instead of asking for compliance in a document, the rules are enforced by hooks. Five fail-closed guards — source freeze, document standards, and channel access among them — stop the work outright when a condition is not met. Fifteen auto-loaded rules sit on top of that (evidence-backed claims, complete verification, limits on autonomous execution), so every session starts under the same constraints.",
+      "structure": "The team is five agents, all of them AI. One orchestrator is the single point of contact; four roles cover strategy, verification, recordkeeping, and monitoring. Nothing from the strategy role reaches execution until the verification role's separate tests clear it. The recordkeeping role moves every decision through a three-stage pipeline (New → In Review → Final), and the monitoring role watches live positions around the clock.",
+      "result": "It has been running since April 2026 and still is. Strategy logic, parameters, and performance figures are company assets and are not published here. What is public is the structure of how the work gets done."
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "public",
+  "featured": false,
+  "updated": "2026-09-16"
+}

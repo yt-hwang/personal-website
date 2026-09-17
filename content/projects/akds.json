@@ -1,0 +1,62 @@
+{
+  "slug": "akds",
+  "order": 12,
+  "group": "community",
+  "title": {
+    "ko": "Atlanta Korean Data Science Community",
+    "en": "Atlanta Korean Data Science Community"
+  },
+  "tagline": {
+    "ko": "가르치는 자리가 아니라, 써보고 배운 걸 공유하는 자리",
+    "en": "Not a place to be taught — a place to share what we actually tried."
+  },
+  "role": {
+    "ko": "운영자 · 발표자",
+    "en": "Organizer and speaker"
+  },
+  "status": "active",
+  "period": {
+    "start": "2024",
+    "end": null
+  },
+  "stack": [],
+  "agent_team": {
+    "count": 0,
+    "members": []
+  },
+  "highlights": {
+    "ko": [
+      "2년째 월 1회 정기 세션 운영",
+      "2026-05 '하네스 엔지니어링: AI 에이전트를 길들이고 통제하는 시스템 구축' 핸즈온 발표",
+      "2026-08 '클로드 코드 × 텔레그램: 나만의 AI 에이전트 팀 만들기' 23슬라이드 발표",
+      "외부 연사 초청 — 보안, UX 디자인",
+      "Kaggle 1기 운영 (2팀 × 5명)"
+    ],
+    "en": [
+      "Monthly sessions, running into a second year.",
+      "May 2026 — a hands-on talk, \"Harness Engineering: building systems that tame and control AI agents.\"",
+      "August 2026 — a 23-slide talk, \"Claude Code × Telegram: building your own AI agent team.\"",
+      "Outside speakers invited, covering security and UX design.",
+      "Ran the first Kaggle cohort with two teams of five."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "애틀랜타에서 한국어로 데이터·AI 이야기를 할 자리가 없었습니다. 온라인 자료는 많지만 실제로 써보니 어땠는지를 말해주는 사람은 드뭅니다. 가르치는 자리로 만들면 발표자 몇 명만 준비하다 지치고, 그런 모임은 대개 몇 달 만에 멈춥니다.",
+      "work": "2024년부터 Atlanta Korean Data Science Community를 월 1회 정기 세션으로 운영하고 있습니다. 규칙은 하나입니다 — 가르치는 자리가 아니라 각자 써보고 배운 걸 공유하는 자리로 둡니다. 직접 발표도 맡아, 2026년 5월에는 '하네스 엔지니어링: AI 에이전트를 길들이고 통제하는 시스템 구축'을 핸즈온으로, 8월에는 '클로드 코드 × 텔레그램: 나만의 AI 에이전트 팀 만들기'를 23슬라이드로 진행했습니다.",
+      "structure": "매달 한 번, 최소 한 명이 직접 해본 것을 들고 옵니다. 커뮤니티 안에서만 돌면 주제가 좁아지므로 외부 연사를 초청해 보안, UX 디자인 같은 인접 분야를 채웠습니다. 듣는 데서 직접 해보는 데로 넘어가는 경로로 Kaggle 1기를 2팀 × 5명으로 따로 운영했습니다.",
+      "result": "2년째 끊기지 않고 이어지고 있습니다. 이 사이트에서 말하는 에이전트 시스템 이야기는 2026년 5월과 8월 세션에서 이미 커뮤니티 앞에 꺼내 놓은 주제입니다. 멤버 수와 참가자 명단은 공개 범위가 확정되지 않아 쓰지 않습니다."
+    },
+    "en": {
+      "problem": "There was no place in Atlanta to talk about data and AI in Korean. Online material is abundant, but almost nobody says what it was actually like to use the thing. Build it as a teaching venue and the same few presenters burn out preparing — that kind of group usually stops within a few months.",
+      "work": "Since 2024 I have run the Atlanta Korean Data Science Community as a monthly session. There is one rule: it is not a place to be taught, it is a place to share what each person tried. I also present. In May 2026 the session was a hands-on talk, \"Harness Engineering: building systems that tame and control AI agents\"; in August 2026 it was a 23-slide talk, \"Claude Code × Telegram: building your own AI agent team.\"",
+      "structure": "Once a month, at least one person brings something they actually built. To keep the topics from narrowing to whoever is in the room, outside speakers are invited — security and UX design so far. A first Kaggle cohort, two teams of five, was run separately as a path from listening to doing.",
+      "result": "It is now in its second year without a gap. The agent-system work described across this site was first put in front of the community at the May and August 2026 sessions. Member counts and participant lists are not published, since what may be shared has not been settled."
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "public",
+  "featured": true,
+  "updated": "2026-09-16"
+}

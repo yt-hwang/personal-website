@@ -1,0 +1,130 @@
+{
+  "slug": "training-coach",
+  "order": 3,
+  "group": "agent-systems",
+  "title": {
+    "ko": "Personal Training Coach",
+    "en": "Personal Training Coach"
+  },
+  "tagline": {
+    "ko": "러닝·근력·HYROX·주짓수를 5인 코치팀이 하나의 주간 스케줄로 통합한다",
+    "en": "A five-coach agent team folds running, lifting, HYROX, and jiu-jitsu into one weekly schedule."
+  },
+  "role": {
+    "ko": "전체 설계 · 개발 · 운영",
+    "en": "Design, development, and operation"
+  },
+  "status": "active",
+  "period": {
+    "start": "2026-07",
+    "end": null
+  },
+  "stack": [
+    "Claude Code",
+    "Python",
+    "Streamlit",
+    "Plotly",
+    "SQLite",
+    "Strava API (OAuth2)",
+    "Open-Meteo API",
+    "Anthropic API",
+    "Telegram Bot API"
+  ],
+  "agent_team": {
+    "count": 5,
+    "members": [
+      {
+        "name": {
+          "ko": "헤드코치",
+          "en": "Head Coach"
+        },
+        "role": {
+          "ko": "오케스트레이터 — 최종 판단, 주간 스케줄 조립",
+          "en": "Orchestrator — final calls, assembles the weekly schedule"
+        }
+      },
+      {
+        "name": {
+          "ko": "러닝코치",
+          "en": "Running Coach"
+        },
+        "role": {
+          "ko": "러닝 세션, Strava 기반 러닝 체력 판독",
+          "en": "Run sessions and run-fitness readout from Strava"
+        }
+      },
+      {
+        "name": {
+          "ko": "근력코치",
+          "en": "Strength Coach"
+        },
+        "role": {
+          "ko": "리프팅 프로그램, 재적응",
+          "en": "Lifting program and re-acclimation"
+        }
+      },
+      {
+        "name": {
+          "ko": "HYROX코치",
+          "en": "HYROX Coach"
+        },
+        "role": {
+          "ko": "8개 스테이션, compromised run, 시뮬레이션",
+          "en": "Eight stations, compromised runs, race simulations"
+        }
+      },
+      {
+        "name": {
+          "ko": "회복매니저",
+          "en": "Recovery Manager"
+        },
+        "role": {
+          "ko": "총부하 조정, 디로드 — 유일하게 '오늘은 쉬어'를 말할 수 있는 역할",
+          "en": "Total-load reconciliation and deloads — the only role that can say stop"
+        }
+      }
+    ]
+  },
+  "highlights": {
+    "ko": [
+      "전문 코치 3명이 병렬로 초안을 내고, 회복매니저가 총부하 기준으로 충돌을 조정한 뒤 확정",
+      "Streamlit 7개 화면(페이스 트렌드·경사 분석·날씨 상관·심박 체력·훈련 플래너·AI 코치), 한/영 i18n",
+      "코치별 텔레그램 봇 3개 — 헤드코치만 양방향, 나머지는 단방향"
+    ],
+    "en": [
+      "Three specialist coaches draft in parallel; the recovery manager reconciles the conflicts against total load before the week is final.",
+      "A Streamlit app with seven screens — pace trend, grade analysis, weather correlation, heart-rate fitness, planner, AI coach — in Korean and English.",
+      "Three Telegram bots, one per coach; only the head coach is two-way."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "러닝, 근력, HYROX, 주짓수를 같은 주에 하면 서로 충돌합니다. 종목별 계획은 따로 보면 전부 타당한데, 합치면 특정 요일에 부하가 몰리고 회복 시간이 사라집니다. 종목별 앱은 자기 종목만 보기 때문에 이 충돌을 보지 못합니다.",
+      "work": "종목별 코치를 각각 에이전트로 두고, 이들의 계획을 하나의 주간 스케줄로 합치는 과정 자체를 시스템으로 만들었습니다. 코치 5인은 전부 AI 에이전트입니다. 판단에 쓰는 러닝 데이터는 Strava에서 자동으로 가져오고, 날씨와 경사를 함께 보정합니다. Streamlit으로 7개 화면을 만들어 코치가 무엇을 보고 판단했는지 확인할 수 있게 했고, 한국어와 영어를 모두 지원합니다.",
+      "structure": "헤드코치가 오케스트레이터로 최종 조립을 맡습니다. 러닝·근력·HYROX 코치 3인이 병렬로 초안을 내고, 회복매니저가 총부하 기준으로 충돌을 조정합니다. 회복매니저는 유일하게 오늘은 쉬라고 선언할 수 있는 역할이고, 다른 코치가 이 판단을 뒤집지 못합니다. 코치별 텔레그램 봇 3개가 붙어 있으며 헤드코치만 양방향입니다.",
+      "result": "2026년 7월부터 주간 스케줄을 계속 만들어내고 있습니다. 개인 훈련 기록과 신체 데이터는 이 사이트에 쓰지 않고, 같은 이유로 저장소도 링크하지 않습니다. 공개하는 것은 코치 역할 분담과 조정 방식의 구조입니다."
+    },
+    "en": {
+      "problem": "Running, lifting, HYROX, and jiu-jitsu in the same week collide. Each sport's plan is sound on its own, but stacked together they pile load onto the same days and leave no room to recover. A single-sport app cannot see the collision because it only looks at its own sport.",
+      "work": "Each sport got its own coach agent, and the act of merging their plans into one weekly schedule became the system itself. All five coaches are AI agents. Running data is pulled from Strava automatically and adjusted for weather and grade. Seven Streamlit screens expose what each coach actually looked at before deciding, in Korean and English.",
+      "structure": "The head coach is the orchestrator and assembles the final week. The running, strength, and HYROX coaches draft in parallel, and the recovery manager reconciles the conflicts against total load. The recovery manager is the only role that can call a rest day, and no other coach can override that call. Three Telegram bots sit on top, one per coach; only the head coach's is two-way.",
+      "result": "It has produced weekly schedules since July 2026. Personal training records and body metrics are not published here, and for the same reason the repository is not linked. What is public is the structure — how the coach roles split, and how their conflicts get reconciled."
+    }
+  },
+  "links": [],
+  "assets": [
+    {
+      "path": "Personal-Training-Coach/_coach/assets/coach-avatars/team-group.jpg",
+      "kind": "avatar",
+      "cleared": false
+    },
+    {
+      "path": "Personal-Training-Coach/_coach/assets/coach-avatars/team-logo.jpg",
+      "kind": "logo",
+      "cleared": false
+    }
+  ],
+  "visibility": "public",
+  "featured": false,
+  "updated": "2026-09-16"
+}

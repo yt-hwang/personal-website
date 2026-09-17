@@ -1,0 +1,85 @@
+{
+  "slug": "humor-test",
+  "order": 7,
+  "group": "products",
+  "title": {
+    "ko": "개그유형 테스트",
+    "en": "Humor Type Test"
+  },
+  "tagline": {
+    "ko": "16가지 개그 유형 중 내 유형을 찾고 결과를 이미지로 공유하는 테스트",
+    "en": "Find which of 16 humor types is yours, then share the result as an image."
+  },
+  "role": {
+    "ko": "기획 · 개발 · 운영",
+    "en": "Product, development, and operation"
+  },
+  "status": "live",
+  "period": {
+    "start": "2025-06",
+    "end": null
+  },
+  "stack": [
+    "Next.js 15",
+    "React 19",
+    "TypeScript",
+    "Tailwind CSS",
+    "Supabase (PostgreSQL)",
+    "Vercel Analytics",
+    "html2canvas",
+    "Kakao JavaScript SDK",
+    "Web Share API"
+  ],
+  "agent_team": {
+    "count": 0,
+    "members": []
+  },
+  "highlights": {
+    "ko": [
+      "플랫폼마다 공유 방식을 따로 구현 — 인스타 스토리 9:16 전용 이미지, 트위터 미리보기 카드, 카카오 SDK, 네이티브 공유 API",
+      "결과를 화면 캡처가 아니라 서버에서 OG 이미지로 생성해 링크만으로 미리보기가 뜬다",
+      "방문·결과 분석을 자체 API로 수집해 유형별 분포를 실시간 집계"
+    ],
+    "en": [
+      "Sharing is built per platform — a 9:16 image for Instagram Stories, a Twitter preview card, the Kakao SDK, and the native Web Share API.",
+      "Results render as server-generated OG images instead of screen captures, so a bare link produces the preview.",
+      "Visits and results go through a first-party API that aggregates the type distribution in real time."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "유형 테스트는 결과를 공유하는 순간에 퍼집니다. 그런데 대부분은 결과를 화면 캡처로 공유하게 두거나, 링크를 보내도 미리보기에 아무것도 뜨지 않습니다. 공유 경로에서 끊기면 테스트를 잘 만들어도 혼자 풀고 끝납니다.",
+      "work": "16개 개그 유형과 문항을 만들고, 공유 경로를 플랫폼마다 따로 구현했습니다. 인스타그램 스토리는 9:16 전용 이미지를 별도로 만들고, 트위터는 미리보기 카드, 카카오는 JavaScript SDK, 모바일은 네이티브 공유 API를 씁니다. 결과 이미지는 클라이언트 캡처가 아니라 서버에서 OG 이미지로 생성해, 링크만 보내도 미리보기가 뜹니다.",
+      "structure": "Next.js 15 / React 19 / TypeScript에 Tailwind CSS를 얹고 Vercel에 배포했습니다. 응답과 결과는 Supabase(PostgreSQL)에 저장하고, 방문·결과 로그는 자체 API로 수집해 유형별 분포를 실시간 집계합니다. 결과 카드 합성에는 html2canvas를, 링크 미리보기에는 서버 OG 렌더링을 씁니다.",
+      "result": "2025년 6월부터 배포돼 지금도 열립니다. 12개 프로젝트 중 저장소가 공개돼 있고 배포도 살아 있는 유일한 건이라, 앱과 코드를 둘 다 열어볼 수 있습니다. 누적 사용자 수는 집계는 하고 있으나 확인하지 않아 여기에 쓰지 않습니다."
+    },
+    "en": {
+      "problem": "A personality-style test spreads at the moment someone shares the result. Most of them leave that moment to a screenshot, or send a link that produces an empty preview. If the sharing path breaks, a good test ends with one person taking it alone.",
+      "work": "Sixteen humor types and their questions were written first, then the sharing path was implemented separately for each platform: a dedicated 9:16 image for Instagram Stories, a preview card for Twitter, the Kakao JavaScript SDK, and the native Web Share API on mobile. The result image is generated server-side as an OG image rather than captured on the client, so a plain link renders its own preview.",
+      "structure": "Next.js 15, React 19, and TypeScript with Tailwind CSS, deployed on Vercel. Answers and results are stored in Supabase (PostgreSQL). Visit and result logs go to a first-party API that aggregates the type distribution in real time. html2canvas composes the result card; server-side OG rendering handles link previews.",
+      "result": "It has been live since June 2025 and still is. Of the twelve projects here it is the only one with both a public repository and a live deployment, so the app and the code can both be opened. Usage totals are being collected but have not been verified, so no number is claimed here."
+    }
+  },
+  "links": [
+    {
+      "label": {
+        "ko": "테스트 해보기",
+        "en": "Take the test"
+      },
+      "url": "https://humor-test.vercel.app",
+      "kind": "app"
+    },
+    {
+      "label": {
+        "ko": "소스 코드",
+        "en": "Source code"
+      },
+      "url": "https://github.com/yt-hwang/Humor_Test",
+      "kind": "repo"
+    }
+  ],
+  "assets": [],
+  "visibility": "public",
+  "featured": false,
+  "updated": "2026-09-16"
+}

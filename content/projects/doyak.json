@@ -1,0 +1,176 @@
+{
+  "slug": "doyak",
+  "order": 5,
+  "group": "agent-systems",
+  "title": {
+    "ko": "도약 (Doyak)",
+    "en": "Doyak"
+  },
+  "tagline": {
+    "ko": "중독자를 곁에 둔 한인 가족과 자녀를 위한 한국어 상호지원 허브",
+    "en": "A Korean-language mutual-support hub for families and children living alongside addiction."
+  },
+  "role": {
+    "ko": "설립자 · 대표",
+    "en": "Founder"
+  },
+  "status": "planning",
+  "period": {
+    "start": "2026-06",
+    "end": null
+  },
+  "stack": [
+    "Claude Code",
+    "정적 HTML/CSS/JS",
+    "Telegram Bot API",
+    "이미지 생성 모델(웹툰 작화)"
+  ],
+  "agent_team": {
+    "count": 11,
+    "members": [
+      {
+        "name": {
+          "ko": "사무국장",
+          "en": "Executive Director"
+        },
+        "role": {
+          "ko": "오케스트레이터",
+          "en": "Orchestrator"
+        }
+      },
+      {
+        "name": {
+          "ko": "기획국장",
+          "en": "Program Director"
+        },
+        "role": {
+          "ko": "프로그램 설계",
+          "en": "Program design"
+        }
+      },
+      {
+        "name": {
+          "ko": "펀딩부장",
+          "en": "Development Lead"
+        },
+        "role": {
+          "ko": "그랜트",
+          "en": "Grants"
+        }
+      },
+      {
+        "name": {
+          "ko": "법무이사",
+          "en": "Legal Counsel"
+        },
+        "role": {
+          "ko": "법률 · 컴플라이언스",
+          "en": "Law and compliance"
+        }
+      },
+      {
+        "name": {
+          "ko": "리서치팀장",
+          "en": "Research Lead"
+        },
+        "role": {
+          "ko": "조사 · 데이터",
+          "en": "Research and data"
+        }
+      },
+      {
+        "name": {
+          "ko": "홍보팀장",
+          "en": "Communications Lead"
+        },
+        "role": {
+          "ko": "이중언어 집필 · PR",
+          "en": "Bilingual writing and public relations"
+        }
+      },
+      {
+        "name": {
+          "ko": "재정실장",
+          "en": "Finance Manager"
+        },
+        "role": {
+          "ko": "예산",
+          "en": "Budget"
+        }
+      },
+      {
+        "name": {
+          "ko": "기술이사",
+          "en": "Technology Lead"
+        },
+        "role": {
+          "ko": "웹 · 앱 · 데이터 보안",
+          "en": "Web, app, data security"
+        }
+      },
+      {
+        "name": {
+          "ko": "디자인실장",
+          "en": "Design Lead"
+        },
+        "role": {
+          "ko": "UX/UI, 접근성",
+          "en": "User experience and accessibility"
+        }
+      },
+      {
+        "name": {
+          "ko": "자문위원",
+          "en": "Clinical Advisor"
+        },
+        "role": {
+          "ko": "중독과학 감수",
+          "en": "Addiction-science review"
+        }
+      },
+      {
+        "name": {
+          "ko": "스토리작가",
+          "en": "Story Writer"
+        },
+        "role": {
+          "ko": "웹툰 스토리 · 콘티",
+          "en": "Webtoon story and storyboards"
+        }
+      }
+    ]
+  },
+  "highlights": {
+    "ko": [
+      "법인 설립을 서두르지 않고 3단계로 설계 — 프로젝트형 운영 → 피스컬 스폰서 → 법인",
+      "폴짝이 웹툰(인스타 카드툰) 1·2화 콘티 확정 + 완성 이미지 18장",
+      "인스타 교육 카드뉴스 1주차 7건 — 중독과학 자문 감수 완료",
+      "웹사이트 v2 전면 재설계 — 한국어 기본 + EN 토글, 상시 위기번호 배너, 접근성 검토 통과"
+    ],
+    "en": [
+      "Incorporation is staged instead of rushed — project-based operation first, then a fiscal sponsor, then a legal entity.",
+      "Storyboards for episodes 1 and 2 of the Poljjagi webtoon are locked, with 18 finished panels.",
+      "A first week of seven educational card-news posts for Instagram, reviewed for addiction-science accuracy.",
+      "Website v2 redesigned end to end — Korean by default with an EN toggle, a permanent crisis-line banner, accessibility review passed."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "미국에 사는 한인 가정에서 가족 중 한 명이 중독을 겪을 때, 남은 가족과 자녀가 한국어로 정보와 연결을 받을 수 있는 곳이 사실상 없습니다. 영어권 자료는 있지만 언어와 문화가 맞지 않고, 한인 커뮤니티 안에서는 이야기를 꺼내는 것 자체가 어렵습니다. 도약은 그 공백을 메우려고 만든 단체입니다.",
+      "work": "설립을 서두르지 않고 3단계로 설계했습니다 — 프로젝트형 운영으로 먼저 실체를 만들고, 피스컬 스폰서를 거쳐, 법인으로 갑니다. 그 사이에 실제로 쓰일 자료를 먼저 만들었습니다. 인스타 카드툰 폴짝이 1·2화 콘티와 완성 이미지 18장, 교육 카드뉴스 1주차 7건, 그리고 한국어 기본에 영어 토글과 상시 위기번호 배너를 둔 웹사이트 v2입니다.",
+      "structure": "운영은 11개 역할로 나뉜 팀이 맡습니다. 팀원은 사람 직원이 아니라 전부 AI 에이전트입니다. 사무국장 역할이 오케스트레이터로 작업을 분배하고, 기획·펀딩·법무·리서치·홍보·재정·기술·디자인·자문·스토리 10개 역할이 각 영역의 초안을 냅니다. 외부로 나가는 콘텐츠는 중독과학 자문 역할의 감수를 거칩니다. 프로그램 참여자나 상담 사례는 이 체계 안에서 다루지 않습니다.",
+      "result": "현재 설립 준비 단계이고 법인은 아직 없습니다. 도메인과 공식 계정이 확정되지 않아 지금 걸 수 있는 공개 링크가 없습니다. 콘텐츠와 웹사이트는 만들어져 있고, 공개 시점에 맞춰 정리하는 중입니다."
+    },
+    "en": {
+      "problem": "When someone in a Korean immigrant family in the US is struggling with addiction, the rest of the family — especially the children — has almost nowhere to turn for information and connection in Korean. English-language resources exist but do not match the language or the culture, and inside the Korean community the subject is hard to raise at all. Doyak was started to close that gap.",
+      "work": "Incorporation is deliberately staged rather than rushed: operate as a project first, move to a fiscal sponsor, then form the legal entity. In the meantime the materials people would actually use came first — storyboards and 18 finished panels for episodes 1 and 2 of the Poljjagi Instagram webtoon, a first week of seven educational card-news posts, and a version 2 website that is Korean by default with an EN toggle and a permanent crisis-line banner.",
+      "structure": "The organization runs on a team of eleven roles. None of them are people on staff; all eleven are AI agents. An executive-director role acts as orchestrator and distributes the work, and ten roles cover program design, funding, legal, research, communications, budget, technology, design, advisory review, and story writing. Anything that goes out publicly passes through the addiction-science advisory role. Program participants and counseling cases are never handled inside this system.",
+      "result": "Doyak is in setup and has no legal entity yet. There is no public link right now because the domain and the official accounts are not settled. The content and the website are built and are being prepared for launch."
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "public",
+  "featured": false,
+  "updated": "2026-09-16"
+}

@@ -1,0 +1,67 @@
+{
+  "slug": "incom",
+  "order": 9,
+  "group": "products",
+  "title": {
+    "ko": "InCom",
+    "en": "InCom"
+  },
+  "tagline": {
+    "ko": "교회 청년부의 셀 출석·새가족 관리를 역할별 권한으로 운영하는 내부 앱",
+    "en": "An internal app for a church young-adult group — small-group attendance and newcomer care, gated by role."
+  },
+  "role": {
+    "ko": "기획 · 개발 · 운영",
+    "en": "Product, development, and operation"
+  },
+  "status": "live",
+  "period": {
+    "start": "2026-02",
+    "end": null
+  },
+  "stack": [
+    "React 19",
+    "Vite 7",
+    "Supabase (Postgres, Auth, RLS)",
+    "Google OAuth",
+    "dnd-kit",
+    "Recharts",
+    "PWA",
+    "Vercel"
+  ],
+  "agent_team": {
+    "count": 0,
+    "members": []
+  },
+  "highlights": {
+    "ko": [
+      "셀장·새가족 리더·목회자 역할별로 보이는 화면과 데이터가 다름 — Supabase RLS로 강제",
+      "모바일 우선 PWA. 홈 화면에 설치해 출석 체크",
+      "주 2회 리마인더 cron"
+    ],
+    "en": [
+      "Group leaders, newcomer leaders, and pastors each see a different screen and a different slice of the data — enforced by Supabase row-level security.",
+      "Mobile-first PWA, installed to the home screen for attendance check-in.",
+      "A twice-weekly reminder cron."
+    ]
+  },
+  "body": {
+    "ko": {
+      "problem": "",
+      "work": "",
+      "structure": "",
+      "result": ""
+    },
+    "en": {
+      "problem": "",
+      "work": "",
+      "structure": "",
+      "result": ""
+    }
+  },
+  "links": [],
+  "assets": [],
+  "visibility": "limited",
+  "featured": false,
+  "updated": "2026-09-16"
+}
