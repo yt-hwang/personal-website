@@ -1,108 +1,79 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f2efe7;
-  --surface: #faf8f2;
-  --surface-2: #e8e3d7;
-  --rule: #d8d2c4;
-  --rule-strong: #857d6c;
-  --ink: #1b1815;
-  --ink-muted: #4c463d;
-  --ink-subtle: #6b6355;
-  --accent: #a33612;
-  --accent-strong: #7f290c;
-  --accent-on: #faf8f2;
-  --accent-soft: #f4e3da;
-  --accent-soft-ink: #8a2e0f;
-  --sig-live: #2f6b41;
-  --sig-active: #8a5510;
-  --sig-planning: #6b6355;
-  --sig-held: #6b6355;
-  --focus: #a33612;
+  --bg: #f0f0e8;
+  --ink: #000000;
+  --ink-soft: #464136;
+  --rule: #cdcabc;
+  --accent: #c03a20;
+  --accent-on: #f0f0e8;
+  --focus: #c03a20;
 }
 
 /*
- * 색은 전부 위 토큰으로만 정의한다. 컴포넌트에서 색 리터럴을 쓰지 않는다.
+ * 팔레트 — `_workspace/09_design_reference.md` 실측값.
+ *   배경 #F0F0E8 (따뜻한 본 화이트) · 글자 #000000 (순수 검정, 회색으로 낮추지 않는다)
+ *   강조 #EA5038 (따뜻한 코랄 레드)
+ *
+ * 강조색만 레퍼런스 값에서 옮겼다. #EA5038 은 #F0F0E8 위에서 **3.21:1** 이라
+ * 본문 글자색으로 쓰면 4.5:1 을 못 넘는다(실측). 색상(hue)을 유지한 채 명도만 내려
+ * `#C03A20` (4.74:1) 으로 쓴다. 다크에서는 배경이 어두워 레퍼런스 계열 그대로 올릴 수 있다.
+ *
+ * 토큰은 7개뿐이다. 이전 팔레트의 `surface` / `sig-*`(상태별 신호색)를 없앴다 —
+ * 레퍼런스가 깔끔한 이유 중 하나가 "강조색을 면적으로 쓰지 않는다"이고,
+ * 상태를 색으로 구분하면 한 화면의 색 수가 늘어난다. 상태는 글자로만 말한다.
+ *
+ * 색은 전부 이 토큰으로만 정의한다. 컴포넌트에서 색 리터럴을 쓰지 않는다.
  * 라이트(:root) / 시스템 다크(prefers-color-scheme) / 명시 다크([data-theme="dark"]) 3곳에 같은 토큰을 둔다.
  * 위 :root 블록이 파일의 첫 중괄호 블록이어야 한다 — lib/tokens.ts 가 이 블록을 라이트 팔레트로 읽는다.
  *
- * 대비 실측(WCAG 2.1 상대휘도): 본문 토큰 쌍 전부 4.5:1 이상,
- * 비텍스트(--rule-strong) 3:1 이상. 라이트·다크 각각 위반 0건.
+ * 대비 실측(WCAG 2.1 상대휘도):
+ *   라이트  ink/bg 20.59 · ink-soft/bg 8.86 · accent/bg 4.74
+ *   다크    ink/bg 15.70 · ink-soft/bg 8.71 · accent/bg 5.39
  */
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #121110;
-    --surface: #1a1917;
-    --surface-2: #23211e;
-    --rule: #302d29;
-    --rule-strong: #767061;
-    --ink: #ede7da;
-    --ink-muted: #b3ac9d;
-    --ink-subtle: #948d7e;
-    --accent: #ee7a4e;
-    --accent-strong: #f79b77;
-    --accent-on: #121110;
-    --accent-soft: #2a1c15;
-    --accent-soft-ink: #f29068;
-    --sig-live: #6fb98a;
-    --sig-active: #d6a75a;
-    --sig-planning: #948d7e;
-    --sig-held: #948d7e;
-    --focus: #ee7a4e;
+    /* 차가운 회색이 아니라 따뜻한 먹색 — 라이트의 본 화이트와 같은 온도를 반전시킨다. */
+    --bg: #16130f;
+    --ink: #f0ece2;
+    --ink-soft: #b9b1a2;
+    --rule: #332e27;
+    --accent: #f3533a;
+    --accent-on: #16130f;
+    --focus: #f3533a;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #121110;
-  --surface: #1a1917;
-  --surface-2: #23211e;
-  --rule: #302d29;
-  --rule-strong: #767061;
-  --ink: #ede7da;
-  --ink-muted: #b3ac9d;
-  --ink-subtle: #948d7e;
-  --accent: #ee7a4e;
-  --accent-strong: #f79b77;
-  --accent-on: #121110;
-  --accent-soft: #2a1c15;
-  --accent-soft-ink: #f29068;
-  --sig-live: #6fb98a;
-  --sig-active: #d6a75a;
-  --sig-planning: #948d7e;
-  --sig-held: #948d7e;
-  --focus: #ee7a4e;
+  --bg: #16130f;
+  --ink: #f0ece2;
+  --ink-soft: #b9b1a2;
+  --rule: #332e27;
+  --accent: #f3533a;
+  --accent-on: #16130f;
+  --focus: #f3533a;
 }
 
-/* 레이아웃 상수 — 고정 헤더 높이. 섹션 스크롤 오프셋과 sticky 위치가 이 값을 공유한다. */
+/* 레이아웃 상수 — 고정 헤더 높이. 섹션 스크롤 오프셋과 sticky 라벨 위치가 이 값을 공유한다. */
 :root {
-  --header-h: 5.5rem;
+  --header-h: 6.5rem;
 }
 
-@media (min-width: 640px) {
+/* 1024px 미만에서는 섹션 앵커 줄이 헤더 두 번째 줄로 붙는다(닐슨 7) — 그만큼 더 높다. */
+@media (min-width: 1024px) {
   :root {
-    --header-h: 3.5rem;
+    --header-h: 5rem;
   }
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-rule: var(--rule);
-  --color-rule-strong: var(--rule-strong);
   --color-ink: var(--ink);
-  --color-ink-muted: var(--ink-muted);
-  --color-ink-subtle: var(--ink-subtle);
+  --color-ink-soft: var(--ink-soft);
+  --color-rule: var(--rule);
   --color-accent: var(--accent);
-  --color-accent-strong: var(--accent-strong);
   --color-accent-on: var(--accent-on);
-  --color-accent-soft: var(--accent-soft);
-  --color-accent-soft-ink: var(--accent-soft-ink);
-  --color-sig-live: var(--sig-live);
-  --color-sig-active: var(--sig-active);
-  --color-sig-planning: var(--sig-planning);
-  --color-sig-held: var(--sig-held);
   --color-focus: var(--focus);
 
   --font-display: var(--ff-display), "Nanum Myeongjo", "Apple SD Gothic Neo",
@@ -110,14 +81,14 @@
   --font-sans: var(--ff-body), "Apple SD Gothic Neo", "Malgun Gothic",
     sans-serif;
   /*
-   * IBM Plex Mono 에는 한글 글리프가 없다. 라벨·수치에 한국어가 섞이므로
-   * 모노 다음에 본문 한글 폰트(IBM Plex Sans KR)를 둔다 — 같은 Plex 슈퍼패밀리라 나란히 선다.
-   * 이 폴백이 없으면 "운영 중", "공동창업자 · CTO" 같은 모노 라벨이 시스템 폰트로 떨어진다.
+   * IBM Plex Mono 에는 한글 글리프가 없다. 알약 버튼 안에 한국어가 들어오므로
+   * 모노 다음에 본문 한글 폰트(Noto Sans KR)를 둔다.
    */
   --font-mono: var(--ff-mono), var(--ff-body), "SFMono-Regular", "Consolas",
     "Apple SD Gothic Neo", "Malgun Gothic", monospace;
 }
 
+/* 색이 없는 border 유틸이 currentColor(=검정)로 떨어지는 사고를 막는 기본값. */
 * {
   border-color: var(--rule);
 }
@@ -140,19 +111,156 @@ body {
   overflow-x: hidden;
   word-break: keep-all;
   overflow-wrap: anywhere;
-  line-height: 1.7;
-  font-size: 0.9375rem;
+  /* 레퍼런스 본문 16px. 이전 디자인의 15px 에서 올렸다 — 3:1 스케일 점프의 분모다. */
+  font-size: 1rem;
+  line-height: 1.75;
 }
 
 :focus-visible {
   outline: 2px solid var(--focus);
-  outline-offset: 2px;
+  outline-offset: 3px;
   border-radius: 1px;
 }
 
 ::selection {
-  background-color: var(--accent-soft);
-  color: var(--accent-soft-ink);
+  background-color: var(--ink);
+  color: var(--bg);
+}
+
+/*
+ * ── 타입 스케일 ───────────────────────────────────────────────
+ * 레퍼런스가 깔끔한 이유 §3: 48px 세리프 : 16px 산세리프 = 3:1, 중간 크기가 거의 없다.
+ * 그래서 크기를 **네 단**으로 고정하고 컴포넌트에서는 임의 크기를 쓰지 않는다.
+ *
+ *   .t-display  40 → 64px   히어로 h1 · 페이지 h1 (한 페이지에 하나)
+ *   .t-title    28 → 40px   섹션 제목 · 프로젝트 이름
+ *   .t-sub      20 → 24px   목록 안의 이름처럼 제목이되 주인공은 아닌 것
+ *   (본문)      16px        body 기본값
+ *   .t-micro    14px        대문자 마이크로 라벨 (letter-spacing 2.24px — 레퍼런스 2.8px 의 한글 보정)
+ */
+
+.t-display,
+.t-title,
+.t-sub {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/*
+ * 360px 에서 한글 아홉 글자("데이터사이언티스트")가 한 줄에 들어가는 상한이 32px 다.
+ * 그보다 키우면 낱말 가운데가 쪼개진다(`overflow-wrap: anywhere` 라 넘치지는 않는다).
+ */
+.t-display {
+  font-size: clamp(2rem, 6.4vw, 4rem);
+  line-height: 1.16;
+}
+
+.t-title {
+  font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+  line-height: 1.24;
+}
+
+.t-sub {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* 리드 문장 — 섹션당 한 줄까지만. 중간 크기를 늘리지 않기 위해 이 한 단만 둔다. */
+.t-lead {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+/*
+ * 레퍼런스 실측은 14~16px 에 letter-spacing 2.8~3.2px(= 0.2em)다. 라틴 기준 값이고,
+ * 한글은 글자 폭이 넓어 같은 값을 주면 낱말이 흩어져 보인다. 14px × 0.16em = 2.24px 로 낮췄다 —
+ * 라틴 라벨(RENFINITY)은 레퍼런스와 거의 같게 보이고 한글 라벨(시스템)은 읽힌다.
+ */
+.t-micro {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.t-meta {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * ── 알약 버튼 ─────────────────────────────────────────────────
+ * 레퍼런스 §8: 검정 알약 + 모노 텍스트. 유일하게 장난기 있는 요소이고 그래서 기억에 남는다.
+ * 강조색을 면적으로 쓰지 않으므로(§6) 채워진 알약은 **검정(=--ink)** 이다.
+ */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.025em;
+}
+
+/*
+ * ── 조판 격자 ─────────────────────────────────────────────────
+ * 컨테이너 1344px, 본문 텍스트 열 896px (레퍼런스 실측).
+ * 비대칭 배치(§5)를 위해 큰 화면에서만 12열 격자를 깐다. 가운데 정렬 대칭 레이아웃은 쓰지 않는다.
+ */
+.shell {
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .shell {
+    padding-inline: 2.5rem;
+  }
+}
+
+.bay {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  column-gap: 2.5rem;
+  row-gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .bay {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* 본문 텍스트 열 — 한 줄이 너무 길어지지 않게 896px 에서 끊는다. */
+.measure {
+  max-width: 56rem;
+}
+
+/*
+ * 디스플레이 제목 전용 열 — 1216px.
+ * 896px 는 **본문** 텍스트 열의 값이다(레퍼런스 실측). 64px 짜리 제목에 그대로 쓰면
+ * 한 줄에 열네 글자밖에 못 들어가 선언문 한 문장이 두 줄로 꺾인다(실측: 한국어 About h1 이 1157px 필요).
+ * 컨테이너(1344px − 좌우 여백 = 1264px)보다는 좁게 잡아 제목도 열을 갖게 한다 —
+ * 64px 에서 한국어 약 19자. .t-display 를 쓰는 h1 세 곳이 이 값을 공유한다.
+ */
+.measure-display {
+  max-width: 76rem;
+}
+
+/* 한 문단짜리 설명은 더 좁게 — 읽기 좋은 60~70자. */
+.measure-tight {
+  max-width: 38rem;
 }
 
 /* 넓은 요소는 자기 자신만 가로 스크롤한다 — 페이지 본문은 360px 에서도 가로 스크롤이 없다. */
@@ -177,16 +285,22 @@ summary::-webkit-details-marker {
 
 /*
  * 시스템 상태 가시성 (닐슨 1) — 클라이언트 JS 없이.
- * ① 섹션 헤더가 sticky 라 스크롤 중에도 "지금 보는 섹션"의 번호·제목이 화면에 남는다.
+ * ① 섹션의 마이크로 라벨만 sticky 다. 스크롤 중에도 "지금 보는 섹션"이 화면에 남는다.
+ *    이전 디자인은 섹션 헤더 전체(번호 + 제목 + 2px 선)를 붙였는데, 여백이 주인공인
+ *    이 디자인에서는 그게 화면을 무겁게 만든다. 라벨 한 줄로 줄였다.
  * ② 해시로 이동한 섹션은 :target 으로 표식이 붙는다(어떤 id 에도 자동 적용).
  * ③ 그 섹션을 가리키는 헤더 내비 항목이 :has() 로 강조된다.
  */
+/*
+ * 표식은 색을 바꾸지 않는다 — 마이크로 라벨은 항상 강조색이고(레퍼런스 §6),
+ * 상태 변화는 **굵기와 규칙선**으로 준다(레퍼런스 §7 — 굵기로 강조한다).
+ */
 [data-section]:target [data-section-marker] {
-  color: var(--accent);
+  font-weight: 700;
 }
 
 [data-section]:target [data-section-rule] {
-  background-color: var(--accent);
+  background-color: var(--ink);
 }
 
 @supports selector(:has(*)) {
@@ -196,7 +310,6 @@ summary::-webkit-details-marker {
   body:has(#community:target) [data-nav="community"],
   body:has(#contact:target) [data-nav="contact"] {
     color: var(--accent);
-    border-bottom-color: var(--accent);
   }
 }
 
@@ -204,7 +317,7 @@ summary::-webkit-details-marker {
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(0.5rem);
+    transform: translateY(0.75rem);
   }
   to {
     opacity: 1;
@@ -213,20 +326,17 @@ summary::-webkit-details-marker {
 }
 
 .stagger > * {
-  animation: rise 0.55s cubic-bezier(0.22, 0.61, 0.24, 1) both;
+  animation: rise 0.7s cubic-bezier(0.22, 0.61, 0.24, 1) both;
 }
 
 .stagger > *:nth-child(2) {
-  animation-delay: 60ms;
+  animation-delay: 90ms;
 }
 .stagger > *:nth-child(3) {
-  animation-delay: 120ms;
-}
-.stagger > *:nth-child(4) {
   animation-delay: 180ms;
 }
-.stagger > *:nth-child(5) {
-  animation-delay: 240ms;
+.stagger > *:nth-child(4) {
+  animation-delay: 270ms;
 }
 
 @media (prefers-reduced-motion: reduce) {

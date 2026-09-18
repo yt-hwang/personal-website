@@ -12,68 +12,86 @@ import {
 } from "@/lib/projects";
 import { href } from "@/lib/routes";
 import type { GroupId, Lang, Project } from "@/lib/types";
-import { ordinal, ui } from "@/lib/ui";
+import { ui } from "@/lib/ui";
 
-import { GroupMark, StatusMark } from "./Badges";
+import { MetaLine, stackLabel, statusLabel, teamLabel } from "./Badges";
 import { ExternalLinks } from "./ExternalLinks";
 import { ContactChannels } from "./ContactChannels";
 import { GhostAction, GoLink, OutLink, PrimaryAction } from "./Links";
 import { ProjectList } from "./ProjectCard";
 
 /**
- * 홈 — 기술 문서(dossier) 조판.
- * 대칭 카드 그리드를 쓰지 않는다. 섹션 번호(모노) + 가는 규칙선 + 여백으로 위계를 만들고,
- * 내용의 무게에 따라 항목의 형태를 달리한다(에이전트 시스템은 넓게, 앱은 밀도 높은 목록으로).
+ * 홈 — `_workspace/09_design_reference.md` 의 시각 언어.
  *
- * 섹션 헤더는 sticky 라 스크롤 중에도 현재 섹션 번호·제목이 화면에 남는다 (닐슨 1).
+ * 조판을 지배하는 규칙은 세 개다.
+ *   ① **여백이 주인공이다.** 섹션 사이가 `clamp(6rem, 17vh, 11rem)` 로 벌어진다.
+ *      1080px 높이 화면에서 약 184px — 위아래 여백이 합쳐지면 화면의 3분의 1 이상이 빈다.
+ *   ② **한 화면에 요소가 적다.** 섹션 머리는 [마이크로 라벨] [제목] [리드 한 문장] 셋뿐이고,
+ *      번호 거터·배지 더미·상태색을 전부 걷어냈다.
+ *   ③ **비대칭.** 가운데 정렬을 쓰지 않는다. 히어로 본문은 오른쪽 열에만,
+ *      섹션 제목은 왼쪽 5열·리드는 오른쪽 6열에, 프로젝트 판은 좌우로 번갈아 놓인다.
+ *
+ * 현재 섹션 표시(닐슨 1)는 sticky **마이크로 라벨 한 줄**이 맡는다.
+ * 이전 디자인은 섹션 헤더 전체를 붙였는데 여백이 주인공인 조판에서는 그게 화면을 무겁게 만든다.
  */
 
-const HEADING_LABEL =
-  "font-mono text-[0.75rem] tracking-[0.16em] tabular-nums uppercase";
+const SECTION_GAP = "mt-[clamp(6rem,17vh,11rem)]";
+const HEAD_GAP = "mt-[clamp(2.25rem,6vh,4rem)]";
+const BODY_GAP = "mt-[clamp(3rem,8vh,5.5rem)]";
 
+/**
+ * 섹션 하나.
+ * 위에 얇은 규칙선 **하나**만 긋는다(레퍼런스 실측: 섹션 사이 가로 규칙선 1개).
+ *
+ * sticky 마이크로 라벨이 "지금 어느 섹션인가"를 스크롤 내내 화면에 남긴다(닐슨 1).
+ * 짧은 내비 라벨(`NAV-*`)이 있으면 그것을, 없으면 섹션 제목을 그대로 쓴다 —
+ * **어떤 섹션에서도 표시가 비지 않게** 하기 위해서다(카피가 빠져도 화면이 비지 않는다).
+ * 라벨은 `aria-hidden` 이다. 바로 아래 h2 가 같은 말을 이미 하고 있고,
+ * 이 줄은 눈으로 위치를 잡기 위한 장치일 뿐이라 스크린리더에서 두 번 읽힐 이유가 없다.
+ */
 function Section({
   id,
-  index,
+  label,
   heading,
   lead,
   children,
 }: {
   id: string;
-  index: number;
+  label?: string;
   heading: string;
   lead?: string;
   children?: React.ReactNode;
 }) {
+  const mark = label || heading;
   return (
     <section
       id={id}
       data-section="true"
-      className="scroll-mt-[var(--header-h)] pt-14 sm:pt-20"
+      className={"scroll-mt-[var(--header-h)] " + SECTION_GAP}
     >
-      <div className="sticky top-[var(--header-h)] z-20 -mx-4 bg-bg px-4 sm:-mx-6 sm:px-6">
-        <div className="flex items-baseline gap-4 pt-2 pb-2.5">
-          <span
-            data-section-marker="true"
-            className={HEADING_LABEL + " text-ink-subtle"}
-          >
-            {ordinal(index)}
+      <div data-section-rule="true" className="h-px w-full bg-rule" />
+
+      {mark && (
+        <p
+          aria-hidden="true"
+          className="sticky top-[var(--header-h)] z-10 bg-bg py-3.5"
+        >
+          <span data-section-marker="true" className="t-micro text-accent">
+            {mark}
           </span>
-          {heading && (
-            <h2 className="font-display text-lg leading-snug font-medium tracking-tight text-ink sm:text-xl">
-              {heading}
-            </h2>
-          )}
-        </div>
-        <div
-          data-section-rule="true"
-          className="h-0.5 bg-[var(--rule-strong)]"
-        />
+        </p>
+      )}
+
+      <div className={"bay " + (mark ? HEAD_GAP : "pt-10")}>
+        {heading && (
+          <h2 className="t-title lg:col-span-5">{heading}</h2>
+        )}
+        {lead && (
+          <p className="t-lead lg:col-span-6 lg:col-start-7">{lead}</p>
+        )}
       </div>
 
-      {lead && (
-        <p className="mt-6 max-w-2xl leading-relaxed text-ink-muted">{lead}</p>
-      )}
-      {children && <div className="mt-8">{children}</div>}
+      {children && <div className={BODY_GAP}>{children}</div>}
     </section>
   );
 }
@@ -82,12 +100,12 @@ function Section({
 function Gloss({ lang, body }: { lang: Lang; body: string }) {
   if (!body) return null;
   return (
-    <p className="mt-5 max-w-2xl border-l-2 border-[var(--rule-strong)] pl-4 text-[0.8125rem] leading-relaxed text-ink-muted">
-      <span className="mr-2 font-mono text-[0.6875rem] tracking-[0.14em] text-ink-subtle uppercase">
-        {ui(lang, "UI.terms")}
-      </span>
-      {body}
-    </p>
+    <div className="bay">
+      <p className="measure border-l border-rule pl-5 lg:col-span-6 lg:col-start-7">
+        <span className="t-micro mr-3 text-accent">{ui(lang, "UI.terms")}</span>
+        {body}
+      </p>
+    </div>
   );
 }
 
@@ -101,7 +119,8 @@ function splitProof(raw: string): { value: string; label: string } {
   return { value: raw.slice(0, i).trim(), label: raw.slice(i + 1).trim() };
 }
 
-function Ledger({ lang }: { lang: Lang }) {
+/** 검증 가능한 사실 네 개. 칸을 나눈 표가 아니라 왼쪽부터 흐르는 한 줄이다. */
+function Ledger({ lang, className = "" }: { lang: Lang; className?: string }) {
   const items = [1, 2, 3, 4]
     .map((n) => {
       const id = "PROOF-" + n;
@@ -115,25 +134,12 @@ function Ledger({ lang }: { lang: Lang }) {
   if (!items.length) return null;
 
   return (
-    <ul className="grid grid-cols-2 border-t-2 border-[var(--rule-strong)] sm:grid-cols-4">
-      {items.map((i, n) => (
-        <li
-          key={i.key}
-          className={
-            "border-b border-[var(--rule)] py-4 sm:border-b-0 " +
-            (n % 2 === 1 ? "pl-4 " : "pr-4 ") +
-            "sm:border-r sm:border-[var(--rule)] sm:px-4 sm:first:pl-0 sm:last:border-r-0"
-          }
-        >
-          {i.value && (
-            <p className="font-display text-2xl leading-none tracking-tight text-ink tabular-nums sm:text-3xl">
-              {i.value}
-            </p>
-          )}
+    <ul className={"flex flex-wrap gap-x-14 gap-y-8 " + className}>
+      {items.map((i) => (
+        <li key={i.key}>
+          {i.value && <p className="t-sub">{i.value}</p>}
           {i.label && (
-            <p className="mt-2 font-mono text-[0.6875rem] leading-snug tracking-[0.1em] text-ink-subtle uppercase">
-              {i.label}
-            </p>
+            <p className="t-micro mt-1.5 text-ink-soft">{i.label}</p>
           )}
         </li>
       ))}
@@ -141,7 +147,22 @@ function Ledger({ lang }: { lang: Lang }) {
   );
 }
 
-/** 첫 화면 — 스크롤 없이 "이 사이트가 무엇인지"가 끝난다 (닐슨 10). */
+/**
+ * 한 문장 안에서 굵기를 바꿔 강조한다(레퍼런스 §7).
+ * 카피에 이미 있는 가운뎃점을 경계로만 가른다 — 코드가 어디를 강조할지 지어내지 않는다.
+ */
+function Emphasized({ value }: { value: string }) {
+  const i = value.indexOf(" · ");
+  if (i < 0) return <>{value}</>;
+  return (
+    <>
+      <span className="font-semibold">{value.slice(0, i)}</span>
+      <span className="font-normal">{value.slice(i)}</span>
+    </>
+  );
+}
+
+/** 첫 화면 — 위쪽을 크게 비우고 시작한다. 본문은 오른쪽 열에만 둔다(레퍼런스 §5). */
 function Masthead({ lang }: { lang: Lang }) {
   const h1 = t(lang, "HERO-1");
   const sub = t(lang, "HERO-2");
@@ -149,26 +170,26 @@ function Masthead({ lang }: { lang: Lang }) {
   const cta2 = t(lang, "HERO-CTA-2");
 
   return (
-    <section className="stagger pt-10 pb-4 sm:pt-16">
+    <section className="stagger pt-[clamp(4.5rem,19vh,12rem)]">
       {h1 && (
-        <h1 className="max-w-3xl font-display text-[2rem] leading-[1.25] font-medium tracking-tight text-ink sm:text-5xl">
-          {h1}
+        <h1 className="t-display measure-display">
+          <Emphasized value={h1} />
         </h1>
       )}
-      {sub && (
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-muted sm:text-lg">
-          {sub}
-        </p>
-      )}
-      {(cta1 || cta2) && (
-        <div className="mt-8 flex flex-wrap gap-3">
-          {cta1 && <PrimaryAction href="#systems">{cta1}</PrimaryAction>}
-          {cta2 && <GhostAction href="#contact">{cta2}</GhostAction>}
+
+      <div className={"bay " + HEAD_GAP}>
+        <div className="lg:col-span-7 lg:col-start-6">
+          {sub && <p className="t-lead">{sub}</p>}
+          {(cta1 || cta2) && (
+            <div className="mt-9 flex flex-wrap gap-3">
+              {cta1 && <PrimaryAction href="#systems">{cta1}</PrimaryAction>}
+              {cta2 && <GhostAction href="#contact">{cta2}</GhostAction>}
+            </div>
+          )}
         </div>
-      )}
-      <div className="mt-10 sm:mt-12">
-        <Ledger lang={lang} />
       </div>
+
+      <Ledger lang={lang} className="mt-[clamp(4rem,12vh,7.5rem)]" />
     </section>
   );
 }
@@ -213,7 +234,7 @@ function repoLink(lang: Lang): { label: string; url: string } {
   return { label, url: withProtocol(env) };
 }
 
-function MethodSection({ lang, index }: { lang: Lang; index: number }) {
+function MethodSection({ lang }: { lang: Lang }) {
   const intro = t(lang, "METHOD-INTRO");
   const patterns = [1, 2, 3]
     .map((n) => ({
@@ -229,25 +250,15 @@ function MethodSection({ lang, index }: { lang: Lang; index: number }) {
   if (!intro && !patterns.length && !selfDemo && !heading) return null;
 
   return (
-    <Section id="method" index={index} heading={heading} lead={intro}>
+    <Section id="method" label={t(lang, "NAV-METHOD")} heading={heading} lead={intro}>
       {patterns.length > 0 && (
         <ol>
-          {patterns.map((p, i) => (
-            <li
-              key={p.key}
-              className="grid gap-x-8 gap-y-2 border-t border-[var(--rule)] py-6 sm:grid-cols-[4.5rem_minmax(0,1fr)]"
-            >
-              <p className="font-mono text-[1.375rem] leading-none text-ink-subtle tabular-nums">
-                {ordinal(i + 1)}
-              </p>
-              <div className="min-w-0">
-                {p.title && (
-                  <h3 className="font-display text-base font-medium tracking-tight text-ink">
-                    {p.title}
-                  </h3>
-                )}
+          {patterns.map((p) => (
+            <li key={p.key} className="bay border-t border-rule py-9 lg:py-12">
+              <div className="lg:col-span-8 lg:col-start-5">
+                {p.title && <h3 className="t-sub">{p.title}</h3>}
                 {p.body && (
-                  <p className="max-w-2xl leading-relaxed text-ink-muted">
+                  <p className={"measure" + (p.title ? " mt-4" : "")}>
                     {p.body}
                   </p>
                 )}
@@ -256,34 +267,34 @@ function MethodSection({ lang, index }: { lang: Lang; index: number }) {
           ))}
         </ol>
       )}
+
       {(selfDemo || repo.url) && (
-        <div className="mt-8 border border-[var(--rule)] bg-surface p-5 sm:p-6">
-          {selfDemo &&
-            paragraphs(selfDemo).map((para, i) => (
-              <p
-                key={i}
-                className={
-                  "max-w-2xl text-[0.875rem] leading-relaxed text-ink-muted" +
-                  (i > 0 ? " mt-3" : "")
-                }
-              >
-                {para}
+        <div className="bay border-t border-rule py-9 lg:py-12">
+          <div className="lg:col-span-8 lg:col-start-5">
+            {selfDemo &&
+              paragraphs(selfDemo).map((para, i) => (
+                <p key={i} className={"measure" + (i > 0 ? " mt-4" : "")}>
+                  {para}
+                </p>
+              ))}
+            {repo.url && (
+              <p className="mt-6">
+                <OutLink href={repo.url} lang={lang}>
+                  {repo.label}
+                </OutLink>
               </p>
-            ))}
-          {repo.url && (
-            <p className="mt-4 text-[0.8125rem]">
-              <OutLink href={repo.url} lang={lang}>
-                {repo.label}
-              </OutLink>
-            </p>
-          )}
+            )}
+          </div>
         </div>
       )}
     </Section>
   );
 }
 
-/** featured 카드는 그리드에서 빠지고 이 단독 블록이 소비한다 (IA 4.3). */
+/**
+ * featured 카드는 그리드에서 빠지고 이 단독 블록이 소비한다 (IA 4.3).
+ * 프로젝트 판과 같은 조판을 쓰되, 카피 슬롯(`AKDS-SEC`)과 하이라이트가 더 실린다.
+ */
 function FeaturedBlock({ p, lang }: { p: Project; lang: Lang }) {
   const title = text(p.title, lang);
   const tagline = text(p.tagline, lang);
@@ -291,63 +302,46 @@ function FeaturedBlock({ p, lang }: { p: Project; lang: Lang }) {
   const body = t(lang, "AKDS-SEC");
   const highlights = list(p.highlights, lang).slice(0, 3);
   const links = renderableLinks(p);
-  const period = periodLabel(p);
-  const groupLabel = t(lang, groupMeta(p.group).navSlot);
 
   return (
-    <article className="grid gap-x-8 gap-y-4 border-t border-[var(--rule)] py-7 sm:grid-cols-[4.5rem_minmax(0,1fr)]">
-      <div className="flex items-baseline gap-3 sm:block">
-        {period && (
-          <p className="font-mono text-[0.6875rem] text-ink-subtle tabular-nums">
-            {period}
-          </p>
-        )}
+    <article className="bay border-t border-rule py-10 sm:py-14">
+      <div className="lg:col-span-4">
+        {/*
+          그룹 라벨을 여기서는 렌더하지 않는다 — 이 블록은 그룹 하나를 통째로 쓰는 단독 섹션이라
+          sticky 마이크로 라벨과 섹션 제목이 바로 위에서 이미 같은 말을 하고 있다(닐슨 6 은 sticky 라벨이 만족한다).
+        */}
+        {title && <h3 className="t-title">{title}</h3>}
+        {role && <p className="t-meta mt-3 text-ink">{role}</p>}
+        <MetaLine
+          items={[
+            statusLabel(lang, p.status),
+            periodLabel(p),
+            teamLabel(lang, p.agent_team.count),
+            stackLabel(p.stack, 4),
+          ]}
+          className="mt-6"
+        />
       </div>
 
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <GroupMark label={groupLabel} />
-          <StatusMark lang={lang} status={p.status} />
-        </div>
-
-        {title && (
-          <h3 className="mt-2 font-display text-xl leading-snug font-medium tracking-tight text-ink sm:text-2xl">
-            {title}
-          </h3>
-        )}
-        {role && (
-          <p className="mt-1.5 font-mono text-[0.8125rem] tracking-[0.04em] text-accent">
-            {role}
-          </p>
-        )}
-        {tagline && (
-          <p className="mt-3 max-w-2xl leading-relaxed text-ink-muted">
-            {tagline}
-          </p>
-        )}
+      <div className="lg:col-span-7 lg:col-start-6">
+        {tagline && <p className="t-lead">{tagline}</p>}
         {body &&
           paragraphs(body).map((para, i) => (
-            <p
-              key={i}
-              className="mt-3 max-w-2xl text-[0.875rem] leading-relaxed text-ink-muted"
-            >
+            <p key={i} className="measure mt-5">
               {para}
             </p>
           ))}
         {highlights.length > 0 && (
-          <ul className="mt-5 space-y-2">
+          <ul className="mt-8 space-y-3">
             {highlights.map((h) => (
-              <li
-                key={h}
-                className="border-l-2 border-[var(--rule-strong)] pl-4 text-[0.8125rem] leading-relaxed text-ink-muted"
-              >
+              <li key={h} className="measure border-l border-rule pl-5">
                 {h}
               </li>
             ))}
           </ul>
         )}
         {(hasDetailPage(p) || links.length > 0) && (
-          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.8125rem]">
+          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2">
             {hasDetailPage(p) && (
               <GoLink href={href(lang, "/projects/" + p.slug)}>
                 {ui(lang, "UI.detail")}
@@ -363,12 +357,10 @@ function FeaturedBlock({ p, lang }: { p: Project; lang: Lang }) {
 
 function GroupSection({
   group,
-  index,
   lang,
   gloss,
 }: {
   group: GroupId;
-  index: number;
   lang: Lang;
   gloss?: string;
 }) {
@@ -378,21 +370,22 @@ function GroupSection({
   return (
     <Section
       id={g.anchor}
-      index={index}
+      label={t(lang, g.navSlot)}
       heading={pick(lang, g.titleSlot, "SECTION." + group)}
       lead={t(lang, g.leadSlot)}
     >
-      {gloss && <Gloss lang={lang} body={gloss} />}
-      <div className={gloss ? "mt-8" : undefined}>
-        <ProjectList items={items} lang={lang} />
-      </div>
+      {gloss && (
+        <div className="mb-[clamp(2.5rem,6vh,4rem)]">
+          <Gloss lang={lang} body={gloss} />
+        </div>
+      )}
+      <ProjectList items={items} lang={lang} />
     </Section>
   );
 }
 
 export function HomePage({ lang }: { lang: Lang }) {
   const featured = featuredProjects();
-  const contact = t(lang, "CONTACT");
 
   return (
     <>
@@ -400,19 +393,18 @@ export function HomePage({ lang }: { lang: Lang }) {
 
       <GroupSection
         group={GRID_GROUPS[0]}
-        index={1}
         lang={lang}
         gloss={ui(lang, "UI.glossHarness")}
       />
 
-      <MethodSection lang={lang} index={2} />
+      <MethodSection lang={lang} />
 
-      <GroupSection group={GRID_GROUPS[1]} index={3} lang={lang} />
+      <GroupSection group={GRID_GROUPS[1]} lang={lang} />
 
       {featured.length > 0 && (
         <Section
           id="community"
-          index={4}
+          label={t(lang, "NAV-COMMUNITY")}
           heading={pick(lang, "SEC6-TITLE", "SECTION.community")}
           lead={t(lang, "GRP-C")}
         >
@@ -424,16 +416,20 @@ export function HomePage({ lang }: { lang: Lang }) {
 
       <Section
         id="contact"
-        index={5}
+        label={t(lang, "NAV-CONTACT")}
         heading={pick(lang, "SEC7-TITLE", "SECTION.contact")}
-        lead={contact}
+        lead={t(lang, "CONTACT")}
       >
-        <ContactChannels lang={lang} className="max-w-2xl" />
-        <p className="mt-8 text-[0.8125rem]">
-          <GoLink href={href(lang, "/about")}>
-            {t(lang, "NAV-ABOUT") || ui(lang, "UI.about")}
-          </GoLink>
-        </p>
+        <div className="bay">
+          <div className="lg:col-span-6 lg:col-start-7">
+            <ContactChannels lang={lang} />
+            <p className="mt-10">
+              <GoLink href={href(lang, "/about")}>
+                {t(lang, "NAV-ABOUT") || ui(lang, "UI.about")}
+              </GoLink>
+            </p>
+          </div>
+        </div>
       </Section>
     </>
   );

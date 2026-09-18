@@ -12,9 +12,10 @@ import { ContactChannels } from "./ContactChannels";
  * 모든 페이지가 같은 껍데기를 쓴다.
  * path 는 언어 중립 경로("/", "/about", "/projects/<slug>")이며 언어 토글이 이것을 그대로 유지한다.
  *
+ * 헤더는 레퍼런스처럼 **얇고 조용하다** — 규칙선 하나, 세리프 브랜드 하나, 나머지는 14px 한 줄.
  * 시스템 상태 가시성(닐슨 1)은 두 층으로 준다.
- *   ① 페이지 층 — 지금 페이지에 해당하는 내비 항목에 aria-current="page" 와 밑줄이 붙는다. 서버가 안다.
- *   ② 섹션 층 — 홈 섹션 헤더가 sticky 라 스크롤 중에도 현재 섹션 번호·제목이 화면에 남고,
+ *   ① 페이지 층 — 지금 페이지에 해당하는 내비 항목에 aria-current="page" 와 강조색이 붙는다. 서버가 안다.
+ *   ② 섹션 층 — 홈 섹션의 마이크로 라벨이 sticky 라 스크롤 중에도 현재 섹션이 화면에 남고,
  *      해시로 이동하면 globals.css 의 :target + :has() 규칙이 해당 내비 항목을 강조한다.
  * 둘 다 CSS 로만 처리한다 — 이 파일에 클라이언트 JS 는 없다.
  */
@@ -22,13 +23,14 @@ import { ContactChannels } from "./ContactChannels";
 /** 섹션 앵커 — 홈의 해시로 이동한다. 라벨 카피가 없으면 항목 자체를 렌더하지 않는다. */
 const SECTION_NAV = [
   { key: "systems", slot: "NAV-SYSTEMS" },
+  { key: "method", slot: "NAV-METHOD" },
   { key: "apps", slot: "NAV-APPS" },
   { key: "community", slot: "NAV-COMMUNITY" },
   { key: "contact", slot: "NAV-CONTACT" },
 ];
 
 const NAV_ITEM =
-  "font-mono text-[0.6875rem] tracking-[0.12em] uppercase whitespace-nowrap border-b border-transparent pb-0.5 text-ink-muted hover:text-accent hover:border-[var(--accent)]";
+  "text-[0.875rem] leading-6 tracking-[0.06em] whitespace-nowrap text-ink-soft hover:text-accent aria-[current=page]:text-accent";
 
 export function PageShell({
   lang,
@@ -56,33 +58,33 @@ export function PageShell({
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:border focus:border-[var(--accent)] focus:bg-surface focus:px-3 focus:py-2 focus:text-sm focus:text-ink"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:border focus:border-ink focus:bg-bg focus:px-4 focus:py-2 focus:text-ink"
       >
         {ui(lang, "UI.skip")}
       </a>
 
-      <header className="sticky top-0 z-30 border-b border-[var(--rule)] bg-bg">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+      <header className="sticky top-0 z-30 border-b border-rule bg-bg">
+        <div className="shell">
           <nav
             aria-label={brand || ui(lang, "UI.home")}
-            className="flex h-14 items-center justify-between gap-3"
+            className="flex h-16 items-center justify-between gap-4 lg:h-20"
           >
             {/* 어느 페이지에서도 홈까지 1클릭 (닐슨 3) */}
             <Link
               href={home}
               aria-current={onHome ? "page" : undefined}
-              className="font-display text-[0.9375rem] font-medium tracking-tight text-ink aria-[current=page]:text-accent hover:text-accent"
+              className="font-display text-[1.125rem] font-medium tracking-[-0.01em] text-ink aria-[current=page]:text-accent hover:text-accent"
             >
               {brand || ui(lang, "UI.home")}
             </Link>
 
-            <div className="flex items-center gap-4 sm:gap-5">
+            <div className="flex items-center gap-5 lg:gap-8">
               {sections.map((s) => (
                 <Link
                   key={s.key}
                   href={s.href}
                   data-nav={s.key}
-                  className={"hidden sm:inline-block " + NAV_ITEM}
+                  className={"hidden lg:inline-block " + NAV_ITEM}
                 >
                   {s.label}
                 </Link>
@@ -90,10 +92,7 @@ export function PageShell({
               <Link
                 href={href(lang, "/about")}
                 aria-current={onAbout ? "page" : undefined}
-                className={
-                  NAV_ITEM +
-                  " aria-[current=page]:border-[var(--accent)] aria-[current=page]:text-accent"
-                }
+                className={NAV_ITEM}
               >
                 {aboutLabel}
               </Link>
@@ -101,17 +100,19 @@ export function PageShell({
                 href={href(other, path)}
                 hrefLang={other}
                 lang={other}
-                className="border border-[var(--rule-strong)] px-2 py-1 font-mono text-[0.6875rem] tracking-[0.1em] text-ink-muted hover:border-[var(--accent)] hover:text-accent"
+                className="rounded-full border border-ink-soft px-3 py-1 font-mono text-[0.75rem] tracking-[0.06em] text-ink-soft hover:border-ink hover:text-ink"
               >
                 {LANG_SHORT[other]}
               </Link>
             </div>
           </nav>
+        </div>
 
-          {/* 좁은 화면에서도 섹션에 직접 닿는다 (닐슨 7). 이 줄만 가로로 스크롤한다. */}
-          {sections.length > 0 && (
-            <div className="scroll-x -mx-4 border-t border-[var(--rule)] px-4 sm:hidden">
-              <div className="flex items-center gap-4 py-1.5">
+        {/* 좁은 화면에서도 섹션에 직접 닿는다 (닐슨 7). 이 줄만 가로로 스크롤한다. */}
+        {sections.length > 0 && (
+          <div className="border-t border-rule lg:hidden">
+            <div className="shell scroll-x">
+              <div className="flex items-center gap-6 py-2">
                 {sections.map((s) => (
                   <Link
                     key={s.key}
@@ -124,12 +125,12 @@ export function PageShell({
                 ))}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </header>
 
       {/* tabIndex -1: skip-link 가 실제로 포커스를 옮기려면 대상이 포커스 가능해야 한다 (QA D-9) */}
-      <main id="main" tabIndex={-1} className="mx-auto max-w-5xl px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="shell">
         {children}
       </main>
 
@@ -148,22 +149,22 @@ function SiteFooter({
   home: string;
 }) {
   return (
-    <footer className="mt-20 border-t border-[var(--rule)]">
-      <div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] sm:px-6">
-        <div>
-          {brand && (
-            <p className="font-display text-base tracking-tight text-ink">
-              {brand}
-            </p>
-          )}
-          <Link
-            href={home}
-            className="mt-3 inline-block font-mono text-[0.6875rem] tracking-[0.12em] text-ink-subtle uppercase hover:text-accent"
-          >
-            {t(lang, "NAV-HOME") || ui(lang, "UI.home")}
-          </Link>
+    <footer className="mt-[clamp(6rem,17vh,11rem)] border-t border-rule">
+      <div className="shell">
+        <div className="bay py-14 sm:py-20">
+          <div className="lg:col-span-4">
+            {brand && <p className="t-sub">{brand}</p>}
+            <Link
+              href={home}
+              className="t-micro mt-4 inline-block text-ink-soft hover:text-accent"
+            >
+              {t(lang, "NAV-HOME") || ui(lang, "UI.home")}
+            </Link>
+          </div>
+          <div className="lg:col-span-6 lg:col-start-7">
+            <ContactChannels lang={lang} />
+          </div>
         </div>
-        <ContactChannels lang={lang} />
       </div>
     </footer>
   );

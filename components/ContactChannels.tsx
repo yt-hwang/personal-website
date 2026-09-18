@@ -94,10 +94,10 @@ export function ContactChannels({
   if (!items.length) return null;
 
   return (
-    <dl className={"grid gap-x-4 gap-y-3 sm:grid-cols-[auto_minmax(0,1fr)] " + className}>
+    <dl className={"grid gap-x-8 gap-y-5 sm:grid-cols-[minmax(0,7rem)_minmax(0,1fr)] " + className}>
       {items.map((i) => (
         <div key={i.key} className="contents">
-          <dt className="flex items-center gap-2 font-mono text-[0.6875rem] tracking-[0.14em] text-ink-subtle uppercase">
+          <dt className="t-micro flex items-center gap-2.5 text-ink-soft">
             <ChannelIcon kind={i.kind} />
             {ui(lang, i.labelKey)}
           </dt>
@@ -106,7 +106,7 @@ export function ContactChannels({
               i.kind === "email" ? (
                 <a
                   href={i.href}
-                  className="font-mono text-[0.8125rem] text-accent underline decoration-[var(--rule-strong)] decoration-from-font underline-offset-4 hover:text-accent-strong hover:decoration-[var(--accent)]"
+                  className="font-mono text-accent underline decoration-accent/40 decoration-from-font underline-offset-[0.3em] hover:decoration-accent"
                 >
                   {i.value}
                 </a>
@@ -114,18 +114,18 @@ export function ContactChannels({
                 <OutLink
                   href={i.href}
                   lang={lang}
-                  className="font-mono text-[0.8125rem]"
+                  className="font-mono"
                 >
                   {i.value}
                 </OutLink>
               )
             ) : (
-              <span className="font-mono text-[0.8125rem] text-ink-muted">
+              <span className="font-mono text-ink">
                 {i.value}
               </span>
             )}
             {i.note && (
-              <p className="mt-1 text-[0.8125rem] leading-relaxed text-ink-muted">
+              <p className="measure-tight mt-2 text-ink-soft">
                 {i.note}
               </p>
             )}

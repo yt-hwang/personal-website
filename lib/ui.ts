@@ -96,8 +96,3 @@ export function ui(lang: Lang, key: string): string {
 export function teamBadge(lang: Lang, count: number): string {
   return count + ui(lang, "UI.teamUnit");
 }
-
-/** 섹션·항목 번호는 두 자리 모노로 고정한다 — 01 / 02 / 03. */
-export function ordinal(n: number): string {
-  return String(n).padStart(2, "0");
-}

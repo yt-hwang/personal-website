@@ -7,6 +7,7 @@ import { token } from "@/lib/tokens";
  * 파비콘을 코드로 생성한다 — 텍스트 전용 사이트라 받아올 이미지 자산이 없고,
  * 외부 자산을 내려받지 않는다는 원칙도 그대로 지킨다.
  * 글자는 사이트 이름에서 머리글자를 따고, 색은 globals.css 의 라이트 토큰을 읽어 쓴다.
+ * 강조색을 면적으로 쓰지 않는 원칙(레퍼런스 §6)에 맞춰 검정 바탕 + 본 화이트 글자로 둔다.
  */
 export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
@@ -34,8 +35,8 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: token("accent", "#1c5a86"),
-          color: token("accent-on", "#ffffff"),
+          background: token("ink", "#000000"),
+          color: token("bg", "#f0f0e8"),
           fontSize: 34,
           fontWeight: 600,
           letterSpacing: -1,

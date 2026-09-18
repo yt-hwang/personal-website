@@ -35,3 +35,8 @@
 | 2026-09-17 | 전면 재디자인 (기술 문서 조판 · 종이/잉크 팔레트 · Hahmlet+IBM Plex) + About 구조화 | app/ components/ lib/ | 사용자 피드백 "디자인 UI/UX 별로야", "소개 페이지 산문이라 뭘 하는지 모르겠어". IA는 유지, 시각 언어·레이아웃·정보 밀도만 교체. 근거는 `_workspace/04_builder_notes.md` §11~§17 |
 | 2026-09-17 | 의존성 추가 — `lucide-react@0.577.0` (버전 고정) | package.json | 아이콘 세트 단일화. 1.x 는 아이콘 기반 컴포넌트에 `"use client"` 가 붙어 전 페이지에 11KB 클라이언트 청크가 생긴다. 0.577 은 서버에서 순수 SVG 로 렌더되고 클라이언트 JS 0바이트 |
 | 2026-09-17 | 배포 주소 교체 — yun-hwang.vercel.app | Vercel 프로젝트 yun-hwang | 공개 주소는 프로젝트 이름에서 나온다. alias 로는 배포별 URL의 인증 보호에 걸려 로그인 벽이 뜬다 |
+| 2026-09-18 | 레퍼런스(timmyomahony.com) 기반 재디자인 | app/ components/ lib/ | 사용자가 해당 사이트를 지목. 브라우저로 computed style 실측 후 적용 — 실측값과 "왜 깔끔한가" 분석은 `_workspace/09_design_reference.md` |
+| 2026-09-18 | 서체 교체 — Noto Serif KR + Noto Sans KR + IBM Plex Mono | lib/fonts.ts | 레퍼런스 헤딩이 Noto Serif JP(CJK 세리프). 한국어판 직계가 있어 한글이 폴백으로 안 떨어진다. Inter 는 한글 글리프가 없어 Noto Sans KR 로 대체 |
+| 2026-09-18 | 강조색을 `#EA5038` → `#C03A20` 으로 조정 | app/globals.css | 레퍼런스 원색은 본 화이트 위에서 3.21:1 로 WCAG AA 미달. hue 유지·명도만 조정 |
+| 2026-09-18 | ABOUT-SUB / NAV-METHOD 슬롯 신설 | content/copy/{ko,en}/ | About h1 이 두 문장이라 디스플레이 스케일을 못 씀. 한 문장으로 줄여 홈과 동일한 64px 확보 |
+

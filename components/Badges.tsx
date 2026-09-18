@@ -5,80 +5,82 @@ import { teamBadge, ui } from "@/lib/ui";
 import { LockIcon } from "./Icon";
 
 /**
- * 메타 표기 — 알약 배지를 쓰지 않는다.
- * 기술 문서의 난외 표기처럼 모노 대문자 라벨 + 신호색으로 상태를 싣는다.
- * 색만으로 뜻을 전하지 않는다 — 라벨 문자열이 항상 함께 있다.
+ * 메타 표기 — 알약 배지도, 배지 더미도 쓰지 않는다.
+ *
+ * 레퍼런스가 깔끔한 이유 §2("한 화면에 요소가 적다")에 대한 답이다.
+ * 이전 디자인은 카드 하나에 그룹·상태·팀·비공개 표식이 **네 덩어리**로 따로 떠 있었다.
+ * 지금은 두 가지만 남는다.
+ *   ① 그룹 라벨 — 제목 위에 강조색 마이크로 라벨 한 줄 (닐슨 6, 이 자리는 비우지 않는다)
+ *   ② 나머지 사실 전부 — 제목 아래 **가운뎃점으로 이은 한 줄**(모노 13px)
+ *
+ * 색으로 뜻을 전하지 않는다. 상태별 신호색(sig-*)을 팔레트에서 아예 없앴다 —
+ * 상태는 글자로만 말하고, 색은 링크와 마이크로 라벨에만 쓴다(레퍼런스 §6).
  */
 
-const LABEL =
-  "font-mono text-[0.6875rem] leading-5 tracking-[0.14em] uppercase whitespace-nowrap";
-
-const STATUS_COLOR: Record<string, string> = {
-  active: "text-sig-active",
-  live: "text-sig-live",
-  planning: "text-sig-planning",
-};
-
-export function StatusMark({ lang, status }: { lang: Lang; status: string }) {
-  if (!status) return null;
-  // 라벨은 카피 슬롯이 있으면 그것을, 없으면 데이터 원값을 쓴다.
-  const label =
-    pick(lang, "STATUS-LABEL-" + status.toUpperCase(), "STATUS." + status) ||
-    status;
-  const tone = STATUS_COLOR[status] ?? "text-ink-subtle";
-  return <span className={LABEL + " " + tone}>{label}</span>;
+/** 카드·상세에서 프로젝트가 어느 그룹인지 보여준다 (닐슨 6 — 회상보다 인식). */
+export function GroupMark({ label }: { label: string }) {
+  if (!label) return null;
+  return <span className="t-micro text-accent">{label}</span>;
 }
 
-export function TeamMark({ lang, count }: { lang: Lang; count: number }) {
-  if (count <= 0) return null;
+/** 라벨은 카피 슬롯이 있으면 그것을, 없으면 데이터 원값을 쓴다. */
+export function statusLabel(lang: Lang, status: string): string {
+  if (!status) return "";
   return (
-    <span className={LABEL + " text-ink-subtle"}>{teamBadge(lang, count)}</span>
+    pick(lang, "STATUS-LABEL-" + status.toUpperCase(), "STATUS." + status) ||
+    status
   );
 }
 
+export function teamLabel(lang: Lang, count: number): string {
+  return count > 0 ? teamBadge(lang, count) : "";
+}
+
+/** 스택은 슬래시로 잇는다. 칩을 만들지 않는다. */
+export function stackLabel(stack: string[], max = 0): string {
+  if (!stack.length) return "";
+  const shown = max > 0 ? stack.slice(0, max) : stack;
+  const rest = stack.length - shown.length;
+  return shown.join(" / ") + (rest > 0 ? " / +" + rest : "");
+}
+
+/** limited 프로젝트에만 붙는다 — 죽은 링크 대신 상태를 보인다 (닐슨 5). */
 export function LimitedMark({ lang }: { lang: Lang }) {
   const label = t(lang, "LIMITED-BADGE") || ui(lang, "UI.detailNone");
   if (!label) return null;
   return (
-    <span
-      className={LABEL + " inline-flex items-center gap-1 text-sig-held"}
-    >
-      <LockIcon className="size-3" />
+    <span className="inline-flex items-center gap-1.5">
+      <LockIcon className="size-3.5" />
       {label}
     </span>
   );
 }
 
-/** 카드·상세에서 프로젝트가 어느 그룹인지 보여준다 (닐슨 6 — 회상보다 인식). */
-export function GroupMark({ label }: { label: string }) {
-  if (!label) return null;
-  return <span className={LABEL + " text-ink-subtle"}>{label}</span>;
-}
-
-export function StackList({
-  stack,
-  max = 0,
+/**
+ * 사실을 한 줄로 잇는다. 빈 값은 통째로 빠지므로 " ·  · " 같은 꼬리가 남지 않는다.
+ * 문자열과 노드(자물쇠 표식)를 함께 받는다.
+ */
+export function MetaLine({
+  items,
+  className = "",
 }: {
-  stack: string[];
-  max?: number;
+  items: React.ReactNode[];
+  className?: string;
 }) {
-  if (!stack.length) return null;
-  const shown = max > 0 ? stack.slice(0, max) : stack;
-  const rest = stack.length - shown.length;
+  const shown = items.filter(Boolean);
+  if (!shown.length) return null;
   return (
-    <ul className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.6875rem] leading-5 text-ink-subtle">
-      {shown.map((s, i) => (
-        <li key={s} className="flex items-center gap-2">
-          {i > 0 && <span aria-hidden="true">/</span>}
-          <span>{s}</span>
-        </li>
+    <p className={"t-meta flex flex-wrap items-center text-ink-soft " + className}>
+      {shown.map((node, i) => (
+        <span key={i} className="inline-flex items-center">
+          {i > 0 && (
+            <span aria-hidden="true" className="px-2.5 opacity-60">
+              ·
+            </span>
+          )}
+          {node}
+        </span>
       ))}
-      {rest > 0 && (
-        <li className="flex items-center gap-2">
-          <span aria-hidden="true">/</span>
-          <span>+{rest}</span>
-        </li>
-      )}
-    </ul>
+    </p>
   );
 }

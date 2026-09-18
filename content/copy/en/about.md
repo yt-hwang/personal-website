@@ -8,7 +8,11 @@
 
 ## ABOUT-LEAD
 
-Data scientist and AI developer, based in Atlanta. I hold four distinct roles.
+Data scientist and AI developer.
+
+## ABOUT-SUB
+
+Based in Atlanta, holding four distinct roles.
 
 ## ROLES-TITLE
 

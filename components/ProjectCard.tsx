@@ -11,44 +11,60 @@ import {
 } from "@/lib/projects";
 import { href } from "@/lib/routes";
 import type { Lang, Project } from "@/lib/types";
-import { ordinal, ui } from "@/lib/ui";
+import { ui } from "@/lib/ui";
 
-import { GroupMark, LimitedMark, StackList, StatusMark, TeamMark } from "./Badges";
+import {
+  GroupMark,
+  LimitedMark,
+  MetaLine,
+  stackLabel,
+  statusLabel,
+  teamLabel,
+} from "./Badges";
 import { ExternalLinks } from "./ExternalLinks";
 import { GoLink } from "./Links";
 
 /**
  * 프로젝트 카드는 **한 종류**다. 프로젝트마다 다른 레이아웃을 만들지 않는다.
- * 갈리는 것은 그룹의 밀도(`GROUP_META[].density`) 하나뿐이다 —
- * 팀·역할·스택이 다 있는 에이전트 시스템은 넓은 판(full),
- * 한 줄이면 끝나는 앱은 밀도 높은 목록(compact)으로 같은 데이터를 조판만 달리 싣는다.
+ * 갈리는 것은 그룹의 밀도(`GROUP_META[].density`) 하나뿐이다.
+ *
+ * ── 이미지가 없는데 어떻게 그리드의 여백감을 내는가 (이번 재디자인의 핵심 문제)
+ *
+ * 레퍼런스는 "최근 작업"을 이미지 3열 그리드로 보여준다. 우리는 쓸 수 있는 이미지가 0장이다
+ * (`assets[].cleared` 전부 false). 빈 박스나 회색 플레이스홀더를 두면 즉시 미완성으로 읽힌다.
+ *
+ * 그래서 **이미지가 하던 두 가지 일을 각각 다른 것으로 대신한다.**
+ *   ① 덩어리감(mass) → 큰 세리프 제목. 28~40px 제목이 한 항목의 시각적 무게를 혼자 진다.
+ *      이미지 대신 **글자 자체가 그림**이 된다. 그래서 제목만 크게 두고 나머지는 전부 16px 이하로 눌렀다.
+ *   ② 리듬(rhythm) → **좌우로 번갈아 들어가는 비대칭 열**. 3열 그리드가 만들던 "찼다 / 비었다"의
+ *      교차를, 12열 격자에서 항목이 홀수는 왼쪽(1~7열)·짝수는 오른쪽(5~12열)에 놓이며 만든다.
+ *      비는 칸은 플레이스홀더가 아니라 **아무것도 없는 격자 칸**이다. 그릴 게 없으면 그리지 않는다.
+ * 항목 사이는 가는 규칙선 하나와 큰 세로 여백(최대 4.5rem × 2)으로 끊는다.
  *
  * 카드만 보고도 "무엇이고 어느 그룹인가"를 알 수 있어야 한다(닐슨 6) —
- * 그룹 라벨·상태·역할이 제목과 함께 항상 붙어 있다.
+ * 그룹 라벨이 제목 위 강조색 마이크로 라벨로 항상 붙는다.
  * 데이터가 없는 필드는 요소 자체를 렌더하지 않는다(닐슨 5).
  */
 
-function MetaLine({
+const PLATE = "border-t border-rule py-10 sm:py-14 lg:py-[4.5rem]";
+const ROW = "border-t border-rule py-7 sm:py-9";
+
+/** 홀수는 왼쪽 열, 짝수는 오른쪽 열 — 대칭 그리드를 만들지 않는다(레퍼런스 §5). */
+function bayColumn(index: number): string {
+  return index % 2 === 1
+    ? "lg:col-span-7"
+    : "lg:col-start-5 lg:col-span-8";
+}
+
+function Title({
   p,
   lang,
-  groupLabel,
+  className,
 }: {
   p: Project;
   lang: Lang;
-  groupLabel: string;
+  className: string;
 }) {
-  const meta = cardShowsMeta(p);
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-      <GroupMark label={groupLabel} />
-      <StatusMark lang={lang} status={p.status} />
-      {meta && <TeamMark lang={lang} count={p.agent_team.count} />}
-      {p.visibility === "limited" && <LimitedMark lang={lang} />}
-    </div>
-  );
-}
-
-function Title({ p, lang, className }: { p: Project; lang: Lang; className: string }) {
   const title = text(p.title, lang);
   if (!title) return null;
   // limited 카드는 <a> 로 만들지 않는다 — 커서만 바뀌고 아무 일도 안 일어나면 버그로 읽힌다.
@@ -57,7 +73,7 @@ function Title({ p, lang, className }: { p: Project; lang: Lang; className: stri
       {hasDetailPage(p) ? (
         <Link
           href={href(lang, "/projects/" + p.slug)}
-          className="underline decoration-transparent decoration-from-font underline-offset-4 hover:text-accent hover:decoration-[var(--accent)]"
+          className="underline decoration-transparent decoration-from-font underline-offset-[0.25em] hover:text-accent hover:decoration-accent"
         >
           {title}
         </Link>
@@ -68,7 +84,42 @@ function Title({ p, lang, className }: { p: Project; lang: Lang; className: stri
   );
 }
 
-function FullRow({
+function facts(p: Project, lang: Lang, maxStack: number): React.ReactNode[] {
+  const meta = cardShowsMeta(p);
+  return [
+    statusLabel(lang, p.status),
+    periodLabel(p),
+    meta ? teamLabel(lang, p.agent_team.count) : "",
+    meta ? stackLabel(p.stack, maxStack) : "",
+    p.visibility === "limited" ? <LimitedMark key="lim" lang={lang} /> : "",
+  ];
+}
+
+function Actions({
+  p,
+  lang,
+  className = "",
+}: {
+  p: Project;
+  lang: Lang;
+  className?: string;
+}) {
+  const links = renderableLinks(p);
+  if (!hasDetailPage(p) && !links.length) return null;
+  return (
+    <div className={"flex flex-wrap items-center gap-x-7 gap-y-2 " + className}>
+      {hasDetailPage(p) && (
+        <GoLink href={href(lang, "/projects/" + p.slug)}>
+          {ui(lang, "UI.detail")}
+        </GoLink>
+      )}
+      <ExternalLinks links={links} lang={lang} />
+    </div>
+  );
+}
+
+/** 에이전트 시스템 — 한 항목이 한 판(plate)을 쓴다. 제목이 이미지 자리를 대신한다. */
+function Plate({
   p,
   lang,
   index,
@@ -82,117 +133,63 @@ function FullRow({
   const tagline = text(p.tagline, lang);
   const role = text(p.role, lang);
   const meta = cardShowsMeta(p);
-  const links = renderableLinks(p);
-  const period = periodLabel(p);
 
   return (
-    <article className="grid gap-x-8 gap-y-3 border-t border-[var(--rule)] py-7 sm:grid-cols-[4.5rem_minmax(0,1fr)]">
-      <div className="flex items-baseline gap-3 sm:block">
-        <p className="font-mono text-[1.375rem] leading-none text-ink-subtle tabular-nums">
-          {ordinal(index)}
-        </p>
-        {period && (
-          <p className="font-mono text-[0.6875rem] text-ink-subtle tabular-nums sm:mt-2">
-            {period}
-          </p>
-        )}
-      </div>
+    <article className={"bay " + PLATE}>
+      <div className={bayColumn(index)}>
+        <GroupMark label={groupLabel} />
 
-      <div className="min-w-0">
-        <MetaLine p={p} lang={lang} groupLabel={groupLabel} />
-
-        <Title
-          p={p}
-          lang={lang}
-          className="mt-2 font-display text-xl leading-snug font-medium tracking-tight text-ink sm:text-2xl"
-        />
+        <Title p={p} lang={lang} className="t-title mt-4" />
 
         {/* 무엇을 만들었나만큼 어떤 위치였나가 중요하다. 역할을 제목 바로 아래 둔다. */}
-        {meta && role && (
-          <p className="mt-1.5 font-mono text-[0.8125rem] tracking-[0.04em] text-accent">
-            {role}
-          </p>
-        )}
+        {meta && role && <p className="t-meta mt-3 text-ink">{role}</p>}
 
-        {tagline && (
-          <p className="mt-3 max-w-2xl leading-relaxed text-ink-muted">
-            {tagline}
-          </p>
-        )}
+        {tagline && <p className="measure-tight mt-6">{tagline}</p>}
 
-        {meta && p.stack.length > 0 && (
-          <div className="mt-4">
-            <StackList stack={p.stack} max={4} />
-          </div>
-        )}
+        <MetaLine items={facts(p, lang, 4)} className="mt-6" />
 
-        {(hasDetailPage(p) || links.length > 0) && (
-          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.8125rem]">
-            {hasDetailPage(p) && (
-              <GoLink href={href(lang, "/projects/" + p.slug)}>
-                {ui(lang, "UI.detail")}
-              </GoLink>
-            )}
-            <ExternalLinks links={links} lang={lang} />
-          </div>
-        )}
+        <Actions p={p} lang={lang} className="mt-7" />
       </div>
     </article>
   );
 }
 
-function CompactRow({
+/**
+ * 앱 — 한 줄이면 끝나는 항목. 제목과 한 줄 설명을 **한 문장처럼 이어** 싣는다.
+ * 같은 줄 안에서 서체·굵기·크기가 바뀌며 위계를 만든다(레퍼런스 §7).
+ */
+function Row({
   p,
   lang,
-  index,
   groupLabel,
 }: {
   p: Project;
   lang: Lang;
-  index: number;
   groupLabel: string;
 }) {
   const tagline = text(p.tagline, lang);
-  const role = text(p.role, lang);
-  const meta = cardShowsMeta(p);
-  const links = renderableLinks(p);
 
   return (
-    <article className="grid gap-x-8 gap-y-1.5 border-t border-[var(--rule)] py-4 sm:grid-cols-[4.5rem_minmax(0,1fr)]">
-      <p className="font-mono text-[0.875rem] leading-6 text-ink-subtle tabular-nums">
-        {ordinal(index)}
-      </p>
-
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <Title
-            p={p}
-            lang={lang}
-            className="font-display text-base leading-snug font-medium tracking-tight text-ink"
-          />
-          <MetaLine p={p} lang={lang} groupLabel={groupLabel} />
-        </div>
-
-        {tagline && (
-          <p className="mt-1 max-w-2xl text-[0.875rem] leading-relaxed text-ink-muted">
-            {tagline}
-          </p>
-        )}
-
-        <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[0.8125rem]">
-          {meta && role && (
-            <span className="font-mono text-[0.6875rem] tracking-[0.04em] text-accent">
-              {role}
+    <article className={"bay " + ROW}>
+      <div className="lg:col-span-9 lg:col-start-2">
+        <p>
+          <Title p={p} lang={lang} className="t-sub inline" />
+          {tagline && (
+            <span className="ml-2.5 align-baseline">
+              <span aria-hidden="true" className="mr-2.5 text-ink-soft">
+                —
+              </span>
+              {tagline}
             </span>
           )}
-          {meta && p.stack.length > 0 && <StackList stack={p.stack} max={3} />}
-          {hasDetailPage(p) && (
-            <GoLink href={href(lang, "/projects/" + p.slug)}>
-              {ui(lang, "UI.detail")}
-            </GoLink>
-          )}
-          <ExternalLinks links={links} lang={lang} />
-        </div>
+        </p>
+
+        <MetaLine
+          items={[groupLabel, ...facts(p, lang, 3)]}
+          className="mt-3.5"
+        />
+
+        <Actions p={p} lang={lang} className="mt-4" />
       </div>
     </article>
   );
@@ -210,15 +207,14 @@ export function ProjectCard({
   if (!text(p.title, lang)) return null;
   const g = groupMeta(p.group);
   const groupLabel = t(lang, g.navSlot);
-  const props = { p, lang, index, groupLabel };
   return g.density === "compact" ? (
-    <CompactRow {...props} />
+    <Row p={p} lang={lang} groupLabel={groupLabel} />
   ) : (
-    <FullRow {...props} />
+    <Plate p={p} lang={lang} index={index} groupLabel={groupLabel} />
   );
 }
 
-/** 목록은 대칭 그리드가 아니라 규칙선으로 나뉜 한 줄짜리 항목들이다. */
+/** 목록은 대칭 카드 그리드가 아니라 규칙선으로 나뉜 판들이다. */
 export function ProjectList({ items, lang }: { items: Project[]; lang: Lang }) {
   if (!items.length) return null;
   return (
