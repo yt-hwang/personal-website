@@ -1,4 +1,4 @@
-import { paragraphs, pick, t } from "@/lib/copy";
+import { paragraphs, pick, roles, t } from "@/lib/copy";
 import {
   GRID_GROUPS,
   featuredProjects,
@@ -101,7 +101,7 @@ function Gloss({ lang, body }: { lang: Lang; body: string }) {
   if (!body) return null;
   return (
     <div className="bay">
-      <p className="measure border-l border-rule pl-5 lg:col-span-6 lg:col-start-7">
+      <p className="measure border-l border-rule pl-5 lg:col-span-7">
         <span className="t-micro mr-3 text-accent">{ui(lang, "UI.terms")}</span>
         {body}
       </p>
@@ -162,7 +162,42 @@ function Emphasized({ value }: { value: string }) {
   );
 }
 
-/** 첫 화면 — 위쪽을 크게 비우고 시작한다. 본문은 오른쪽 열에만 둔다(레퍼런스 §5). */
+/** 히어로 왼쪽 열 — 지금 맡고 있는 역할. 자세한 설명(DESC)은 About 에만 둔다. */
+const HERO_ROLES = 4;
+
+function CurrentRoles({ lang }: { lang: Lang }) {
+  const items = roles(lang, HERO_ROLES).filter((r) => r.org || r.title);
+  if (!items.length) return null;
+  const label = t(lang, "ROLES-TITLE");
+
+  return (
+    <div className="mt-8 lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:mt-0">
+      {label && <p className="t-micro text-accent">{label}</p>}
+      <ul className={"space-y-5" + (label ? " mt-6" : "")}>
+        {items.map((r) => (
+          <li key={r.n}>
+            {r.org && <p className="t-meta text-ink-soft">{r.org}</p>}
+            {r.title && <p className="mt-0.5">{r.title}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * 첫 화면 — 위쪽을 크게 비우고 시작한다.
+ *
+ * 레퍼런스의 히어로는 h1 아래를 **왼쪽 인물 사진 / 오른쪽 본문**으로 나눈다.
+ * 우리는 사진을 넣지 않으므로 왼쪽을 비워 두면 그 칸이 "여백"이 아니라 **"빠진 것"** 으로 읽힌다
+ * (실제로 그렇게 읽혔다 — 사용자 지적, 2026-09-18).
+ * 장식(도형·그라디언트·이니셜)으로 때우지 않고 **이미 카피에 있는 사실**을 넣었다 —
+ * 지금 맡고 있는 역할 4개(`ROLE-n-ORG` / `-TITLE`). 채용담당자가 가장 먼저 찾는 정보이고,
+ * 그때까지 About 페이지에만 있었다. 비대칭(레퍼런스 §5)은 그대로다: 왼쪽 4열 / 오른쪽 7열.
+ *
+ * DOM 순서는 [보조문장 + CTA] → [역할] 이다. 좁은 화면에서 CTA 가 역할 목록 아래로
+ * 밀려나지 않게 하기 위해서다. 큰 화면에서는 두 칸이 같은 행에 나란히 놓인다.
+ */
 function Masthead({ lang }: { lang: Lang }) {
   const h1 = t(lang, "HERO-1");
   const sub = t(lang, "HERO-2");
@@ -178,7 +213,7 @@ function Masthead({ lang }: { lang: Lang }) {
       )}
 
       <div className={"bay " + HEAD_GAP}>
-        <div className="lg:col-span-7 lg:col-start-6">
+        <div className="lg:col-span-7 lg:col-start-6 lg:row-start-1">
           {sub && <p className="t-lead">{sub}</p>}
           {(cta1 || cta2) && (
             <div className="mt-9 flex flex-wrap gap-3">
@@ -187,6 +222,8 @@ function Masthead({ lang }: { lang: Lang }) {
             </div>
           )}
         </div>
+
+        <CurrentRoles lang={lang} />
       </div>
 
       <Ledger lang={lang} className="mt-[clamp(4rem,12vh,7.5rem)]" />
@@ -234,12 +271,47 @@ function repoLink(lang: Lang): { label: string; url: string } {
   return { label, url: withProtocol(env) };
 }
 
+/**
+ * 일하는 방식 한 덩어리.
+ *
+ * **왼쪽 칸에 이름표가 있을 때만 본문을 오른쪽으로 민다.** 이름표 카피(`METHOD-n.title`)가
+ * 아직 없어서, 예전에는 본문만 5~12열에 놓이고 왼쪽 네 칸이 네 덩어리 내내 통째로 비어 있었다 —
+ * 사진 자리로 읽히는 세로 구멍이었다. 지금은 이름표가 없으면 본문이 왼쪽에서 시작하고,
+ * 남는 공간은 오른쪽 바깥(페이지 가장자리)으로 간다. 그건 구멍이 아니라 여백이다.
+ * 이름표 슬롯이 생기면 자동으로 [라벨 1~3열][본문 5~12열] 두 칸으로 갈린다 —
+ * 프로젝트 상세 페이지의 블록과 같은 모양이라 사이트 전체가 한 가지 규칙만 쓴다(닐슨 4).
+ */
+function MethodBlock({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="bay border-t border-rule py-9 lg:py-12">
+      {title && (
+        <h3 className="t-micro text-accent lg:col-span-3">{title}</h3>
+      )}
+      <div
+        className={
+          title ? "lg:col-span-8 lg:col-start-5" : "lg:col-span-9"
+        }
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function MethodSection({ lang }: { lang: Lang }) {
   const intro = t(lang, "METHOD-INTRO");
   const patterns = [1, 2, 3]
     .map((n) => ({
       key: n,
-      title: t(lang, "METHOD-" + n + ".title"),
+      // 이름표 슬롯은 `SEC4-TITLE` 처럼 대문자 접미사를 쓴다. 점 표기(`METHOD-1.title`)도
+      // 받아두는 이유는 SELFDEMO-LINK 가 그 형태를 쓰고 있어 혼용될 수 있기 때문이다.
+      title: t(lang, "METHOD-" + n + "-TITLE") || t(lang, "METHOD-" + n + ".title"),
       body: t(lang, "METHOD-" + n + ".body") || t(lang, "METHOD-" + n),
     }))
     .filter((p) => p.title || p.body);
@@ -254,38 +326,31 @@ function MethodSection({ lang }: { lang: Lang }) {
       {patterns.length > 0 && (
         <ol>
           {patterns.map((p) => (
-            <li key={p.key} className="bay border-t border-rule py-9 lg:py-12">
-              <div className="lg:col-span-8 lg:col-start-5">
-                {p.title && <h3 className="t-sub">{p.title}</h3>}
-                {p.body && (
-                  <p className={"measure" + (p.title ? " mt-4" : "")}>
-                    {p.body}
-                  </p>
-                )}
-              </div>
+            <li key={p.key}>
+              <MethodBlock title={p.title}>
+                {p.body && <p className="measure">{p.body}</p>}
+              </MethodBlock>
             </li>
           ))}
         </ol>
       )}
 
       {(selfDemo || repo.url) && (
-        <div className="bay border-t border-rule py-9 lg:py-12">
-          <div className="lg:col-span-8 lg:col-start-5">
-            {selfDemo &&
-              paragraphs(selfDemo).map((para, i) => (
-                <p key={i} className={"measure" + (i > 0 ? " mt-4" : "")}>
-                  {para}
-                </p>
-              ))}
-            {repo.url && (
-              <p className="mt-6">
-                <OutLink href={repo.url} lang={lang}>
-                  {repo.label}
-                </OutLink>
+        <MethodBlock title={t(lang, "SELFDEMO-TITLE")}>
+          {selfDemo &&
+            paragraphs(selfDemo).map((para, i) => (
+              <p key={i} className={"measure" + (i > 0 ? " mt-4" : "")}>
+                {para}
               </p>
-            )}
-          </div>
-        </div>
+            ))}
+          {repo.url && (
+            <p className="mt-6">
+              <OutLink href={repo.url} lang={lang}>
+                {repo.label}
+              </OutLink>
+            </p>
+          )}
+        </MethodBlock>
       )}
     </Section>
   );
@@ -305,7 +370,13 @@ function FeaturedBlock({ p, lang }: { p: Project; lang: Lang }) {
 
   return (
     <article className="bay border-t border-rule py-10 sm:py-14">
-      <div className="lg:col-span-4">
+      {/*
+        카드와 같은 해부도를 쓴다 — 왼쪽 칸은 **정체와 사실과 행동**(이름·역할·메타·링크),
+        오른쪽 칸은 **서술과 근거**(한 줄 설명·본문·하이라이트).
+        링크를 오른쪽 맨 아래에서 왼쪽 칸으로 옮긴 이유는 그쪽이 짧아서 바닥에
+        사진 자리 모양의 빈 사각형이 남았기 때문이다. 옮기니 두 칸의 높이가 맞는다.
+      */}
+      <div className="lg:col-span-5">
         {/*
           그룹 라벨을 여기서는 렌더하지 않는다 — 이 블록은 그룹 하나를 통째로 쓰는 단독 섹션이라
           sticky 마이크로 라벨과 섹션 제목이 바로 위에서 이미 같은 말을 하고 있다(닐슨 6 은 sticky 라벨이 만족한다).
@@ -321,9 +392,19 @@ function FeaturedBlock({ p, lang }: { p: Project; lang: Lang }) {
           ]}
           className="mt-6"
         />
+        {(hasDetailPage(p) || links.length > 0) && (
+          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2">
+            {hasDetailPage(p) && (
+              <GoLink href={href(lang, "/projects/" + p.slug)}>
+                {ui(lang, "UI.detail")}
+              </GoLink>
+            )}
+            <ExternalLinks links={links} lang={lang} />
+          </div>
+        )}
       </div>
 
-      <div className="lg:col-span-7 lg:col-start-6">
+      <div className="lg:col-span-6 lg:col-start-7">
         {tagline && <p className="t-lead">{tagline}</p>}
         {body &&
           paragraphs(body).map((para, i) => (
@@ -339,16 +420,6 @@ function FeaturedBlock({ p, lang }: { p: Project; lang: Lang }) {
               </li>
             ))}
           </ul>
-        )}
-        {(hasDetailPage(p) || links.length > 0) && (
-          <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2">
-            {hasDetailPage(p) && (
-              <GoLink href={href(lang, "/projects/" + p.slug)}>
-                {ui(lang, "UI.detail")}
-              </GoLink>
-            )}
-            <ExternalLinks links={links} lang={lang} />
-          </div>
         )}
       </div>
     </article>
@@ -420,8 +491,12 @@ export function HomePage({ lang }: { lang: Lang }) {
         heading={pick(lang, "SEC7-TITLE", "SECTION.contact")}
         lead={t(lang, "CONTACT")}
       >
+        {/*
+          연락 수단을 오른쪽 6열에 두면 섹션 제목 아래 왼쪽이 세로로 길게 비어
+          인물 사진 자리처럼 읽혔다. 왼쪽으로 붙이면 남는 공간이 페이지 바깥쪽 여백이 된다.
+        */}
         <div className="bay">
-          <div className="lg:col-span-6 lg:col-start-7">
+          <div className="lg:col-span-6">
             <ContactChannels lang={lang} />
             <p className="mt-10">
               <GoLink href={href(lang, "/about")}>

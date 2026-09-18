@@ -97,8 +97,14 @@ export function ProjectDetail({ p, lang }: { p: Project; lang: Lang }) {
         <GroupMark label={groupLabel} />
         {title && <h1 className="t-display measure-display mt-5">{title}</h1>}
 
+        {/*
+          한 줄 설명·역할·메타를 오른쪽 6~12열에 두면, 전폭 h1 아래 왼쪽이
+          세로로 긴 빈 사각형이 된다 — 레퍼런스에서 그 자리는 사진 자리였다.
+          사진이 없으므로 왼쪽으로 붙인다. 남는 공간은 오른쪽 바깥 여백이 된다.
+          비대칭은 아래 블록(라벨 1~3열 / 본문 5~12열)이 계속 진다.
+        */}
         <div className="bay mt-[clamp(2rem,6vh,3.5rem)]">
-          <div className="lg:col-span-7 lg:col-start-6">
+          <div className="lg:col-span-7">
             {tagline && <p className="t-lead">{tagline}</p>}
             {role && <p className="t-meta mt-5 text-ink">{role}</p>}
             <MetaLine

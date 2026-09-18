@@ -1,4 +1,4 @@
-import { paragraphs, pick, t } from "@/lib/copy";
+import { paragraphs, pick, roles as readRoles, t } from "@/lib/copy";
 import type { Lang } from "@/lib/types";
 import { ui } from "@/lib/ui";
 
@@ -8,6 +8,11 @@ import { ContactChannels } from "./ContactChannels";
  * About — 산문 한 덩어리가 아니라 **구조화된 슬롯**으로 짠다.
  *
  * 머리는 `ABOUT-LEAD`(선언문 한 줄, 홈 히어로와 같은 64px) + `ABOUT-SUB`(보조문장 18px) 두 층이다.
+ * 보조문장은 **왼쪽에 붙인다**. 홈 히어로처럼 오른쪽 열에만 두면 전폭 h1 아래 왼쪽이
+ * 인물 사진 자리 모양으로 비는데, 홈은 그 칸을 역할 목록으로 채울 수 있었지만
+ * About 은 바로 아래 섹션이 그 역할 목록이라 같은 것을 두 번 실을 수 없다.
+ * 그래서 여기서는 채우는 대신 **구도를 다시 잡았다** — 왼쪽으로 붙이면 남는 공간이
+ * 페이지 바깥쪽 여백이 되고, 비대칭은 아래 섹션(제목 1~4열 / 본문 6~12열)이 계속 진다.
  *
  * 페이지의 주인공은 "지금 맡고 있는 역할 4개"다. 한 역할은 세 층으로 쌓는다.
  *   기관명(ROLE-n-ORG)   강조색 마이크로 라벨 — 어디에서
@@ -22,22 +27,6 @@ import { ContactChannels } from "./ContactChannels";
  *
  * 섹션 번호(01/02/03)는 걷어냈다. 섹션의 정체는 번호가 아니라 제목이 말한다.
  */
-
-const MAX_ROLES = 12;
-
-type Role = { n: number; org: string; title: string; desc: string };
-
-function readRoles(lang: Lang): Role[] {
-  const out: Role[] = [];
-  for (let n = 1; n <= MAX_ROLES; n++) {
-    const org = t(lang, "ROLE-" + n + "-ORG");
-    const title = t(lang, "ROLE-" + n + "-TITLE");
-    const desc = t(lang, "ROLE-" + n + "-DESC");
-    if (!org && !title && !desc) continue;
-    out.push({ n, org, title, desc });
-  }
-  return out;
-}
 
 /** 홈과 같은 섹션 조판 — 규칙선 하나, 큰 여백, 왼쪽 제목 / 오른쪽 본문의 비대칭. */
 function Section({
@@ -98,7 +87,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
         {lead && <h1 className="t-display measure-display mt-5">{lead}</h1>}
         {sub && (
           <div className="bay mt-[clamp(2.25rem,6vh,4rem)]">
-            <p className="t-lead lg:col-span-7 lg:col-start-6">{sub}</p>
+            <p className="t-lead lg:col-span-7">{sub}</p>
           </div>
         )}
       </header>

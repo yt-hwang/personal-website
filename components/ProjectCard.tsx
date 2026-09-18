@@ -5,6 +5,7 @@ import {
   cardShowsMeta,
   groupMeta,
   hasDetailPage,
+  list,
   periodLabel,
   renderableLinks,
   text,
@@ -28,17 +29,31 @@ import { GoLink } from "./Links";
  * 프로젝트 카드는 **한 종류**다. 프로젝트마다 다른 레이아웃을 만들지 않는다.
  * 갈리는 것은 그룹의 밀도(`GROUP_META[].density`) 하나뿐이다.
  *
- * ── 이미지가 없는데 어떻게 그리드의 여백감을 내는가 (이번 재디자인의 핵심 문제)
+ * ── 이미지가 없는데 어떻게 그리드의 여백감을 내는가
  *
  * 레퍼런스는 "최근 작업"을 이미지 3열 그리드로 보여준다. 우리는 쓸 수 있는 이미지가 0장이다
  * (`assets[].cleared` 전부 false). 빈 박스나 회색 플레이스홀더를 두면 즉시 미완성으로 읽힌다.
  *
- * 그래서 **이미지가 하던 두 가지 일을 각각 다른 것으로 대신한다.**
  *   ① 덩어리감(mass) → 큰 세리프 제목. 28~40px 제목이 한 항목의 시각적 무게를 혼자 진다.
  *      이미지 대신 **글자 자체가 그림**이 된다. 그래서 제목만 크게 두고 나머지는 전부 16px 이하로 눌렀다.
- *   ② 리듬(rhythm) → **좌우로 번갈아 들어가는 비대칭 열**. 3열 그리드가 만들던 "찼다 / 비었다"의
- *      교차를, 12열 격자에서 항목이 홀수는 왼쪽(1~7열)·짝수는 오른쪽(5~12열)에 놓이며 만든다.
- *      비는 칸은 플레이스홀더가 아니라 **아무것도 없는 격자 칸**이다. 그릴 게 없으면 그리지 않는다.
+ *   ② **판은 두 칸이다.** 2026-09-18 이전에는 판 하나가 한 칸만 쓰고 홀수는 왼쪽·짝수는 오른쪽에
+ *      번갈아 놓였다. 맞은편 칸은 원래 작업 스크린샷이 들어갈 자리였고, 사진이 없으니
+ *      여섯 판 내내 큰 빈 사각형이 따라다녔다 — 여백이 아니라 빠진 것으로 읽혔다.
+ *      지금은 그 칸에 **이미 데이터에 있는 사실**을 넣는다:
+ *        왼쪽 = 정체·사실·행동 (그룹 · 이름 · 역할 · 메타 줄 · 링크)
+ *        오른쪽 = 서술·근거 (한 줄 설명 · 하이라이트 2개)
+ *      새 사실을 지어내지 않았다. 하이라이트는 그때까지 상세 페이지에만 있던 데이터다.
+ *      `limited` 카드는 하이라이트를 싣지 않는다(공개 게이트: "limited 는 한 문장 + 태그만").
+ *      오른쪽 칸에 실을 것이 하나도 없으면 두 칸으로 나누지 않고 왼쪽 칸을 넓힌다 —
+ *      빈 칸을 만들 바에는 칸을 안 만든다.
+ *   ③ **홀짝 교차 배치는 철회했다** (2026-09-18). 한 그룹의 항목은 전부 같은 열에 선다.
+ *      교차는 레퍼런스의 이미지 3열 그리드의 *모양*만 흉내 낸 것이었고, 이미지가 없으니
+ *      결과는 리듬이 아니라 구멍이었다 — 히어로에서 지적받은 "사진 자리가 비어 보인다"를
+ *      목록에서 그대로 재생산했다. 게다가 훑는 목록에서 눈이 좌→우→좌로 점프해 스캔이 느려지고,
+ *      같은 종류의 항목을 다른 위치에 세우는 것은 **없는 차이를 있는 것처럼 보이게 하는 신호**라
+ *      닐슨 4(일관성)에 어긋난다. 항목 사이의 구분은 위치가 아니라 **내용의 무게**가 진다 —
+ *      제목 크기, 여백, 메타 줄 유무, 그리고 `GROUP_META[].density`(판 / 행).
+ *      비대칭은 역할이 다른 두 요소 사이(섹션 제목 ↔ 리드, 정체 ↔ 근거)에만 쓴다.
  * 항목 사이는 가는 규칙선 하나와 큰 세로 여백(최대 4.5rem × 2)으로 끊는다.
  *
  * 카드만 보고도 "무엇이고 어느 그룹인가"를 알 수 있어야 한다(닐슨 6) —
@@ -49,12 +64,18 @@ import { GoLink } from "./Links";
 const PLATE = "border-t border-rule py-10 sm:py-14 lg:py-[4.5rem]";
 const ROW = "border-t border-rule py-7 sm:py-9";
 
-/** 홀수는 왼쪽 열, 짝수는 오른쪽 열 — 대칭 그리드를 만들지 않는다(레퍼런스 §5). */
-function bayColumn(index: number): string {
-  return index % 2 === 1
-    ? "lg:col-span-7"
-    : "lg:col-start-5 lg:col-span-8";
-}
+/**
+ * 한 그룹의 항목은 **전부 같은 열에 선다.** 왼쪽 = 정체·사실·행동, 오른쪽 = 서술·근거.
+ * 항목마다 위치를 바꾸지 않는다(위 ③).
+ */
+const IDENTITY_COL = "lg:col-span-5";
+const EVIDENCE_COL = "lg:col-span-6 lg:col-start-7";
+
+/** 오른쪽 칸이 통째로 비면 두 칸으로 나누지 않는다. */
+const IDENTITY_ALONE = "lg:col-span-9";
+
+/** 카드에 싣는 하이라이트 수. 상세 페이지(3개)보다 하나 적게 둬 카드가 무거워지지 않게 한다. */
+const CARD_HIGHLIGHTS = 2;
 
 function Title({
   p,
@@ -122,21 +143,22 @@ function Actions({
 function Plate({
   p,
   lang,
-  index,
   groupLabel,
 }: {
   p: Project;
   lang: Lang;
-  index: number;
   groupLabel: string;
 }) {
   const tagline = text(p.tagline, lang);
   const role = text(p.role, lang);
   const meta = cardShowsMeta(p);
+  // limited 는 "한 문장 + 태그만" 이다 (05_privacy_gate.md). 하이라이트를 카드에 싣지 않는다.
+  const highlights = meta ? list(p.highlights, lang).slice(0, CARD_HIGHLIGHTS) : [];
+  const hasEvidence = Boolean(tagline) || highlights.length > 0;
 
   return (
     <article className={"bay " + PLATE}>
-      <div className={bayColumn(index)}>
+      <div className={hasEvidence ? IDENTITY_COL : IDENTITY_ALONE}>
         <GroupMark label={groupLabel} />
 
         <Title p={p} lang={lang} className="t-title mt-4" />
@@ -144,12 +166,28 @@ function Plate({
         {/* 무엇을 만들었나만큼 어떤 위치였나가 중요하다. 역할을 제목 바로 아래 둔다. */}
         {meta && role && <p className="t-meta mt-3 text-ink">{role}</p>}
 
-        {tagline && <p className="measure-tight mt-6">{tagline}</p>}
-
         <MetaLine items={facts(p, lang, 4)} className="mt-6" />
 
         <Actions p={p} lang={lang} className="mt-7" />
       </div>
+
+      {hasEvidence && (
+        <div className={EVIDENCE_COL}>
+          {tagline && <p className="measure-tight">{tagline}</p>}
+          {highlights.length > 0 && (
+            <ul className={"space-y-3" + (tagline ? " mt-7" : "")}>
+              {highlights.map((h) => (
+                <li
+                  key={h}
+                  className="measure-tight border-l border-rule pl-5 text-ink-soft"
+                >
+                  {h}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </article>
   );
 }
@@ -195,22 +233,14 @@ function Row({
   );
 }
 
-export function ProjectCard({
-  p,
-  lang,
-  index,
-}: {
-  p: Project;
-  lang: Lang;
-  index: number;
-}) {
+export function ProjectCard({ p, lang }: { p: Project; lang: Lang }) {
   if (!text(p.title, lang)) return null;
   const g = groupMeta(p.group);
   const groupLabel = t(lang, g.navSlot);
   return g.density === "compact" ? (
     <Row p={p} lang={lang} groupLabel={groupLabel} />
   ) : (
-    <Plate p={p} lang={lang} index={index} groupLabel={groupLabel} />
+    <Plate p={p} lang={lang} groupLabel={groupLabel} />
   );
 }
 
@@ -219,9 +249,9 @@ export function ProjectList({ items, lang }: { items: Project[]; lang: Lang }) {
   if (!items.length) return null;
   return (
     <ul>
-      {items.map((p, i) => (
+      {items.map((p) => (
         <li key={p.slug}>
-          <ProjectCard p={p} lang={lang} index={i + 1} />
+          <ProjectCard p={p} lang={lang} />
         </li>
       ))}
     </ul>

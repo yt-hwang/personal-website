@@ -134,3 +134,30 @@ export function paragraphs(value: string): string[] {
     .map((s) => s.trim())
     .filter(Boolean);
 }
+
+/**
+ * "지금 맡고 있는 역할" 슬롯 묶음 (`ROLE-1-ORG` / `-TITLE` / `-DESC` …).
+ *
+ * About 페이지가 쓰던 읽기 로직을 여기로 올렸다 — 홈 히어로도 같은 슬롯을 쓰기 때문이다.
+ * (2026-09-18: 히어로 왼쪽 아래가 인물 사진 자리 모양으로 비어 있었다. 장식으로 채우지 않고
+ *  **이미 있는 카피**인 현재 역할 4개를 그 자리에 넣었다. 채용담당자에게 가장 값이 큰 사실이고,
+ *  그때까지 About 에만 있었다.)
+ *
+ * 역할 개수는 코드에 고정돼 있지 않다. `ROLE-5-*` 가 생기면 그대로 한 줄 더 붙는다.
+ * 세 슬롯이 전부 비면 그 항목은 렌더하지 않는다 (닐슨 5 — 빈 칸을 만들지 않는다).
+ */
+export type RoleEntry = { n: number; org: string; title: string; desc: string };
+
+const MAX_ROLES = 12;
+
+export function roles(lang: Lang, limit = MAX_ROLES): RoleEntry[] {
+  const out: RoleEntry[] = [];
+  for (let n = 1; n <= MAX_ROLES && out.length < limit; n++) {
+    const org = t(lang, "ROLE-" + n + "-ORG");
+    const title = t(lang, "ROLE-" + n + "-TITLE");
+    const desc = t(lang, "ROLE-" + n + "-DESC");
+    if (!org && !title && !desc) continue;
+    out.push({ n, org, title, desc });
+  }
+  return out;
+}

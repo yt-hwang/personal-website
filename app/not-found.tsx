@@ -11,7 +11,9 @@ import "./globals.css";
 /**
  * 404 는 두 언어를 함께 보여주고, **어디로 갈 수 있는지**를 같이 준다 (닐슨 9 — 오류 복구).
  *
- * 이중언어인 이유: 루트 레이아웃이 언어별로 둘(app/(ko), app/(en))이라 Next 가 이 전역 404 에
+ * 영어가 먼저 온다 — 기본 언어가 영어이고(2026-09-18 정책 변경) 이 페이지의 <html lang> 도 en 이다.
+ *
+ * 이중언어인 이유: 루트 레이아웃이 언어별로 둘(app/(en), app/(ko))이라 Next 가 이 전역 404 에
  * 레이아웃을 붙이지 못한다. 라우트 그룹 안에 not-found 를 두거나 catch-all 로 언어를 나누면
  * 요청 시 NoFallbackError 가 나면서 본문이 통째로 비어 버린다(실측 확인).
  * 그래서 이 페이지는 자기 <html><body> 를 직접 그리고, <title> 도 직접 올린다(React 가 head 로 끌어올린다).
@@ -69,10 +71,10 @@ function Block({ lang }: { lang: Lang }) {
 
 export default function NotFound() {
   const title =
-    ui("ko", "UI.notFoundTitle") + " · " + ui("en", "UI.notFoundTitle");
+    ui("en", "UI.notFoundTitle") + " · " + ui("ko", "UI.notFoundTitle");
 
   return (
-    <html lang="ko" className={fontClass}>
+    <html lang="en" className={fontClass}>
       <body className="min-h-screen antialiased">
         <title>{title}</title>
         <main className="shell">
@@ -81,10 +83,10 @@ export default function NotFound() {
             <h1 className="t-display text-accent tabular-nums">404</h1>
             <div className="bay mt-[clamp(3rem,10vh,7rem)] border-t border-rule pt-12">
               <div className="lg:col-span-5">
-                <Block lang="ko" />
+                <Block lang="en" />
               </div>
               <div className="mt-16 lg:col-span-6 lg:col-start-7 lg:mt-0">
-                <Block lang="en" />
+                <Block lang="ko" />
               </div>
             </div>
           </div>

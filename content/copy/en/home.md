@@ -63,17 +63,33 @@ How the work is set up
 
 The domains have nothing in common — trading, fantasy football, personal finance, training, a nonprofit — but the six systems share the same three structures.
 
+## METHOD-1-TITLE
+
+Adversarial verification
+
 ## METHOD-1
 
 One agent's conclusion does not move forward until another agent has attacked it item by item. In the fantasy football system the strategist re-checks the optimizer's squad with a PASS/FAIL; in the trading system the verification role runs separate tests on whatever the strategy role proposes.
+
+## METHOD-2-TITLE
+
+A single veto
 
 ## METHOD-2
 
 Exactly one role per team gets a veto. In the finance system it is the risk manager; in the training system it is the recovery manager. Either can halt execution alone, and no other role can override that call.
 
+## METHOD-3-TITLE
+
+Enforced by hooks
+
 ## METHOD-3
 
 Rules are enforced by hooks, not requested in a document. Fail-closed guards stop the work when a condition is not met, and hard gates in front of execution will not pass until the supporting numbers are filled in.
+
+## SELFDEMO-TITLE
+
+This site
 
 ## SELFDEMO
 
@@ -94,6 +110,10 @@ Apps in production
 Apps I designed, built, and shipped. Two internal tools are listed without links.
 
 ---
+
+## GRP-C
+
+What I do outside the projects — running a community, and turning what I learn there into sessions.
 
 ## SEC6-TITLE
 
@@ -123,7 +143,7 @@ hyt037@gmail.com
 
 ## CONTACT-GITHUB
 
-github.com/yt-hwang — most repositories are private. The Humor Type Test is the one whose code you can open.
+github.com/yt-hwang — most repositories are private. Two have code you can open: the Humor Type Test and this site.
 
 ---
 

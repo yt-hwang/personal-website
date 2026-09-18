@@ -21,9 +21,9 @@
   },
   "stack": [
     "Claude Code",
-    "정적 HTML/CSS/JS",
+    "Static HTML/CSS/JS",
     "Telegram Bot API",
-    "이미지 생성 모델(웹툰 작화)"
+    "Image generation model"
   ],
   "agent_team": {
     "count": 11,

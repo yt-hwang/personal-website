@@ -97,7 +97,7 @@ export function ContactChannels({
     <dl className={"grid gap-x-8 gap-y-5 sm:grid-cols-[minmax(0,7rem)_minmax(0,1fr)] " + className}>
       {items.map((i) => (
         <div key={i.key} className="contents">
-          <dt className="t-micro flex items-center gap-2.5 text-ink-soft">
+          <dt className="t-micro flex items-center gap-2.5 self-start text-ink-soft sm:pt-0.5">
             <ChannelIcon kind={i.kind} />
             {ui(lang, i.labelKey)}
           </dt>

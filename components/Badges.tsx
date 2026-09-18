@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import { pick, t } from "@/lib/copy";
 import type { Lang } from "@/lib/types";
 import { teamBadge, ui } from "@/lib/ui";
@@ -59,6 +61,10 @@ export function LimitedMark({ lang }: { lang: Lang }) {
 /**
  * 사실을 한 줄로 잇는다. 빈 값은 통째로 빠지므로 " ·  · " 같은 꼬리가 남지 않는다.
  * 문자열과 노드(자물쇠 표식)를 함께 받는다.
+ *
+ * **flex 가 아니라 보통의 글 흐름이다.** flex 로 깔면 항목 하나(예: 긴 스택 문자열)가
+ * 줄바꿈되지 않는 한 덩어리가 되어 좁은 칸에서 칸 밖으로 삐져나간다(카드가 두 칸이 되면서 실제로 그랬다).
+ * 문장처럼 흘리면 칸 폭에 맞춰 알아서 접힌다.
  */
 export function MetaLine({
   items,
@@ -70,16 +76,16 @@ export function MetaLine({
   const shown = items.filter(Boolean);
   if (!shown.length) return null;
   return (
-    <p className={"t-meta flex flex-wrap items-center text-ink-soft " + className}>
+    <p className={"t-meta text-ink-soft " + className}>
       {shown.map((node, i) => (
-        <span key={i} className="inline-flex items-center">
+        <Fragment key={i}>
           {i > 0 && (
             <span aria-hidden="true" className="px-2.5 opacity-60">
               ·
             </span>
           )}
           {node}
-        </span>
+        </Fragment>
       ))}
     </p>
   );

@@ -13,6 +13,7 @@ import type { Lang } from "./types";
 const UI: Record<Lang, Record<string, string>> = {
   ko: {
     "UI.skip": "본문으로 건너뛰기",
+    "UI.footerNav": "사이트 목적지",
     "UI.detail": "상세 보기",
     "UI.detailNone": "상세 비공개",
     "UI.teamExpand": "전체 보기",
@@ -51,6 +52,7 @@ const UI: Record<Lang, Record<string, string>> = {
   },
   en: {
     "UI.skip": "Skip to content",
+    "UI.footerNav": "Site destinations",
     "UI.detail": "Details",
     "UI.detailNone": "Details withheld",
     "UI.teamExpand": "Show all",

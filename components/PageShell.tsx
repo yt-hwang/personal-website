@@ -134,32 +134,66 @@ export function PageShell({
         {children}
       </main>
 
-      <SiteFooter lang={lang} brand={brand} home={home} />
+      <SiteFooter
+        lang={lang}
+        brand={brand}
+        home={home}
+        sections={sections}
+        aboutHref={href(lang, "/about")}
+        aboutLabel={aboutLabel}
+      />
     </>
   );
 }
 
+/**
+ * 푸터 — 왼쪽은 **이름 + 이 사이트의 목적지 전부**, 오른쪽은 연락 수단.
+ *
+ * 이전에는 왼쪽이 이름과 "홈" 링크 두 줄뿐이라, 오른쪽 연락 수단 블록 옆으로
+ * 세로로 긴 빈 사각형이 남았다(사진 자리로 읽히던 자리다).
+ * 장식을 넣는 대신 **원래 있어야 할 정보**를 넣었다 — 헤더에서 1024px 미만이면 숨는
+ * 섹션 앵커들이 푸터에 전부 모여 있다. 페이지 맨 아래에서도 어디로든 한 번에 간다(닐슨 3·7).
+ */
 function SiteFooter({
   lang,
   brand,
   home,
+  sections,
+  aboutHref,
+  aboutLabel,
 }: {
   lang: Lang;
   brand: string;
   home: string;
+  sections: { key: string; label: string; href: string }[];
+  aboutHref: string;
+  aboutLabel: string;
 }) {
+  const destinations = [
+    { key: "home", label: t(lang, "NAV-HOME") || ui(lang, "UI.home"), href: home },
+    ...sections,
+    { key: "about", label: aboutLabel, href: aboutHref },
+  ].filter((d) => d.label);
+
   return (
     <footer className="mt-[clamp(6rem,17vh,11rem)] border-t border-rule">
       <div className="shell">
         <div className="bay py-14 sm:py-20">
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-5">
             {brand && <p className="t-sub">{brand}</p>}
-            <Link
-              href={home}
-              className="t-micro mt-4 inline-block text-ink-soft hover:text-accent"
-            >
-              {t(lang, "NAV-HOME") || ui(lang, "UI.home")}
-            </Link>
+            {destinations.length > 0 && (
+              <nav aria-label={ui(lang, "UI.footerNav")} className="mt-7">
+                <ul className="flex flex-col gap-y-2.5 sm:flex-row sm:flex-wrap sm:gap-x-7">
+                  {destinations.map((d) => (
+                    <li key={d.key}>
+                      <Link href={d.href} className={NAV_ITEM}>
+                        {d.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
           </div>
           <div className="lg:col-span-6 lg:col-start-7">
             <ContactChannels lang={lang} />
