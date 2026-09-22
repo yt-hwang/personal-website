@@ -88,6 +88,51 @@
     "Apple SD Gothic Neo", "Malgun Gothic", monospace;
 }
 
+/*
+ * ── 모션 토큰 ─────────────────────────────────────────────────
+ * 값을 여기 한 곳에만 둔다. 컴포넌트에서 duration·easing 리터럴을 쓰지 않는다
+ * (색을 토큰 밖에서 쓰지 않는 것과 같은 규칙이다).
+ *
+ * `--ease-*` 는 Tailwind v4 의 실제 테마 네임스페이스라 `ease-rise` 같은 유틸이 함께 생긴다.
+ * `--motion-*`(지속시간)은 네임스페이스가 아니라 변수로만 나온다 — `duration-*` 유틸과
+ * 이름이 겹치지 않게 일부러 `--duration-*` 을 피했다.
+ *
+ * **linear() 를 쓰는 이유.** Baseline Widely available (2026-06-11 · 전역 92.0%).
+ * cubic-bezier 는 제어점이 둘뿐이라 "빠르게 출발해 길게 눕는" 다단 감속을 못 만든다.
+ * linear() 는 구간을 쪼개 그 곡선을 만들 수 있고 비용은 0바이트다.
+ * `--ease-rise` 만 기존 cubic-bezier 값을 **그대로** 보존한다 — 지금 화면이 바뀌면 안 된다.
+ */
+@theme {
+  /* 현행 등장 곡선. 값 보존용이므로 건드리지 말 것. */
+  --ease-rise: cubic-bezier(0.22, 0.61, 0.24, 1);
+
+  /* Tailwind 의 기본 transition 곡선과 동일한 값. 토큰으로만 옮겨 왔다. */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 다단 감속 — 앞이 빠르고 꼬리가 길다. cubic-bezier 로는 안 나오는 곡선이다. */
+  --ease-out-soft: linear(
+    0,
+    0.2178 2.1%,
+    0.3993 4.4%,
+    0.5505 6.9%,
+    0.6731 9.6%,
+    0.7707 12.6%,
+    0.8461 15.9%,
+    0.9035 19.6%,
+    0.9455 23.7%,
+    0.9739 28.4%,
+    0.9911 33.9%,
+    0.9995 41%,
+    1
+  );
+}
+
+:root {
+  --motion-fast: 150ms;
+  --motion-base: 220ms;
+  --motion-slow: 420ms;
+}
+
 /* 색이 없는 border 유틸이 currentColor(=검정)로 떨어지는 사고를 막는 기본값. */
 * {
   border-color: var(--rule);
@@ -95,14 +140,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
+/* `scroll-behavior: smooth` 는 파일 맨 아래 모션 게이트 안에 있다. 이유는 그 블록 주석 참고. */
 
 body {
   background-color: var(--bg);
@@ -148,6 +188,19 @@ body {
 }
 
 /*
+ * 제목의 줄 길이를 고르게 나눈다 — 마지막 줄에 한 낱말만 떨어지는 것을 막는다.
+ * **제목에만 쓴다.** 본문에 쓰면 안 되는 이유는 구현 상한 때문이다:
+ * Chromium 은 **6줄**, Firefox 는 **10줄**(`layout.css.text-wrap-balance.limit`)까지만 계산하고
+ * 그 이상은 선언을 조용히 무시한다. 문단에 걸면 짧은 문단만 정렬돼 오히려 들쭉날쭉해진다.
+ * 전역 지원 약 91.6%, 미지원 브라우저는 그냥 기본 줄바꿈이 된다(내용 손실 없음).
+ */
+.t-display,
+.t-title,
+.t-sub {
+  text-wrap: balance;
+}
+
+/*
  * 360px 에서 한글 아홉 글자("데이터사이언티스트")가 한 줄에 들어가는 상한이 32px 다.
  * 그보다 키우면 낱말 가운데가 쪼개진다(`overflow-wrap: anywhere` 라 넘치지는 않는다).
  */
@@ -165,6 +218,23 @@ body {
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   line-height: 1.4;
   letter-spacing: -0.01em;
+}
+
+/*
+ * 수치 전용 단. 네 단 원칙의 **의도적인 다섯째**이고, 쓰는 곳은 하네스 도식 하나뿐이다.
+ * 왜 새 단이 필요한가: 도식의 숫자를 `.t-meta`(13px)로 두니 그래픽이 아니라 **데이터 표**로 읽혔다.
+ * `.t-title`(40px)을 빌려 쓰면 섹션 제목과 같은 무게가 되어 위계가 무너지고,
+ * `.t-display`(64px)를 쓰면 페이지에 64px 요소가 여섯 개가 되어 h1 이 유일한 최대치가 아니게 된다.
+ * 그래서 그 사이 한 단(36→52px)을 만들고 **이 용도 밖에서는 쓰지 않는다.**
+ * 숫자를 비교하며 읽는 자리라 고정폭 숫자(tabular-nums)를 강제한다.
+ */
+.t-figure {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.25rem, 4.4vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 /* 리드 문장 — 섹션당 한 줄까지만. 중간 크기를 늘리지 않기 위해 이 한 단만 둔다. */
@@ -313,6 +383,29 @@ summary::-webkit-details-marker {
   }
 }
 
+/*
+ * ── 모션 게이트 ───────────────────────────────────────────────
+ * **이 사이트에서 움직이는 것은 전부 이 블록 안에 있다. 예외는 없다.**
+ *
+ * 왜 `reduce` 를 잡아 끄지 않고 `no-preference` 일 때만 켜는가 (fail-open → fail-closed).
+ *   `prefers-reduced-motion` 에는 "모름" 값이 없다. OS 가 선호를 보고하지 못하면
+ *   미디어쿼리는 `no-preference` 로 평가된다. 그래서 `@media (reduce) { 끄기 }` 형태는
+ *   **보고하지 못하는 환경에서 조용히 애니메이션이 켜진다** — 끄려던 쪽으로 실패하지 않는다.
+ *   반대로 `@media (no-preference) { 켜기 }` 는 선호를 확인한 경우에만 켜진다.
+ *   실제로 이 저장소에 그 결함이 있었다: `AgentTeam` 의 chevron transition 이
+ *   `reduce` 를 켜도 0.15s 로 남아 있었다(헤드리스 Chrome 154, `Emulation.setEmulatedMedia` 실측).
+ *
+ * 규칙 세 가지.
+ *   ① 반복·루프 애니메이션을 만들지 않는다. 자동 시작 + 5초 초과 + 병렬 표시는
+ *      WCAG 2.2.2(Pause/Stop/Hide, Level A)에서 정지 수단을 요구한다. 만들지 않으면 걸리지 않는다.
+ *   ② 모션이 정보를 전달하지 않는다. 모션이 전부 꺼진 상태에서 잃는 정보가 0이어야 한다
+ *      (현재 위치 표시는 sticky 라벨과 `:target`/`:has()` 가 맡는다 — 둘 다 이 블록 밖이다).
+ *   ③ 스크롤 연동(`animation-timeline`)을 넣을 때는 반드시
+ *      `@supports (animation-timeline: scroll())` 안에, 그리고 이 게이트 안에 둔다.
+ *      전역 지원 ~85.4% · Firefox 릴리스는 아직 꺼져 있다(플래그 Nightly 전용).
+ *      `timeline-scope: all` 은 Chrome 138 에서 제거됐으므로 쓰지 않는다.
+ */
+
 /* 절제된 스태거 등장 — 첫 화면에만. CSS 만 쓴다. */
 @keyframes rise {
   from {
@@ -325,22 +418,92 @@ summary::-webkit-details-marker {
   }
 }
 
-.stagger > * {
-  animation: rise 0.7s cubic-bezier(0.22, 0.61, 0.24, 1) both;
-}
+@media (prefers-reduced-motion: no-preference) {
+  /* 앵커 이동. 게이트 밖에 두면 선호를 모르는 환경에서 그냥 켜진다. */
+  html {
+    scroll-behavior: smooth;
+  }
 
-.stagger > *:nth-child(2) {
-  animation-delay: 90ms;
-}
-.stagger > *:nth-child(3) {
-  animation-delay: 180ms;
-}
-.stagger > *:nth-child(4) {
-  animation-delay: 270ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
+  /*
+   * **단축 속성(`animation:`)을 쓰지 않는다.** 롱핸드로 푼 이유는 스타일이 아니라 기능이다:
+   * `animation` 단축은 `animation-timeline` 을 초기값으로 **리셋**하므로,
+   * 나중에 스크롤 연동으로 승격할 때 단축 뒤에 타임라인을 다시 선언해야 하는 함정이 생긴다.
+   * 롱핸드면 `animation-timeline` 한 줄만 더하면 된다
+   * (그때 `animation-duration` 은 `auto` 여야 한다).
+   * 지금은 승격하지 않는다 — 도식 설계가 확정된 뒤다.
+   */
   .stagger > * {
-    animation: none;
+    animation-name: rise;
+    animation-duration: 0.7s;
+    animation-timing-function: var(--ease-rise);
+    animation-fill-mode: both;
+  }
+
+  .stagger > *:nth-child(2) {
+    animation-delay: 90ms;
+  }
+  .stagger > *:nth-child(3) {
+    animation-delay: 180ms;
+  }
+  .stagger > *:nth-child(4) {
+    animation-delay: 270ms;
+  }
+
+  /*
+   * 회전·이동 같은 모양 변형에 전이를 주는 요소가 붙이는 클래스.
+   * Tailwind 의 같은 역할 유틸을 쓰면 그 유틸이 이 게이트 **밖**에 생성돼 끌 수 없다.
+   * 그래서 같은 값을 이 안에서 직접 선언한다(현재 사용처: `components/AgentTeam.tsx` 펼침 표시).
+   *
+   * **주석에 Tailwind 유틸 이름을 적지 말 것.** v4 는 소스를 평문으로 스캔하므로
+   * 주석 안의 낱말도 후보로 잡아 유틸을 만들어 낸다. 이 파일에서 실제로 두 번 일어났다:
+   * 처음에는 전이 유틸 이름을, 다음에는 영어 낱말 하나를 주석에 적었다가 각각
+   * 게이트 밖에 죽은 유틸이 생겼다(빌드 산출 CSS 에서 확인). 그래서 이 설명은 한국어로만 쓴다.
+   */
+  .motion-transform {
+    transition-property: transform;
+    transition-duration: var(--motion-fast);
+    transition-timing-function: var(--ease-standard);
+  }
+
+  /*
+   * ── 하네스 도식의 연결선 (components/HarnessFlow.tsx)
+   *
+   * 스크롤로 도식이 들어올 때 연결선이 왼쪽에서 오른쪽으로 **한 번** 그려지고,
+   * 끊긴 구간에서 선다. 끊긴 구간에는 애초에 요소가 없으므로 "멈춤"은 연출이 아니라 구조다.
+   * 모션이 꺼져도(아래 게이트 밖, 또는 미지원 브라우저) 선은 처음부터 다 그려진 상태이고,
+   * 끊긴 자리도 그대로 비어 있다 — **잃는 정보가 0이다.**
+   *
+   * 루프는 없다. 한 사이클이 한 번 흐르고 끝난다 (WCAG 2.2.2 는 자동 시작 + 5초 초과 +
+   * 병렬 표시에 정지 수단을 요구하는데, 이 애니메이션은 스크롤에 종속돼 사용자가 멈추면 멈춘다).
+   */
+  @supports (animation-timeline: scroll()) {
+    @keyframes flow-draw {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    [data-flow] [data-flow-line],
+    [data-rail] [data-rail-line] {
+      transform-origin: left center;
+      animation-name: flow-draw;
+      /* 스크롤 연동에서는 지속시간이 타임라인 진행률로 대체된다. */
+      animation-duration: auto;
+      animation-timing-function: var(--ease-out-soft);
+      animation-fill-mode: both;
+      animation-timeline: view();
+      /*
+       * 범위는 **백분율로만** 준다. `vh` 를 섞으면 모바일 주소창이 접힐 때 구간이 다시 잡히고,
+       * 한국어판과 영어판의 문서 높이 차이(실측 약 3.5%)에도 그대로 흡수된다.
+       *
+       * `cover` 범위만 쓴다. 연결선은 높이 1px 짜리 요소라 `entry` 범위의 길이가 사실상 0 이다 —
+       * 거기에 구간을 걸면 스크롤 몇 px 만에 끝나 버리거나 아예 발화하지 않는다(실측으로 확인했다).
+       * `cover` 는 요소가 뷰포트를 가로지르는 전 구간이라 1px 요소에서도 길이가 화면 높이만큼 나온다.
+       */
+      animation-range: cover 25% cover 50%;
+    }
   }
 }

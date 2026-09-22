@@ -176,9 +176,9 @@ function SiteFooter({
   ].filter((d) => d.label);
 
   return (
-    <footer className="mt-[clamp(6rem,17vh,11rem)] border-t border-rule">
+    <footer className="mt-[clamp(3rem,8vh,4.75rem)] border-t border-rule">
       <div className="shell">
-        <div className="bay py-14 sm:py-20">
+        <div className="bay py-11 sm:py-14">
           <div className="lg:col-span-5">
             {brand && <p className="t-sub">{brand}</p>}
             {destinations.length > 0 && (

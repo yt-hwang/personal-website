@@ -15,7 +15,9 @@ Data Scientist · AI Developer
 
 ## HERO-2
 
-I design and run six systems in which teams of AI agents do the actual work: algorithmic trading, personal finance, athletic training, and a nonprofit.
+An AI agent will tell you it followed the rule, and not have followed it.
+I build the systems where saying so isn't enough — six of them, running a
+trading desk, a nonprofit, a weekly training schedule, and this page.
 
 ## HERO-CTA-1
 
@@ -24,24 +26,6 @@ See the systems
 ## HERO-CTA-2
 
 Get in touch
-
----
-
-## PROOF-1
-
-6 · agent-run systems
-
-## PROOF-2
-
-5 · apps shipped
-
-## PROOF-3
-
-2 years · monthly sessions
-
-## PROOF-4
-
-2 · talks given in 2026
 
 ---
 
@@ -61,7 +45,9 @@ How the work is set up
 
 ## METHOD-INTRO
 
-Trading, fantasy football, personal finance, training, a nonprofit. The domains have nothing in common, but the six systems share the same three structures.
+Trading, fantasy football, personal finance, a weekly training plan, a nonprofit,
+and this page. The domains have nothing to do with each other. What is underneath
+them is the same, and this is it.
 
 ## METHOD-1-TITLE
 
@@ -69,7 +55,10 @@ Adversarial verification
 
 ## METHOD-1
 
-One agent's conclusion does not move forward until another agent has attacked it item by item. In the fantasy football system the strategist re-checks the optimizer's squad with a PASS/FAIL; in the trading system the verification role runs separate tests on whatever the strategy role proposes.
+One agent's conclusion does not move forward until another agent has attacked it
+item by item. In fantasy football the strategist marks the optimizer's squad PASS
+or FAIL; at Renfinity the verification role runs its own tests on whatever
+strategy proposes.
 
 ## METHOD-2-TITLE
 
@@ -77,7 +66,10 @@ A single veto
 
 ## METHOD-2
 
-Exactly one role per team gets a veto. In the finance system it is the risk manager; in the training system it is the recovery manager. Either can halt execution alone, and no other role can override that call.
+Exactly one role per team holds a veto, and no other role can override it. In the
+finance system it is the risk manager, in the training system the recovery
+manager, and on this site the privacy reviewer — which is why some cards here
+have no link.
 
 ## METHOD-3-TITLE
 
@@ -85,7 +77,9 @@ Enforced by hooks
 
 ## METHOD-3
 
-Rules are enforced by hooks, not requested in a document. Fail-closed guards stop the work when a condition is not met, and hard gates in front of execution will not pass until the supporting numbers are filled in.
+Rules are enforced by hooks, not requested in a document. A guard that fails
+closed stops the work where it stands, and the gate in front of execution will
+not open until the numbers behind the decision are filled in.
 
 ## SELFDEMO-TITLE
 
@@ -121,9 +115,17 @@ Community and talks
 
 ## AKDS-SEC
 
-Since 2024 I have run the Atlanta Korean Data Science Community, a Korean-language data-science meetup in Atlanta, as a monthly session. In May 2026 I gave a hands-on talk, "Harness Engineering: building systems that tame and control AI agents"; in August 2026, a 23-slide talk, "Claude Code × Telegram: building your own AI agent team." Outside speakers are invited so the topics do not narrow to whoever is already in the room. So far they have covered security and UX design. A first Kaggle cohort ran with two teams of five.
-
----
+There was no place in Atlanta to talk about data and AI in Korean. Plenty of
+material exists online; almost nobody says what it was actually like to use the
+thing. So the community has one rule: you come with something you tried, not
+something you read. It has met every month since 2024 and has not skipped one.
+In May 2026 I ran a hands-on session, "Harness Engineering: building systems
+that tame and control AI agents" — the same problem every system on this page
+was built to solve. In August, "Claude Code × Telegram: building your own AI
+agent team," which is the short version of how each of them starts. Outside
+speakers cover what the room does not already know: security, UX design. And
+for the people who wanted to stop listening and start building, a Kaggle cohort
+ran alongside the sessions.
 
 ## SEC7-TITLE
 

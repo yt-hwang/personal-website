@@ -151,6 +151,7 @@ function normalize(raw: Record<string, unknown>): Project {
     group: (str(raw.group) || "products") as GroupId,
     title: bilingual(raw.title),
     tagline: bilingual(raw.tagline),
+    tagline_more: bilingual(raw.tagline_more),
     role: bilingual(raw.role),
     status: str(raw.status),
     period: { start: str(period.start) || null, end: str(period.end) || null },
@@ -275,6 +276,108 @@ export function splitTeam(p: Project): {
   return {
     orchestrator: members[idx],
     specialists: members.filter((_, i) => i !== idx),
+  };
+}
+
+/**
+ * 검증 역할 — "제안한 것을 다시 본다"가 role 에 명시된 멤버.
+ * 게이트키퍼와 다르다: 검증은 **반례를 찾는 일**이고, 게이트는 **멈출 권한**이다.
+ * 추정하지 않는다 — 아래 표기가 role 에 실제로 있는 멤버만 잡는다.
+ */
+const VERIFY_MARKS = ["검증", "감수"];
+
+export function isVerifier(m: TeamMember): boolean {
+  return VERIFY_MARKS.some((k) => m.role.ko.includes(k));
+}
+
+/**
+ * 한 멤버가 하네스의 어느 단계에 서는가.
+ * 우선순위가 있다 — 멈출 권한이 가장 강한 사실이므로 게이트가 먼저다.
+ * (예: "게이트키퍼 — 유일하게 집행 보류를 선언" 는 검증이기도 하지만 게이트로 잡힌다.)
+ */
+export type HarnessStage = "orchestrate" | "propose" | "verify" | "gate";
+
+export function stageOf(slug: string, m: TeamMember): HarnessStage {
+  if (isGatekeeper(slug, m)) return "gate";
+  if (isOrchestrator(slug, m)) return "orchestrate";
+  if (isVerifier(m)) return "verify";
+  return "propose";
+}
+
+/**
+ * 히어로의 "얼마나 오래" 한 줄.
+ * 역할 4개가 "지금 무엇인가"를 말하고 이 문장이 "얼마나 오래"를 말한다 — 같은 층의 사실이라 같은 행에 선다.
+ *
+ * 출처는 **featured 커뮤니티 항목의 둘째 문장**(`tagline_more`)이다. 컴포넌트가 프로젝트 이름을
+ * 알 필요가 없도록 선택 규칙을 여기 둔다(이 파일 머리의 원칙). 해당 항목이 없거나 문장이 비면
+ * 빈 문자열이 나가고 호출부가 요소를 통째로 생략한다.
+ */
+export function continuityNote(lang: Lang): string {
+  const p = featuredProjects().find((x) => x.group === "community");
+  return p ? text(p.tagline_more, lang) : "";
+}
+
+/** 에이전트 팀이 실제로 있는 프로젝트 — 하네스 도식의 모집단 */
+export function teamedProjects(): Project[] {
+  return listedProjects().filter((p) => p.agent_team.members.length > 0);
+}
+
+export interface HarnessCensus {
+  systems: number;
+  agents: number;
+  stages: { stage: HarnessStage; agents: number; systems: number }[];
+  /** 멈출 권한이 데이터에 **명시된** 자리. 없으면 빈 배열이고 도식이 그 사실을 그대로 말한다. */
+  gatekeepers: { slug: string; member: TeamMember }[];
+  /** 게이트가 명시된 시스템 수 / 전체 시스템 수 — 도식이 지어내지 않고 이 비율을 쓴다. */
+  gatedSystems: number;
+}
+
+const STAGE_ORDER: HarnessStage[] = [
+  "orchestrate",
+  "propose",
+  "verify",
+  "gate",
+];
+
+/**
+ * 하네스 도식이 읽는 유일한 자료. 코드가 숫자를 지어내지 않는다 —
+ * 전부 `content/projects/*.json` 의 `agent_team.members[]` 에서 세어 온다.
+ * 새 프로젝트 JSON 이 하나 들어오면 도식의 수치가 저절로 따라온다.
+ */
+export function harnessCensus(): HarnessCensus {
+  const projects = teamedProjects();
+  const counts = new Map<HarnessStage, { agents: number; slugs: Set<string> }>();
+  for (const s of STAGE_ORDER) counts.set(s, { agents: 0, slugs: new Set() });
+
+  const gatekeepers: { slug: string; member: TeamMember }[] = [];
+  let agents = 0;
+
+  for (const p of projects) {
+    for (const m of p.agent_team.members) {
+      agents++;
+      const stage = stageOf(p.slug, m);
+      const bucket = counts.get(stage);
+      if (bucket) {
+        bucket.agents++;
+        bucket.slugs.add(p.slug);
+      }
+      if (stage === "gate") gatekeepers.push({ slug: p.slug, member: m });
+    }
+  }
+
+  return {
+    systems: projects.length,
+    agents,
+    stages: STAGE_ORDER.map((stage) => {
+      const b = counts.get(stage);
+      return {
+        stage,
+        agents: b ? b.agents : 0,
+        systems: b ? b.slugs.size : 0,
+      };
+    }),
+    gatekeepers,
+    gatedSystems: counts.get("gate")?.slugs.size ?? 0,
   };
 }
 

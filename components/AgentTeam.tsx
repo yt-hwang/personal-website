@@ -120,7 +120,15 @@ export function AgentRoster({ p, lang }: { p: Project; lang: Lang }) {
             <span className="hidden group-open:inline">
               {ui(lang, "UI.teamCollapse")}
             </span>
-            <ToggleIcon className="size-3.5 transition-transform group-open:rotate-180" />
+            {/*
+              모양 변형 전이는 Tailwind 유틸이 아니라 `motion-transform`(globals.css)이 준다.
+              Tailwind 유틸은 `prefers-reduced-motion` 게이트 **밖**에 생성돼 끌 수 없었다 —
+              reduce 를 켜도 0.15s 전이가 그대로 남았다(실측). 값은 같고 게이트 안에만 있다.
+
+              주의: 이 주석에 Tailwind 유틸 이름을 영어로 적지 말 것. v4 는 소스를 평문으로
+              스캔해 주석 안의 낱말까지 유틸로 만들어 낸다. 근거는 globals.css 의 해당 블록 주석.
+            */}
+            <ToggleIcon className="size-3.5 motion-transform group-open:rotate-180" />
           </summary>
           <ul className="mt-5 border-b border-rule">
             {tail.map((m) => (

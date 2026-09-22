@@ -50,6 +50,12 @@ export interface Project {
   group: GroupId;
   title: Bilingual;
   tagline: Bilingual;
+  /**
+   * 카드에는 `tagline` 한 문장만 나간다 — 12장이 같은 문장 수여야 그리드가 흔들리지 않는다.
+   * 둘째 문장이 필요한 프로젝트는 여기에 두고 **상세 머리에서만** 받는다.
+   * 상세 페이지가 없는 limited 카드는 받을 자리가 없으므로 비워 둔다.
+   */
+  tagline_more: Bilingual;
   role: Bilingual;
   status: Status;
   period: { start: string | null; end: string | null };

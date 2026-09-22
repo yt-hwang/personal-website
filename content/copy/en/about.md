@@ -12,7 +12,8 @@ Data scientist and AI developer.
 
 ## ABOUT-SUB
 
-Based in Atlanta, holding four distinct roles.
+Atlanta — a trading company, a federal consulting project, a Korean data science
+meetup, and a nonprofit for families around addiction.
 
 ## ROLES-TITLE
 

@@ -7,8 +7,8 @@
     "en": "InCom"
   },
   "tagline": {
-    "ko": "교회 청년부의 셀 출석·새가족 관리를 역할별 권한으로 운영하는 내부 앱",
-    "en": "An internal app for a church young-adult group — small-group attendance and newcomer care, gated by role."
+    "ko": "역할에 따라 보이는 데이터가 달라야 해서 링크를 걸지 않는 교회 청년부 내부 앱",
+    "en": "An internal app for a church young-adult group; what you can see changes with your role, which is why there is no link."
   },
   "role": {
     "ko": "기획 · 개발 · 운영",

@@ -7,8 +7,12 @@
     "en": "Humor Type Test"
   },
   "tagline": {
-    "ko": "16가지 개그 유형 중 내 유형을 찾고 결과를 이미지로 공유하는 테스트",
-    "en": "Find which of 16 humor types is yours, then share the result as an image."
+    "ko": "16가지 개그 유형 중 내 유형을 찾아 결과 이미지 한 장으로 공유하는 테스트",
+    "en": "Find which of 16 humor types is yours and send the result as a single image."
+  },
+  "tagline_more": {
+    "ko": "결과는 화면 캡처가 아니라 서버가 만든 이미지라, 링크만 붙여도 미리보기가 뜹니다.",
+    "en": "The result is a server-generated image rather than a screenshot, so a bare link produces the preview."
   },
   "role": {
     "ko": "기획 · 개발 · 운영",

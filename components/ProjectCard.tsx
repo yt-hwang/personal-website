@@ -8,6 +8,7 @@ import {
   list,
   periodLabel,
   renderableLinks,
+  stageOf,
   text,
 } from "@/lib/projects";
 import { href } from "@/lib/routes";
@@ -61,8 +62,8 @@ import { GoLink } from "./Links";
  * 데이터가 없는 필드는 요소 자체를 렌더하지 않는다(닐슨 5).
  */
 
-const PLATE = "border-t border-rule py-10 sm:py-14 lg:py-[4.5rem]";
-const ROW = "border-t border-rule py-7 sm:py-9";
+const PLATE = "border-t border-rule py-6 sm:py-7 lg:py-8";
+const ROW = "border-t border-rule py-5 sm:py-6";
 
 /**
  * 한 그룹의 항목은 **전부 같은 열에 선다.** 왼쪽 = 정체·사실·행동, 오른쪽 = 서술·근거.
@@ -139,6 +140,63 @@ function Actions({
   );
 }
 
+/**
+ * 팀 눈금 — `agent_team.members[]` 하나를 눈금 하나로 깐다.
+ *
+ * 왜 넣는가: 카드 12장이 전부 `기간 · N인 팀 · 스택 3개` 한 줄이라 **무게가 똑같았다.**
+ * 11인 팀과 5인 팀의 차이를 숫자로 읽어야만 알 수 있었는데, 눈금이면 훑는 동안 눈에 들어온다.
+ * 새 사실을 지어내지 않는다 — 이미 상세 페이지 명부에 있던 것을 길이로 바꿔 놓았을 뿐이다.
+ *
+ * 세 자리만 표시가 다르다.
+ *   조율(오케스트레이터) — 검정 · 키가 크다
+ *   게이트(멈출 수 있는 자리) — **강조색** · 가장 크다. 강조색은 이 자리에만 쓴다.
+ *   나머지 — 규칙선 색
+ * 애니메이션 없음. 이건 움직일 이유가 없는 정지 정보다.
+ *
+ * 눈금만으로는 뜻이 전달되지 않으므로(색 하나에 기대지 않는다) 게이트가 있는 팀에는
+ * 아래에 텍스트 라벨 한 줄이 함께 나간다. 스크린리더에는 눈금 대신 그 문장이 읽힌다.
+ */
+function TeamGauge({ p, lang }: { p: Project; lang: Lang }) {
+  if (!cardShowsMeta(p)) return null;
+  const members = p.agent_team.members;
+  if (members.length < 2) return null;
+
+  const marks = members.map((m, i) => ({
+    key: (m.name.en || m.name.ko || "") + i,
+    stage: stageOf(p.slug, m),
+  }));
+  const gateCount = marks.filter((m) => m.stage === "gate").length;
+
+  return (
+    <div className="mt-5">
+      <div
+        aria-hidden="true"
+        data-team-gauge="true"
+        className="inline-flex items-end gap-1.5 border-b border-rule pb-1.5"
+      >
+        {marks.map((m) => (
+          <span
+            key={m.key}
+            className={
+              "w-[1.125rem] shrink-0 " +
+              (m.stage === "gate"
+                ? "h-11 bg-accent"
+                : m.stage === "orchestrate"
+                  ? "h-8 bg-ink"
+                  : "h-5 bg-rule")
+            }
+          />
+        ))}
+      </div>
+      {gateCount > 0 && (
+        <p className="t-meta mt-3 text-accent">
+          {ui(lang, "UI.teamStripGate")}
+        </p>
+      )}
+    </div>
+  );
+}
+
 /** 에이전트 시스템 — 한 항목이 한 판(plate)을 쓴다. 제목이 이미지 자리를 대신한다. */
 function Plate({
   p,
@@ -161,21 +219,23 @@ function Plate({
       <div className={hasEvidence ? IDENTITY_COL : IDENTITY_ALONE}>
         <GroupMark label={groupLabel} />
 
-        <Title p={p} lang={lang} className="t-title mt-4" />
+        <Title p={p} lang={lang} className="t-title mt-3" />
 
         {/* 무엇을 만들었나만큼 어떤 위치였나가 중요하다. 역할을 제목 바로 아래 둔다. */}
-        {meta && role && <p className="t-meta mt-3 text-ink">{role}</p>}
+        {meta && role && <p className="t-meta mt-2 text-ink">{role}</p>}
 
-        <MetaLine items={facts(p, lang, 4)} className="mt-6" />
+        <MetaLine items={facts(p, lang, 4)} className="mt-4" />
 
-        <Actions p={p} lang={lang} className="mt-7" />
+        <TeamGauge p={p} lang={lang} />
+
+        <Actions p={p} lang={lang} className="mt-5" />
       </div>
 
       {hasEvidence && (
         <div className={EVIDENCE_COL}>
           {tagline && <p className="measure-tight">{tagline}</p>}
           {highlights.length > 0 && (
-            <ul className={"space-y-3" + (tagline ? " mt-7" : "")}>
+            <ul className={"space-y-3" + (tagline ? " mt-6" : "")}>
               {highlights.map((h) => (
                 <li
                   key={h}
@@ -210,7 +270,12 @@ function Row({
   return (
     <article className={"bay " + ROW}>
       <div className="lg:col-span-9 lg:col-start-2">
-        <p>
+        {/*
+          `Title` 이 h3 를 렌더하므로 이 줄을 <p> 로 감싸면 무효 HTML 이 된다 —
+          파서는 `<p></p><h3>…` 로 쪼개는데 React 는 `<p><h3>…</p>` 로 만들어
+          홈에서만 하이드레이션이 실패한다(#418). 블록 래퍼는 <div> 여야 한다.
+        */}
+        <div>
           <Title p={p} lang={lang} className="t-sub inline" />
           {tagline && (
             <span className="ml-2.5 align-baseline">
@@ -220,7 +285,7 @@ function Row({
               {tagline}
             </span>
           )}
-        </p>
+        </div>
 
         <MetaLine
           items={[groupLabel, ...facts(p, lang, 3)]}

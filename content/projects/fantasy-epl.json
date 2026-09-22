@@ -7,8 +7,12 @@
     "en": "Fantasy EPL Automation Harness"
   },
   "tagline": {
-    "ko": "8인 에이전트가 매 게임위크의 이적·라인업·주장·칩을 스스로 결정한다",
-    "en": "Eight agents decide each gameweek's transfers, lineup, captain, and chips."
+    "ko": "에이전트 여덟이 매 게임위크 스쿼드를 짜되, 반박을 통과해야 실행됩니다",
+    "en": "Eight agents pick the squad each gameweek, and only a squad that survives the argument ships."
+  },
+  "tagline_more": {
+    "ko": "옵티마이저가 안을 내면 전략가가 항목별로 PASS/FAIL을 매기고, FAIL이 하나라도 있으면 돌아갑니다.",
+    "en": "The optimizer proposes, the strategist re-checks it line by line with a PASS/FAIL, and one FAIL sends it back."
   },
   "role": {
     "ko": "전체 설계 · 운영",

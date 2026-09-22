@@ -7,8 +7,12 @@
     "en": "Personal Training Coach"
   },
   "tagline": {
-    "ko": "러닝·근력·HYROX·주짓수를 5인 코치팀이 하나의 주간 스케줄로 통합한다",
-    "en": "A five-coach agent team folds running, lifting, HYROX, and jiu-jitsu into one weekly schedule."
+    "ko": "러닝·근력·HYROX·주짓수가 서로 다투는 일주일을 코치 에이전트 다섯이 하나로 조정합니다",
+    "en": "Running, lifting, HYROX, and jiu-jitsu each want the whole week; five coach agents settle it."
+  },
+  "tagline_more": {
+    "ko": "세 코치가 병렬로 초안을 내고, 총부하를 보는 회복 담당이 충돌을 정리한 뒤에야 주간 계획이 확정됩니다.",
+    "en": "Three specialists draft in parallel, and the week is not final until the coach watching total load reconciles them."
   },
   "role": {
     "ko": "전체 설계 · 개발 · 운영",

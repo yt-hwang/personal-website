@@ -7,8 +7,12 @@
     "en": "Doyak"
   },
   "tagline": {
-    "ko": "중독자를 곁에 둔 한인 가족과 자녀를 위한 한국어 상호지원 허브",
-    "en": "A Korean-language mutual-support hub for families and children living alongside addiction."
+    "ko": "중독은 본인에게서 끝나지 않아, 그 곁에 선 가족과 아이를 위해 만드는 한국어 지원 허브입니다",
+    "en": "Addiction does not stop at one person, so this is a Korean-language hub for the family standing next to it."
+  },
+  "tagline_more": {
+    "ko": "치료받는 당사자가 아니라, 같은 집에서 설명도 없이 감당하고 있는 사람들을 위한 곳입니다.",
+    "en": "It is for the people in the same house handling it without an explanation, not for the person in treatment."
   },
   "role": {
     "ko": "설립자 · 대표",

@@ -64,6 +64,7 @@ function Prose({ value }: { value: string }) {
 export function ProjectDetail({ p, lang }: { p: Project; lang: Lang }) {
   const title = text(p.title, lang);
   const tagline = text(p.tagline, lang);
+  const taglineMore = text(p.tagline_more, lang);
   const role = text(p.role, lang);
   const body = bodyOf(p, lang);
   const highlights = list(p.highlights, lang).slice(0, 3);
@@ -112,6 +113,14 @@ export function ProjectDetail({ p, lang }: { p: Project; lang: Lang }) {
         <div className="bay mt-[clamp(2rem,6vh,3.5rem)]">
           <div className="lg:col-span-7">
             {tagline && <p className="t-lead">{tagline}</p>}
+            {/*
+              둘째 문장은 **상세 머리에서만** 받는다. 카드에 실으면 12장의 문장 수가
+              들쭉날쭉해져 그리드가 흔들린다(`lib/types.ts` 의 `tagline_more` 주석).
+              값이 없는 프로젝트는 요소 자체를 만들지 않는다 — 빈 칸을 남기지 않는다(닐슨 5).
+            */}
+            {taglineMore && (
+              <p className="measure mt-5 text-ink-soft">{taglineMore}</p>
+            )}
             {role && <p className="t-meta mt-5 text-ink">{role}</p>}
             <MetaLine
               items={[

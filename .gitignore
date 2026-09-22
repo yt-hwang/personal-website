@@ -8,6 +8,10 @@ _workspace_prev/
 !.env.example
 *.local.json
 *token*
+# 단, 디자인 토큰 모듈은 비밀이 아니다. `*token*` 은 비밀 차단용인데 파일명이 걸렸다.
+# 이게 빠지면 `app/icon.tsx` 의 import 가 깨져 **클론한 사람만** 빌드에 실패한다 —
+# 로컬에는 파일이 있으므로 여기서는 영원히 재현되지 않는다.
+!lib/tokens.ts
 *secret*
 credentials*
 

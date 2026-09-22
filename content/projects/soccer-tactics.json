@@ -3,12 +3,12 @@
   "order": 11,
   "group": "products",
   "title": {
-    "ko": "FC 명보 전술 보드",
+    "ko": "전술 보드",
     "en": "Tactical Board"
   },
   "tagline": {
-    "ko": "축구팀 전술을 그려 공유하는 보드",
-    "en": "A board for drawing and sharing a football team's tactics."
+    "ko": "축구팀 전술을 그려 공유하는 보드 — 어느 배포본을 정본으로 삼을지 정하지 못해 링크를 걸지 않습니다",
+    "en": "A board for drawing and sharing a team's tactics; nothing is linked until it is settled which deployment is the real one."
   },
   "role": {
     "ko": "기획 · 개발",

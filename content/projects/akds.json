@@ -7,8 +7,12 @@
     "en": "Atlanta Korean Data Science Community"
   },
   "tagline": {
-    "ko": "가르치는 자리가 아니라, 써보고 배운 걸 공유하는 자리",
-    "en": "Not a place to be taught — a place to share what we actually tried."
+    "ko": "읽은 것 말고 해본 것을 들고 오는 애틀랜타 한인 데이터사이언스 모임",
+    "en": "An Atlanta data science meetup in Korean where you come with something you tried, not something you read."
+  },
+  "tagline_more": {
+    "ko": "2024년부터 매달 모였고, 한 번도 거르지 않았습니다.",
+    "en": "It has met every month since 2024 and has not skipped one."
   },
   "role": {
     "ko": "운영자 · 발표자",

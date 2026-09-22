@@ -7,8 +7,12 @@
     "en": "This Site"
   },
   "tagline": {
-    "ko": "이 포트폴리오 자체가 6인 에이전트 팀이 만든 결과물이다",
-    "en": "This portfolio is itself the output of a six-agent team."
+    "ko": "지금 보고 있는 이 페이지도 에이전트 여섯이 쓰고 검수하고 배포한 결과물입니다",
+    "en": "The page you are reading was written, reviewed, and shipped by six agents."
+  },
+  "tagline_more": {
+    "ko": "그중 하나는 공개 검수 담당이었고, 단독으로 배포를 막을 수 있었습니다. 링크가 없는 카드들이 그 결과입니다.",
+    "en": "One of the six was the privacy reviewer, and it could have stopped the deploy alone — the cards with no link are what that looked like."
   },
   "role": {
     "ko": "하네스 설계 · 오케스트레이션",

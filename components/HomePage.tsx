@@ -1,6 +1,7 @@
 import { paragraphs, pick, roles, t } from "@/lib/copy";
 import {
   GRID_GROUPS,
+  continuityNote,
   featuredProjects,
   groupMeta,
   hasDetailPage,
@@ -16,6 +17,7 @@ import { ui } from "@/lib/ui";
 
 import { MetaLine, stackLabel, statusLabel, teamLabel } from "./Badges";
 import { ExternalLinks } from "./ExternalLinks";
+import { HarnessFlow, HarnessRail } from "./HarnessFlow";
 import { ContactChannels } from "./ContactChannels";
 import { GhostAction, GoLink, OutLink, PrimaryAction } from "./Links";
 import { ProjectList } from "./ProjectCard";
@@ -35,9 +37,16 @@ import { ProjectList } from "./ProjectCard";
  * 이전 디자인은 섹션 헤더 전체를 붙였는데 여백이 주인공인 조판에서는 그게 화면을 무겁게 만든다.
  */
 
-const SECTION_GAP = "mt-[clamp(6rem,17vh,11rem)]";
-const HEAD_GAP = "mt-[clamp(2.25rem,6vh,4rem)]";
-const BODY_GAP = "mt-[clamp(3rem,8vh,5.5rem)]";
+/*
+ * 세로 여백 (2026-09-22 축소).
+ * 이전 값은 1440x900 에서 섹션 사이가 **153px** 였다. 여백이 주인공인 조판이라 의도한 값이었는데,
+ * 실제 화면에서는 "여백"이 아니라 **죽은 공백**으로 읽혔다 — 밀도가 낮아서가 아니라 빈 곳이 많아서
+ * 심심해 보인다는 지적이 맞았다. 상한을 내려 96px 로 줄였다.
+ * 덤으로 홈 스크롤 총량이 IA 목표 대역(7~9 화면, `01_architect_ia.md:123`) 안으로 돌아온다.
+ */
+const SECTION_GAP = "mt-[clamp(2.75rem,7vh,4.25rem)]";
+const HEAD_GAP = "mt-[clamp(1.75rem,4vh,2.75rem)]";
+const BODY_GAP = "mt-[clamp(2rem,5vh,3.25rem)]";
 
 /**
  * 섹션 하나.
@@ -74,7 +83,7 @@ function Section({
       {mark && (
         <p
           aria-hidden="true"
-          className="sticky top-[var(--header-h)] z-10 bg-bg py-3.5"
+          className="sticky top-[var(--header-h)] z-10 bg-bg py-3"
         >
           <span data-section-marker="true" className="t-micro text-accent">
             {mark}
@@ -82,7 +91,7 @@ function Section({
         </p>
       )}
 
-      <div className={"bay " + (mark ? HEAD_GAP : "pt-10")}>
+      <div className={"bay " + (mark ? HEAD_GAP : "pt-7")}>
         {heading && (
           <h2 className="t-title lg:col-span-5">{heading}</h2>
         )}
@@ -110,44 +119,6 @@ function Gloss({ lang, body }: { lang: Lang; body: string }) {
 }
 
 /**
- * 증명 항목은 카피가 "값 · 라벨" 한 줄로 온다 ("6 · 에이전트 시스템").
- * 분리자가 없으면 전체를 라벨로 쓴다. 코드가 숫자를 지어내지 않는다.
- */
-function splitProof(raw: string): { value: string; label: string } {
-  const i = raw.indexOf("·");
-  if (i < 0) return { value: "", label: raw };
-  return { value: raw.slice(0, i).trim(), label: raw.slice(i + 1).trim() };
-}
-
-/** 검증 가능한 사실 네 개. 칸을 나눈 표가 아니라 왼쪽부터 흐르는 한 줄이다. */
-function Ledger({ lang, className = "" }: { lang: Lang; className?: string }) {
-  const items = [1, 2, 3, 4]
-    .map((n) => {
-      const id = "PROOF-" + n;
-      const value = t(lang, id + ".value");
-      const label = t(lang, id + ".label");
-      if (value || label) return { key: id, value, label };
-      return { key: id, ...splitProof(t(lang, id)) };
-    })
-    .filter((i) => i.value || i.label);
-
-  if (!items.length) return null;
-
-  return (
-    <ul className={"flex flex-wrap gap-x-14 gap-y-8 " + className}>
-      {items.map((i) => (
-        <li key={i.key}>
-          {i.value && <p className="t-sub">{i.value}</p>}
-          {i.label && (
-            <p className="t-micro mt-1.5 text-ink-soft">{i.label}</p>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/**
  * 한 문장 안에서 굵기를 바꿔 강조한다(레퍼런스 §7).
  * 카피에 이미 있는 가운뎃점을 경계로만 가른다 — 코드가 어디를 강조할지 지어내지 않는다.
  */
@@ -167,20 +138,34 @@ const HERO_ROLES = 4;
 
 function CurrentRoles({ lang }: { lang: Lang }) {
   const items = roles(lang, HERO_ROLES).filter((r) => r.org || r.title);
-  if (!items.length) return null;
+  const continuity = continuityNote(lang);
+  if (!items.length && !continuity) return null;
   const label = t(lang, "ROLES-TITLE");
 
   return (
     <div className="mt-8 lg:col-span-4 lg:col-start-1 lg:row-start-1 lg:mt-0">
       {label && <p className="t-micro text-accent">{label}</p>}
-      <ul className={"space-y-5" + (label ? " mt-6" : "")}>
-        {items.map((r) => (
-          <li key={r.n}>
-            {r.org && <p className="t-meta text-ink-soft">{r.org}</p>}
-            {r.title && <p className="mt-0.5">{r.title}</p>}
-          </li>
-        ))}
-      </ul>
+      {items.length > 0 && (
+        <ul className={"space-y-5" + (label ? " mt-6" : "")}>
+          {items.map((r) => (
+            <li key={r.n}>
+              {r.org && <p className="t-meta text-ink-soft">{r.org}</p>}
+              {r.title && <p className="mt-0.5">{r.title}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/*
+        역할 4개가 "지금 무엇인가"를 말한다면 이 한 줄은 "얼마나 오래"를 말한다.
+        둘은 같은 층의 사실이라 같은 칸에 세운다. 문장은 데이터에서 온다
+        (`continuityNote` — featured 커뮤니티 항목의 둘째 문장). 값이 없으면 이 요소는 없다.
+      */}
+      {continuity && (
+        <p className="t-meta mt-7 border-l border-rule pl-5 text-ink-soft">
+          {continuity}
+        </p>
+      )}
     </div>
   );
 }
@@ -205,7 +190,7 @@ function Masthead({ lang }: { lang: Lang }) {
   const cta2 = t(lang, "HERO-CTA-2");
 
   return (
-    <section className="stagger pt-[clamp(4.5rem,19vh,12rem)]">
+    <section className="stagger pt-[clamp(2.75rem,11vh,7rem)]">
       {h1 && (
         <h1 className="t-display measure-display">
           <Emphasized value={h1} />
@@ -216,17 +201,26 @@ function Masthead({ lang }: { lang: Lang }) {
         <div className="lg:col-span-7 lg:col-start-6 lg:row-start-1">
           {sub && <p className="t-lead">{sub}</p>}
           {(cta1 || cta2) && (
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               {cta1 && <PrimaryAction href="#systems">{cta1}</PrimaryAction>}
               {cta2 && <GhostAction href="#contact">{cta2}</GhostAction>}
             </div>
           )}
+
+          {/*
+            CTA 아래가 208px 비어 있었다(실측). 왼쪽 열은 역할 4개 + 연속성으로 차 있는데
+            오른쪽은 문단 하나와 버튼에서 끝나, `00_purpose.md` 가 경고한 "사진이 빠진 자리"로 읽혔다.
+            장식으로 덮지 않고 **아래 하네스 도식의 축소판**을 넣는다 — 같은 `harnessCensus()` 를 읽고
+            마디의 위치와 끊김만 남긴 것이라, 스크롤하기 전에 구조가 한 번 보이고
+            아래에서 같은 모양이 수치와 함께 펼쳐진다.
+          */}
+          <div className="mt-[clamp(2.5rem,7vh,4.5rem)]">
+            <HarnessRail lang={lang} />
+          </div>
         </div>
 
         <CurrentRoles lang={lang} />
       </div>
-
-      <Ledger lang={lang} className="mt-[clamp(4rem,12vh,7.5rem)]" />
     </section>
   );
 }
@@ -289,7 +283,7 @@ function MethodBlock({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bay border-t border-rule py-9 lg:py-12">
+    <div className="bay border-t border-rule py-6 lg:py-8">
       {title && (
         <h3 className="t-micro text-accent lg:col-span-3">{title}</h3>
       )}
@@ -323,8 +317,14 @@ function MethodSection({ lang }: { lang: Lang }) {
 
   return (
     <Section id="method" label={t(lang, "NAV-METHOD")} heading={heading} lead={intro}>
+      {/*
+        도식이 세 패턴 위에 선다. 산문 셋을 먼저 읽히면 "그래서 공통점이 뭔데"가 끝까지 안 풀린다 —
+        모양을 먼저 보여주고 그 다음에 각 마디를 문장으로 푼다.
+      */}
+      <HarnessFlow lang={lang} />
+
       {patterns.length > 0 && (
-        <ol>
+        <ol className="mt-[clamp(2rem,5vh,3.25rem)]">
           {patterns.map((p) => (
             <li key={p.key}>
               <MethodBlock title={p.title}>
@@ -369,7 +369,7 @@ function FeaturedBlock({ p, lang }: { p: Project; lang: Lang }) {
   const links = renderableLinks(p);
 
   return (
-    <article className="bay border-t border-rule py-10 sm:py-14">
+    <article className="bay border-t border-rule py-7 sm:py-9">
       {/*
         카드와 같은 해부도를 쓴다 — 왼쪽 칸은 **정체와 사실과 행동**(이름·역할·메타·링크),
         오른쪽 칸은 **서술과 근거**(한 줄 설명·본문·하이라이트).
@@ -446,7 +446,7 @@ function GroupSection({
       lead={t(lang, g.leadSlot)}
     >
       {gloss && (
-        <div className="mb-[clamp(2.5rem,6vh,4rem)]">
+        <div className="mb-[clamp(1.75rem,4vh,2.75rem)]">
           <Gloss lang={lang} body={gloss} />
         </div>
       )}
@@ -462,13 +462,19 @@ export function HomePage({ lang }: { lang: Lang }) {
     <>
       <Masthead lang={lang} />
 
+      {/*
+        **방법이 목록보다 먼저 온다** (2026-09-22).
+        시스템 6개를 먼저 보여준 뒤 "사실 다 같은 구조"라고 말하면 늦는다 —
+        앞에 두면 뒤의 6개가 나열이 아니라 **반복의 증거**로 읽힌다.
+        앵커(`#method` / `#systems` / `#apps`)와 헤더 내비 순서는 그대로다.
+      */}
+      <MethodSection lang={lang} />
+
       <GroupSection
         group={GRID_GROUPS[0]}
         lang={lang}
         gloss={ui(lang, "UI.glossHarness")}
       />
-
-      <MethodSection lang={lang} />
 
       <GroupSection group={GRID_GROUPS[1]} lang={lang} />
 

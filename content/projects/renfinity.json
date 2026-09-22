@@ -7,8 +7,12 @@
     "en": "Renfinity"
   },
   "tagline": {
-    "ko": "알고리즘 트레이딩 시스템을 5인 AI 에이전트 팀이 운영한다",
-    "en": "A five-agent AI team runs the day-to-day of an algorithmic trading system."
+    "ko": "에이전트의 말을 믿지 않는 구조로 운영하는 알고리즘 트레이딩 시스템",
+    "en": "An algorithmic trading system run by five agents that are never taken at their word."
+  },
+  "tagline_more": {
+    "ko": "규칙을 문서로 부탁하지 않습니다. 다섯 개의 가드가 fail-closed로 걸려 조건을 못 채우면 작업이 멈춥니다.",
+    "en": "The rules are not written down and hoped for — five guards fail closed and stop the run where it stands."
   },
   "role": {
     "ko": "공동창업자 · CTO",
