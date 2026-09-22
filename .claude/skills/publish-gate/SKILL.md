@@ -57,7 +57,28 @@ git diff --cached --name-only | xargs grep -lEn   'sk-[A-Za-z0-9]{20,}|AIza[0-9A
 
 # 4) 커밋 히스토리에 이미 들어간 비밀
 git log --all --diff-filter=A --name-only | grep -Ei '\.env|token|secret|credential'
+
+# 5) 커밋 대상에 실행 바이너리 / 서드파티 설치물
+git diff --cached --name-only | while read f; do
+  case "$f" in *.exe|*.dll|*.so|*.dylib|*.wasm|*.jar|*.zip|*.tar|*.gz) echo "!! binary: $f";; esac
+  [ -f "$f" ] && [ "$(wc -c < "$f")" -gt 1048576 ] && echo "!! 1MB 초과: $f"
+done
 ```
+
+**서드파티 설치물과 바이너리는 텍스트 grep 의 대상이 아니다.**
+위 1~4번은 전부 문자열 검사라, 소스가 없는 실행 파일은 **히트 0 으로 통과한다.**
+실제로 외부 UI 린터(impeccable 0.1.5)가 `.claude/skills/` 에 14.0 MiB PE 바이너리를 설치했을 때
+1~4번은 전부 무히트였다. 통과한 것이 아니라 **검사 대상이 아니었던 것**이다.
+
+실행 파일이나 1MB 초과 파일이 커밋 대상에 들어오면 판정하지 말고 `NEEDS_USER_DECISION` 으로 올린다.
+근거: (1) 내용을 읽을 수 없으므로 무엇이 공개되는지 확인이 불가능하다,
+(2) git 은 바이너리를 영구 보존한다 — 파일을 지워도 히스토리에 남고 되돌릴 수 없다,
+(3) 재배포는 라이선스 의무를 발생시킨다. `SKILL.md` frontmatter 의 `license:` 선언만으로는 부족하고,
+LICENSE·NOTICE 파일이 실제로 동봉돼 있는지 확인해야 한다(Apache-2.0 §4).
+
+`.claude/` 는 `.gitignore` 화이트리스트로 이미 막혀 있으나(에이전트 6 + 스킬 5 만 열림),
+`git add -A` 는 저장소 전체를 대상으로 하므로 **그 밖에 떨어지는 설치물은 이 검사가 유일한 방어선이다.**
+
 하나라도 걸리면 **배포 중단**. 히스토리에 이미 들어갔으면 파일 삭제로는 부족하다는 점을 사용자에게 알린다.
 
 히트가 나와도 바로 판정하지 마라 — **원문을 열어 확인한다.** 빌드 캐시(`.next/cache/**/*.sst`)와

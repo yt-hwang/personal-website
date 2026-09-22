@@ -38,3 +38,34 @@ ops/
 
 .vercel
 .env*
+
+# 하네스 정의(.claude) — 차단 목록이 아니라 화이트리스트로 관리한다.
+# 손으로 고른 차단 목록은 반드시 무언가를 빠뜨린다(ops/*.py 3회 누락, CLAUDE.md 2026-09-16).
+# 외부 설치물(`npx ... install`)은 디렉토리 이름을 예고하지 않으므로 기본을 '무시'로 두고,
+# 현재 공개 중인 에이전트 6 + 스킬 5 만 명시적으로 연다. 새 설치물은 자동으로 밖에 떨어진다.
+# settings.json / settings.local.json 도 의도적으로 닫아둔다 — 훅 주입 경로이기 때문이다.
+.claude/*
+
+!.claude/agents/
+.claude/agents/*
+!.claude/agents/content-writer.md
+!.claude/agents/privacy-auditor.md
+!.claude/agents/project-scout.md
+!.claude/agents/qa-reviewer.md
+!.claude/agents/site-architect.md
+!.claude/agents/web-builder.md
+
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/portfolio-orchestrate/
+!.claude/skills/project-inventory/
+!.claude/skills/publish-gate/
+!.claude/skills/site-build/
+!.claude/skills/site-copy/
+
+# 실행 바이너리 — 이 저장소가 바이너리를 커밋할 이유는 없다.
+# 화이트리스트보다 뒤에 두어, 열어둔 디렉토리 안으로 들어와도 막는다.
+*.exe
+*.dll
+*.so
+*.dylib

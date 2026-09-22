@@ -1,6 +1,5 @@
-import { paragraphs, pick, roles as readRoles, t } from "@/lib/copy";
+import { paragraphs, roles as readRoles, t } from "@/lib/copy";
 import type { Lang } from "@/lib/types";
-import { ui } from "@/lib/ui";
 
 import { ContactChannels } from "./ContactChannels";
 
@@ -61,8 +60,6 @@ function Prose({ value }: { value: string }) {
 }
 
 export function AboutPage({ lang }: { lang: Lang }) {
-  const heading =
-    pick(lang, "ABOUT-TITLE", "NAV-ABOUT") || ui(lang, "UI.about");
   const lead = t(lang, "ABOUT-LEAD");
   const sub = t(lang, "ABOUT-SUB");
   const roles = readRoles(lang);
@@ -81,10 +78,14 @@ export function AboutPage({ lang }: { lang: Lang }) {
         머리는 홈 히어로와 같은 조판이다 — 선언문 한 줄을 .t-display 로 크게 놓고,
         보조문장은 오른쪽 열에만 둔다(레퍼런스 §5 비대칭).
         `ABOUT-SUB` 가 비면 보조문장 블록을 통째로 만들지 않는다(닐슨 5).
+
+        h1 위의 "소개" 마이크로 라벨은 걷어냈다. <title>·헤더 nav 의 현재 항목과
+        3중으로 겹쳤고, 자간 넓힌 대문자 라벨을 디스플레이 h1 바로 위에 두는 형태
+        자체가 지금 AI 생성 히어로의 기본값이다. 홈 히어로에도 그 자리 라벨은 없었다 —
+        사이트 안에서 라벨 없는 히어로가 이미 표준이었고, About 만 예외였다.
       */}
       <header className="stagger">
-        <p className="t-micro text-accent">{heading}</p>
-        {lead && <h1 className="t-display measure-display mt-5">{lead}</h1>}
+        {lead && <h1 className="t-display measure-display">{lead}</h1>}
         {sub && (
           <div className="bay mt-[clamp(2.25rem,6vh,4rem)]">
             <p className="t-lead lg:col-span-7">{sub}</p>

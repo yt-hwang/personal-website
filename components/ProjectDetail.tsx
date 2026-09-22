@@ -14,7 +14,7 @@ import { href } from "@/lib/routes";
 import type { Lang, Project } from "@/lib/types";
 import { teamBadge, ui } from "@/lib/ui";
 
-import { GroupMark, MetaLine, stackLabel, statusLabel, teamLabel } from "./Badges";
+import { MetaLine, stackLabel, statusLabel, teamLabel } from "./Badges";
 import { AgentRoster } from "./AgentTeam";
 import { ExternalLinks } from "./ExternalLinks";
 import { BackIcon, ForwardIcon } from "./Icon";
@@ -93,9 +93,15 @@ export function ProjectDetail({ p, lang }: { p: Project; lang: Lang }) {
         {groupLabel ? " · " + groupLabel : ""}
       </BackLink>
 
+      {/*
+        그룹 라벨은 바로 위 BackLink 가 `← 홈 · 시스템` 으로 이미 찍는다.
+        여기서 한 번 더 찍으면 자간 넓힌 대문자 라벨이 디스플레이 h1 바로 위에 붙는
+        형태가 되는데, 그건 지금 AI 생성 히어로의 기본값이라 오히려 눈에 띈다.
+        닐슨 6(회상보다 인식)은 BackLink 가 충족하므로 라벨을 지워도 정보는 줄지 않는다.
+        카드(ProjectCard)에서는 돌아갈 길이 없으므로 GroupMark 를 그대로 쓴다.
+      */}
       <header className="mt-[clamp(3rem,10vh,7rem)]">
-        <GroupMark label={groupLabel} />
-        {title && <h1 className="t-display measure-display mt-5">{title}</h1>}
+        {title && <h1 className="t-display measure-display">{title}</h1>}
 
         {/*
           한 줄 설명·역할·메타를 오른쪽 6~12열에 두면, 전폭 h1 아래 왼쪽이

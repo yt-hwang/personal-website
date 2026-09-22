@@ -15,7 +15,7 @@ Data Scientist · AI Developer
 
 ## HERO-2
 
-I design and run six systems in which teams of AI agents do the actual work — algorithmic trading, personal finance, athletic training, and a nonprofit among them.
+I design and run six systems in which teams of AI agents do the actual work: algorithmic trading, personal finance, athletic training, and a nonprofit.
 
 ## HERO-CTA-1
 
@@ -61,7 +61,7 @@ How the work is set up
 
 ## METHOD-INTRO
 
-The domains have nothing in common — trading, fantasy football, personal finance, training, a nonprofit — but the six systems share the same three structures.
+Trading, fantasy football, personal finance, training, a nonprofit. The domains have nothing in common, but the six systems share the same three structures.
 
 ## METHOD-1-TITLE
 
@@ -93,7 +93,7 @@ This site
 
 ## SELFDEMO
 
-This site is one of the six. Six agents built it — information architecture, research, copy, build, privacy review, QA — and the research agent recorded a source file path for every value, so no unsourced sentence could reach the page. Adding a project means adding one JSON file.
+This site is one of the six. Six agents built it: information architecture, research, copy, build, privacy review, QA. The research agent recorded a source file path for every value, so no unsourced sentence could reach the page. Adding a project means adding one JSON file.
 
 ## SELFDEMO-LINK
 
@@ -113,7 +113,7 @@ Apps I designed, built, and shipped. Two internal tools are listed without links
 
 ## GRP-C
 
-What I do outside the projects — running a community, and turning what I learn there into sessions.
+Outside the projects I run a community, and turn what I learn there into sessions.
 
 ## SEC6-TITLE
 
@@ -121,7 +121,7 @@ Community and talks
 
 ## AKDS-SEC
 
-Since 2024 I have run the Atlanta Korean Data Science Community, a Korean-language data-science meetup in Atlanta, as a monthly session. In May 2026 I gave a hands-on talk, "Harness Engineering: building systems that tame and control AI agents"; in August 2026, a 23-slide talk, "Claude Code × Telegram: building your own AI agent team." Outside speakers are invited so the topics do not narrow to whoever is already in the room — security and UX design so far — and a first Kaggle cohort ran with two teams of five.
+Since 2024 I have run the Atlanta Korean Data Science Community, a Korean-language data-science meetup in Atlanta, as a monthly session. In May 2026 I gave a hands-on talk, "Harness Engineering: building systems that tame and control AI agents"; in August 2026, a 23-slide talk, "Claude Code × Telegram: building your own AI agent team." Outside speakers are invited so the topics do not narrow to whoever is already in the room. So far they have covered security and UX design. A first Kaggle cohort ran with two teams of five.
 
 ---
 
